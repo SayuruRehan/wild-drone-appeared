@@ -1,0 +1,83 @@
+{
+  "purpose": "200-episode validation-only matched target-rule screen; not final inference",
+  "learning_rate": 3e-05,
+  "training_seeds": [
+    0,
+    1,
+    2
+  ],
+  "validation_scenarios": [
+    5000,
+    5001,
+    5002,
+    5003,
+    5004
+  ],
+  "aggregates": [
+    {
+      "variant": "standard",
+      "selection": "final",
+      "fits": 3,
+      "return_mean": -38.016079475712125,
+      "weighted_freshness_mean": 0.0524022286563078,
+      "total_losses_mean": 3.0,
+      "collision_attempts_mean": 43.79999999999999,
+      "return_fit_sd": 6.9006639386579645,
+      "weighted_freshness_fit_sd": 0.008330478476129248,
+      "total_losses_fit_sd": 0.0,
+      "collision_attempts_fit_sd": 33.13668661770515,
+      "q_max": -0.008259776048362255,
+      "q_upper_bound_violations": 0,
+      "q_decisions": 1785
+    },
+    {
+      "variant": "standard",
+      "selection": "best",
+      "fits": 3,
+      "return_mean": -29.332930280368604,
+      "weighted_freshness_mean": 0.06820853529153556,
+      "total_losses_mean": 3.0,
+      "collision_attempts_mean": 3.5999999999999996,
+      "return_fit_sd": 0.8859452176851335,
+      "weighted_freshness_fit_sd": 0.01588663407971206,
+      "total_losses_fit_sd": 0.0,
+      "collision_attempts_fit_sd": 5.2306787322488075,
+      "q_max": 1.035109519958496,
+      "q_upper_bound_violations": 0,
+      "q_decisions": 1789
+    },
+    {
+      "variant": "double",
+      "selection": "final",
+      "fits": 3,
+      "return_mean": -32.54805332976417,
+      "weighted_freshness_mean": 0.05966107688629466,
+      "total_losses_mean": 2.9333333333333336,
+      "collision_attempts_mean": 19.599999999999998,
+      "return_fit_sd": 2.961046428224264,
+      "weighted_freshness_fit_sd": 0.0018966976267609076,
+      "total_losses_fit_sd": 0.11547005383792526,
+      "collision_attempts_fit_sd": 16.9434353069264,
+      "q_max": 17.62887191772461,
+      "q_upper_bound_violations": 0,
+      "q_decisions": 1854
+    },
+    {
+      "variant": "double",
+      "selection": "best",
+      "fits": 3,
+      "return_mean": -26.863205155230016,
+      "weighted_freshness_mean": 0.06288110565297524,
+      "total_losses_mean": 2.4,
+      "collision_attempts_mean": 4.333333333333333,
+      "return_fit_sd": 2.0484018548608995,
+      "weighted_freshness_fit_sd": 0.013373712604880858,
+      "total_losses_fit_sd": 0.529150262212918,
+      "collision_attempts_fit_sd": 6.824465791058911,
+      "q_max": 1.1834765672683716,
+      "q_upper_bound_violations": 0,
+      "q_decisions": 2056
+    }
+  ],
+  "training_seconds_sum": 783.5133090859999
+}

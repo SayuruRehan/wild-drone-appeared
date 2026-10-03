@@ -1,0 +1,12 @@
+{
+  "git_revision": "f312eecc048fd8d1c717e4b4aafef5d1b7d6da75",
+  "git_dirty": true,
+  "files": {
+    "src/wild_drone/learning.py": "32e9cadd75d63f7676bc8ebe6dfa5f234e17e4b67d9ecfb74297c2a3a0f9afcd",
+    "src/wild_drone/training_io.py": "b2661faeb7531dd156c555a19c0a03d693498f78a02bae22b2c5b6152536953b",
+    "src/wild_drone/checkpoint_audit.py": "1245875888cee82749bac204ea560c6fa4818f02cea9980aae3f4b70db91af93",
+    "src/wild_drone/environment.py": "433c0549acfaf4665ad93c0b7a2ebb7b898a9ebb94be3f910a3e878a152323cd",
+    "scripts/run_validation_pilot.py": "14ba5f796714eaab58b343d840b0c4c9ca798cb4db3177403bd7d831cd15fdf2"
+  },
+  "concurrent_runs": "two separate output directories; each training process uses one Torch CPU thread"
+}

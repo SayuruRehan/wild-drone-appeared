@@ -21,6 +21,9 @@
 7. Julian and Kochenderfer (2019). [Distributed wildfire surveillance with autonomous aircraft using deep reinforcement learning](https://arxiv.org/abs/1810.04244).
    Journal of Guidance, Control, and Dynamics 42(8), 1768–1778. Related fleet/planning work,
    not a validation of this project's outcome or novelty.
+8. van Hasselt, Guez and Silver (2016). [Deep Reinforcement Learning with Double Q-learning](https://arxiv.org/abs/1509.06461).
+   AAAI. Basis for the optional Double DQN target: online action selection and target-network
+   evaluation. Its reported overestimation reduction does not establish stability here.
 
 The fire model is a deliberately simple stochastic cellular automaton. These references do
 not calibrate its probabilities, physical cell size, wind or battery rates. Literature review

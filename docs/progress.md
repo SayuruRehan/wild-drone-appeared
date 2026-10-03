@@ -79,3 +79,17 @@ coordination. Categorical evaluation reduces repeated blocked commands but still
 whole fleet. Final test seeds remain unused. Live notebook progress and interruption cleanup
 are implemented. [Dated upload paths](experiments/colab-2026-10-03/README.md) keep the owner’s
 raw results and executed notebook separate from the reusable template.
+
+# Checkpoint integrity and Double DQN follow-up
+
+Completed automatic export auditing against authoritative episode-boundary state, a read-only
+audit command, snapshot hash manifests, notebook pre-archive verification, and optional Double
+DQN targets with strict backward-compatible resume. Stale episodes, same-episode changed tensors,
+incorrect selections, interrupted manifest export and archive refusal have regression coverage.
+
+The [matched lower-rate screen](experiments/dqn-stability-2026-10-03/README.md) completed six
+200-episode fits, three per target rule, on validation scenarios only. No Q upper-bound violations
+were observed during diagnostic replay, but both final policies remain weaker than random and
+far behind greedy. This does not establish longer-run stability or convergence. Double DQN remains
+an opt-in comparison; the original defaults and simulator are preserved. Exploration and battery
+return diagnostics, longer fixed-budget confirmation, actor tuning and the final study remain open.

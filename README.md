@@ -67,6 +67,10 @@ to the five environmental maps, all derived from the existing complete state. RE
 an optional value baseline trained on full Monte Carlo returns, without TD bootstrap. Disable
 these choices with `--no-spatial-encoding` and `--no-monte-carlo-baseline` for ablations.
 There is no learned-policy action mask or safety shield.
+Use `--double-dqn` to select next actions with the online network and evaluate them
+with the target network. Standard DQN remains the default. Both variants use the same
+replay, network and reward; this flag does not apply to the actor methods. Resume rejects
+switching the target rule. `--learning-rate` overrides the configured rate.
 REINFORCE weights reward-to-go by absolute-time discount and uses a fixed mission-horizon
 normaliser; A2C also uses absolute-time weights with its rollout-length normaliser. The
 configurable entropy term is a local policy regulariser, separate from mission reward.
@@ -136,6 +140,51 @@ Keep both. Original version-1 policies remain loadable, but their files do not c
 state to resume training. Source/runtime histories are recorded on resume. Only after freezing
 the validation protocol, use `compare --checkpoint-selection best --validation-seeds ...`
 on separate final scenarios; `compare` rejects training/validation/test overlaps.
+
+Training completion verifies each exported episode, metadata field and model tensor against
+`training_state.pt`, then writes `checkpoint_manifest.json` with hashes of the audited bytes.
+The Colab download cell repeats this check immediately before archiving. To audit existing runs:
+
+```bash
+python scripts/audit_checkpoints.py runs/validation20/dqn/seed-0
+```
+
+An audit failure stops evaluation/archiving; it does not silently repair a file. Explicit
+same-budget resume regenerates portable exports from authority. For a completed Drive run,
+the following recovery cell uses the saved conditions and performs no new training episodes:
+
+```python
+from dataclasses import replace
+from pathlib import Path
+import torch
+from wild_drone.config import EnvConfig
+from wild_drone.learning import TrainConfig, train
+
+run = Path('/content/drive/MyDrive/wild-drone-appeared/validation20-v2/reinforce/seed-1')
+state = torch.load(run/'training_state.pt', map_location='cpu', weights_only=True)
+settings = replace(TrainConfig(**state['train_config']),
+                   episodes=state['completed_episodes'], device='cpu')
+train(state['algorithm'], EnvConfig(**state['env_config']), settings, run,
+      resume_from=run/'training_state.pt')
+```
+
+Keep the original archive as a historical record. A standalone portable policy without its
+training state can still be loaded, but cannot certify that it is the latest training export.
+Hashes certify a snapshot; rerun the audit after copying or synchronizing files.
+
+A matched validation-only DQN/Double DQN screen at the lower rate:
+
+```bash
+python scripts/run_validation_pilot.py --episodes 200 --training-seeds 0 1 2 --algorithms dqn --learning-rate 0.00003 --no-double-dqn --out runs/dqn-stability-v3/standard
+python scripts/run_validation_pilot.py --episodes 200 --training-seeds 0 1 2 --algorithms dqn --learning-rate 0.00003 --double-dqn --out runs/dqn-stability-v3/double
+python scripts/diagnose_dqn.py runs/dqn-stability-v3/standard/dqn/seed-* runs/dqn-stability-v3/double/dqn/seed-* --out runs/dqn-stability-v3/diagnostics.csv
+```
+
+The [fixed pilot plan](docs/dqn-stability-plan.md) describes the comparison and its limits.
+The [completed six-fit report](docs/experiments/dqn-stability-2026-10-03/README.md) records
+poor mission performance despite no observed Q-bound violations in the short replay.
+Use separate output folders for variants; all study runners audit completed exports through
+`train` before evaluating them. Final test scenarios remain outside this tuning workflow.
 
 ## Baselines and fair evaluation
 

@@ -1,0 +1,16 @@
+{
+  "format_version": 1,
+  "algorithm": "dqn",
+  "completed_episodes": 200,
+  "authority_sha256": "05dc45fe02d5b1bb4706084264db56eca819ad28781f38196b3cea45d5bf6d39",
+  "exports": {
+    "policy.pt": {
+      "completed_episodes": 200,
+      "sha256": "677ce907452995448f9362bf00d46e50c6e4246cd44cf5af8e78ddda4fef2851"
+    },
+    "best_policy.pt": {
+      "completed_episodes": 120,
+      "sha256": "de53ad5945011d519ae7c1c9d04cbd3adac17828255ca3d0d8783c8ba4eb7603"
+    }
+  }
+}

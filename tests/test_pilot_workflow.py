@@ -42,6 +42,43 @@ def test_validation_runner_resumes_all_methods_and_preserves_protocol_on_mismatc
     assert (out/'protocol.json').read_text() == protocol
 
 
+def test_dqn_only_variant_records_settings_and_rejects_changed_target(tmp_path):
+    config = tmp_path/'config.json'
+    config.write_text(json.dumps({'environment': EnvConfig(grid_size=8, horizon=6).to_dict(),
+                                  'training': {'warmup_steps': 4, 'batch_size': 4}}))
+    out = tmp_path/'double'
+    args = ['--config', str(config), '--episodes', '1', '--training-seeds', '0',
+            '--validation-seeds', '5000', '--algorithms', 'dqn', '--learning-rate', '0.00003',
+            '--out', str(out)]
+    main = runner()
+    main(args+['--double-dqn'])
+    state = torch.load(out/'dqn'/'seed-0'/'training_state.pt', weights_only=True)
+    assert state['train_config']['double_dqn']
+    assert state['train_config']['learning_rate'] == 0.00003
+    assert not (out/'reinforce').exists() and not (out/'a2c').exists()
+    before = (out/'protocol.json').read_bytes()
+    with pytest.raises(ValueError, match='double_dqn'):
+        main(args+['--no-double-dqn'])
+    assert (out/'protocol.json').read_bytes() == before
+
+
+@pytest.mark.parametrize('changed', [
+    ['--training-seeds', '1'], ['--algorithms', 'reinforce']])
+def test_existing_study_cannot_be_relabelled_with_other_fits(tmp_path, changed):
+    config = tmp_path/'config.json'
+    config.write_text(json.dumps({'environment': EnvConfig(grid_size=8, horizon=2).to_dict()}))
+    out = tmp_path/'pilot'
+    args = ['--config', str(config), '--episodes', '1', '--training-seeds', '0',
+            '--validation-seeds', '5000', '--algorithms', 'dqn', '--out', str(out)]
+    main = runner()
+    main(args)
+    before = {name: (out/name).read_bytes() for name in (
+        'protocol.json', 'metadata.json', 'validation_comparison.csv')}
+    with pytest.raises(ValueError, match='study protocol'):
+        main(args+changed)
+    assert all((out/name).read_bytes() == content for name, content in before.items())
+
+
 def test_colab_notebook_code_compiles_without_saved_credentials_or_outputs():
     path = Path(__file__).parents[1]/'notebooks'/'colab_experiments.ipynb'
     notebook = json.loads(path.read_text())
