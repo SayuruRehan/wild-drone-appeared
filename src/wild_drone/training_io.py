@@ -90,7 +90,8 @@ def validate_resume(state, algorithm, environment, settings):
         raise ValueError('resume algorithm/environment differs from saved conditions')
     allowed_changes = {'episodes', 'device', 'checkpoint_interval', 'progress_interval'}
     current = settings.to_dict()
-    saved = state['train_config']
+    # Existing version-2 states predate this opt-in algorithm variant.
+    saved = {'double_dqn': False} | state['train_config']
     differences = [key for key in sorted(set(saved) | set(current))
                    if key not in allowed_changes and current.get(key) != saved.get(key)]
     if differences:

@@ -8,6 +8,7 @@ from wild_drone.learning import (
     TrainConfig,
     discounted_policy_loss,
     discounted_returns,
+    dqn_next_values,
     load_policy,
     td_targets,
     train,
@@ -23,6 +24,16 @@ def test_terminal_td_target_does_not_bootstrap():
     targets = td_targets(torch.tensor([1., 1.]), torch.tensor([True, False]),
                          torch.tensor([100., 2.]), 0.5)
     torch.testing.assert_close(targets, torch.tensor([1., 2.]))
+
+
+def test_double_dqn_selects_online_action_and_evaluates_target_network():
+    online = torch.tensor([[9., 1.], [1., 9.]])
+    target = torch.tensor([[2., 7.], [8., 3.]])
+    torch.testing.assert_close(dqn_next_values(target), torch.tensor([7., 8.]))
+    values = dqn_next_values(target, online)
+    torch.testing.assert_close(values, torch.tensor([2., 3.]))
+    result = td_targets(torch.tensor([1., 1.]), torch.tensor([False, True]), values, 0.5)
+    torch.testing.assert_close(result, torch.tensor([2., 1.]))
 
 
 def test_policy_gradient_weights_absolute_discount_and_fixed_horizon():

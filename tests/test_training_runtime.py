@@ -43,12 +43,15 @@ def test_reinforce_baseline_is_monte_carlo_and_saved_in_checkpoint(tmp_path):
     assert all(float(r['value_loss']) >= 0 for r in rows)
 
 
-@pytest.mark.parametrize('algorithm', ['dqn', 'reinforce', 'a2c'])
+@pytest.mark.parametrize('algorithm,double_dqn', [
+    ('dqn', False), ('dqn', True), ('reinforce', False), ('a2c', False)])
 @pytest.mark.parametrize('device', ['cpu', pytest.param(
     'cuda', marks=pytest.mark.skipif(not torch.cuda.is_available(), reason='requires CUDA'))])
-def test_resume_matches_uninterrupted_training_at_episode_boundary(algorithm, device, tmp_path):
+def test_resume_matches_uninterrupted_training_at_episode_boundary(
+        algorithm, double_dqn, device, tmp_path):
     cfg = EnvConfig(grid_size=8, horizon=8)
-    full = TrainConfig(episodes=4, seed=2, device=device, batch_size=4, warmup_steps=4,
+    full = TrainConfig(episodes=4, seed=2, device=device, double_dqn=double_dqn,
+                       batch_size=4, warmup_steps=4,
                        n_steps=3, target_update_steps=5, checkpoint_interval=1,
                        progress_interval=0)
     a = train(algorithm, cfg, full, tmp_path/'full')
@@ -173,7 +176,7 @@ def test_existing_policy_is_not_overwritten_without_resume(tmp_path):
 
 @pytest.mark.parametrize('interrupted_file', [
     'training_state.pt', 'policy.pt', 'best_policy.pt', 'training.csv',
-    'validation.csv', 'training_summary.json'])
+    'validation.csv', 'training_summary.json', 'checkpoint_manifest.json'])
 def test_first_checkpoint_interruption_can_restart_or_resume_exactly(
         interrupted_file, tmp_path, monkeypatch):
     import wild_drone.learning as learning

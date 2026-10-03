@@ -21,8 +21,14 @@ def main(argv=None):
     parser.add_argument('--training-seeds', nargs='+', type=int, default=[0, 1, 2])
     parser.add_argument('--validation-seeds', nargs='+', type=int, default=list(range(5000, 5005)))
     parser.add_argument('--device', choices=['cpu', 'cuda', 'auto'], default='cpu')
+    parser.add_argument('--algorithms', nargs='+', choices=['dqn', 'reinforce', 'a2c'],
+                        default=['dqn', 'reinforce', 'a2c'])
+    parser.add_argument('--learning-rate', type=float)
+    parser.add_argument('--double-dqn', action=argparse.BooleanOptionalAction, default=None)
     parser.add_argument('--out', type=Path, default=Path('runs/validation20'))
     args = parser.parse_args(argv)
+    if len(set(args.algorithms)) != len(args.algorithms):
+        raise ValueError('algorithms must be distinct')
     if len(set(args.training_seeds)) != len(args.training_seeds) or any(
             s < 0 for s in args.training_seeds):
         raise ValueError('training seeds must be distinct and nonnegative')
@@ -32,10 +38,20 @@ def main(argv=None):
         'episodes': args.episodes, 'validation_seeds': args.validation_seeds,
         'validation_interval': 20, 'checkpoint_interval': 20,
         'progress_interval': 20, 'device': args.device}))
+    overrides = {key: getattr(args, key) for key in ('learning_rate', 'double_dqn')
+                 if getattr(args, key) is not None}
+    settings = replace(settings, **overrides)
     validate_seed_split(settings.scenario_seed_start, settings.episodes, settings.validation_seeds)
     resolve_device(settings.device)
+    protocol_path = args.out/'protocol.json'
+    if protocol_path.exists():
+        previous = json.loads(protocol_path.read_text())
+        previous_algorithms = previous.get('algorithms', ['dqn', 'reinforce', 'a2c'])
+        if (previous_algorithms != args.algorithms or
+                previous['training_seeds'] != args.training_seeds):
+            raise ValueError('study protocol algorithms/training seeds differ; use another output')
     # Preflight every existing run before replacing the study protocol or comparison CSV.
-    for algorithm in ['dqn', 'reinforce', 'a2c']:
+    for algorithm in args.algorithms:
         for seed in args.training_seeds:
             state_path = args.out/algorithm/f'seed-{seed}'/'training_state.pt'
             if state_path.exists():
@@ -46,6 +62,7 @@ def main(argv=None):
     protocol = {'purpose': 'validation only; not final held-out evidence',
                 'environment': config.to_dict(), 'training': settings.to_dict(),
                 'training_seeds': args.training_seeds,
+                'algorithms': args.algorithms,
                 'planner': {'horizon': 3, 'candidates': 8, 'samples': 2},
                 'selection': 'max scenario-mean validation return; also report final policy'}
     args.out.mkdir(parents=True, exist_ok=True)
@@ -56,7 +73,7 @@ def main(argv=None):
         rows.extend(run_episode(config, make_policy(name, seed, **protocol['planner']),
                                 seed, name=name) for seed in settings.validation_seeds)
     atomic_csv_save(rows, args.out/'validation_comparison.csv')
-    for algorithm in ['dqn', 'reinforce', 'a2c']:
+    for algorithm in args.algorithms:
         for seed in args.training_seeds:
             out = args.out/algorithm/f'seed-{seed}'
             state = out/'training_state.pt'

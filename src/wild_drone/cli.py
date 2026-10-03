@@ -42,6 +42,8 @@ def parser():
             cmd.add_argument('--episodes', type=int)
             cmd.add_argument('--warmup-steps', type=int)
             cmd.add_argument('--batch-size', type=int)
+            cmd.add_argument('--learning-rate', type=float)
+            cmd.add_argument('--double-dqn', action=argparse.BooleanOptionalAction)
             cmd.add_argument('--train-scenario-start', type=int)
             cmd.add_argument('--device', choices=['cpu', 'cuda', 'auto'])
             cmd.add_argument('--checkpoint-interval', type=int)
@@ -116,6 +118,7 @@ def main(argv=None):
     settings = TrainConfig(**raw.get('training', {}))
     for option, field in [('episodes', 'episodes'), ('warmup_steps', 'warmup_steps'),
                           ('batch_size', 'batch_size'),
+                          ('learning_rate', 'learning_rate'), ('double_dqn', 'double_dqn'),
                           ('train_scenario_start', 'scenario_seed_start'),
                           ('device', 'device'), ('checkpoint_interval', 'checkpoint_interval'),
                           ('progress_interval', 'progress_interval'),

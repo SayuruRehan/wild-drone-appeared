@@ -13,6 +13,7 @@ import torch
 from torch import nn
 from torch.distributions import Categorical
 
+from wild_drone.checkpoint_audit import audit_checkpoints
 from wild_drone.config import EnvConfig
 from wild_drone.environment import WildfireFleetEnv
 from wild_drone.experiments import run_episode, validate_seed_split, write_metadata
@@ -49,6 +50,7 @@ class TrainConfig:
     device: str = 'cpu'
     spatial_encoding: bool = True
     monte_carlo_baseline: bool = True
+    double_dqn: bool = False
     checkpoint_interval: int = 25
     progress_interval: int = 10
     validation_interval: int = 25
@@ -80,7 +82,7 @@ class TrainConfig:
                 raise ValueError(f'{name} must be a positive integer')
         if not isinstance(self.progress_interval, int) or self.progress_interval < 0:
             raise ValueError('progress_interval must be a nonnegative integer')
-        for name in ('spatial_encoding', 'monte_carlo_baseline'):
+        for name in ('spatial_encoding', 'monte_carlo_baseline', 'double_dqn'):
             if not isinstance(getattr(self, name), bool):
                 raise ValueError(f'{name} must be a boolean')
         seeds = tuple(self.validation_seeds)
@@ -117,6 +119,14 @@ def discounted_returns(rewards, gamma, bootstrap=0.0):
 
 def td_targets(rewards, terminals, next_values, gamma):
     return rewards + gamma*(~terminals).float()*next_values
+
+
+def dqn_next_values(target_q, online_q=None):
+    """DQN target max, or Double DQN online selection / target evaluation."""
+    if online_q is None:
+        return target_q.max(dim=1).values
+    actions = online_q.argmax(dim=1, keepdim=True)
+    return target_q.gather(1, actions).squeeze(1)
 
 
 def discounted_policy_loss(log_probs, advantages, gamma, *, start_step, normalizer):
@@ -359,10 +369,12 @@ def train(algorithm, env_config, train_config, output_dir, *, resume_from=None):
                     actions = torch.tensor([b[1] for b in batch], device=device)
                     selected = q.gather(1, actions[:, None])
                     with torch.no_grad():
-                        next_q, _ = target(*tensors([b[3] for b in batch]))
+                        next_inputs = tensors([b[3] for b in batch])
+                        next_q, _ = target(*next_inputs)
+                        online_q = model(*next_inputs)[0] if t.double_dqn else None
                         targets = td_targets(torch.tensor([b[2] for b in batch], device=device),
                                              torch.tensor([b[4] for b in batch], device=device),
-                                             next_q.max(dim=1).values, t.gamma)
+                                             dqn_next_values(next_q, online_q), t.gamma)
                     loss = nn.functional.smooth_l1_loss(selected.squeeze(1), targets)
                     last_loss = _optimise(optimiser, model, loss, t.max_grad_norm)
                     updates += 1
@@ -426,4 +438,6 @@ def train(algorithm, env_config, train_config, output_dir, *, resume_from=None):
     # A no-op resume still regenerates portable exports from the authoritative state.
     if state is not None and state['completed_episodes'] == t.episodes:
         summary = persist()
+    # Audit once on completion, before callers evaluate or archive portable exports.
+    atomic_json_save(audit_checkpoints(out), out/'checkpoint_manifest.json')
     return summary
