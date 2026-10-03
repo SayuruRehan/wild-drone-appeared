@@ -202,6 +202,17 @@ It also writes one example trace, including the terminal transition, without cha
 actions or live environment randomness. Tracing adds timing overhead; its decision times
 must not be used as uninstrumented policy throughput measurements.
 
+A separate [supervised capability probe](docs/experiments/imitation-2026-10-03/README.md)
+shows that the unchanged network fits greedy training demonstrations, including return and
+charging decisions, but generalizes poorly and loses the fleet during autonomous validation.
+Its checkpoints are explicitly supervised logits; they are not plain RL policies or Q values.
+The [fixed probe plan](docs/imitation-probe-plan.md) and raw results preserve that distinction.
+Run the bounded CPU diagnostic into a fresh folder:
+
+```bash
+python scripts/run_imitation_probe.py --out runs/imitation-v5
+```
+
 ## Baselines and fair evaluation
 
 | Baseline | Behaviour |

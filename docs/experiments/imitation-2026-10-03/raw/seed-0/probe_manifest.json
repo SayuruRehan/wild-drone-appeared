@@ -1,0 +1,14 @@
+{
+  "initial_probe.pt": {
+    "completed_epochs": 0,
+    "sha256": "2b04f54252ccfa3ef1bd5d6d5b93b2caa3887f8f9ec4d8747f358a1ed8fa371f"
+  },
+  "final_probe.pt": {
+    "completed_epochs": 100,
+    "sha256": "0aed4e739bbece6a85c45f924504ce125bf904aa9d96f94d2020e9e6c1ccc2ae"
+  },
+  "selected_probe.pt": {
+    "completed_epochs": 40,
+    "sha256": "3ead3e9764a50e007d50ac0ed9aecbeea36fd2759ca1d2fc8fb56b8484c1a747"
+  }
+}
