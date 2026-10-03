@@ -93,3 +93,15 @@ were observed during diagnostic replay, but both final policies remain weaker th
 far behind greedy. This does not establish longer-run stability or convergence. Double DQN remains
 an opt-in comparison; the original defaults and simulator are preserved. Exploration and battery
 return diagnostics, longer fixed-budget confirmation, actor tuning and the final study remain open.
+
+# Behavior and exploration diagnosis
+
+Added observational command/energy tracing, final-transition loss accounting, retained replay
+coverage and expected epsilon-schedule diagnostics. A checked workflow audits all exports and
+seed splits before replacing reports; CLI/pilot exploration overrides remain strict on resume.
+The [completed exploration screen](experiments/exploration-2026-10-03/README.md) records six
+fresh fits with only decay length changed. Slower uniform exploration covered every joint-action
+label in the retained buffers, but both final arms lost all drones and remained far behind greedy.
+Selected slow-decay models also had eleven near-horizon Q-bound violations. Defaults remain
+unchanged. These results motivate a design discussion of coordination representations or a
+separately labeled demonstration warm start, rather than another unexplained parameter change.

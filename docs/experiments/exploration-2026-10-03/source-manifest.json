@@ -1,0 +1,13 @@
+{
+  "launch_git_revision": "140a3bcfdc735168680628abb173e54580015a00",
+  "launch_git_dirty": true,
+  "files": {
+    "src/wild_drone/learning.py": "32e9cadd75d63f7676bc8ebe6dfa5f234e17e4b67d9ecfb74297c2a3a0f9afcd",
+    "src/wild_drone/environment.py": "433c0549acfaf4665ad93c0b7a2ebb7b898a9ebb94be3f910a3e878a152323cd",
+    "src/wild_drone/training_io.py": "b2661faeb7531dd156c555a19c0a03d693498f78a02bae22b2c5b6152536953b",
+    "src/wild_drone/checkpoint_audit.py": "1245875888cee82749bac204ea560c6fa4818f02cea9980aae3f4b70db91af93",
+    "scripts/run_validation_pilot.py": "b1f330ba7c5c9677bdf4d82dc43a8aede4e9b834e3c0ff38d9a628461badf481",
+    "configs/development.json": "b0c8b6e52a3b9b4db45e57ffc59ed581c02df4305a36adcb671c9a09d4a0ec2d"
+  },
+  "only_learning_difference": "epsilon_decay_steps: 10000 versus 40000; standard DQN, 0.00003 learning rate, 200 episodes, three fits per arm"
+}

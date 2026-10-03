@@ -24,6 +24,7 @@ def main(argv=None):
     parser.add_argument('--algorithms', nargs='+', choices=['dqn', 'reinforce', 'a2c'],
                         default=['dqn', 'reinforce', 'a2c'])
     parser.add_argument('--learning-rate', type=float)
+    parser.add_argument('--epsilon-decay-steps', type=int)
     parser.add_argument('--double-dqn', action=argparse.BooleanOptionalAction, default=None)
     parser.add_argument('--out', type=Path, default=Path('runs/validation20'))
     args = parser.parse_args(argv)
@@ -38,7 +39,8 @@ def main(argv=None):
         'episodes': args.episodes, 'validation_seeds': args.validation_seeds,
         'validation_interval': 20, 'checkpoint_interval': 20,
         'progress_interval': 20, 'device': args.device}))
-    overrides = {key: getattr(args, key) for key in ('learning_rate', 'double_dqn')
+    overrides = {key: getattr(args, key) for key in (
+        'learning_rate', 'double_dqn', 'epsilon_decay_steps')
                  if getattr(args, key) is not None}
     settings = replace(settings, **overrides)
     validate_seed_split(settings.scenario_seed_start, settings.episodes, settings.validation_seeds)
