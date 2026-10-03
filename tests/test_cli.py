@@ -50,3 +50,43 @@ def test_compare_runs_all_algorithms_and_baselines(tmp_path):
     assert {r['policy'] for r in rows} == {
         'random', 'sweep', 'greedy', 'planner', 'dqn', 'reinforce', 'a2c'}
     assert all((tmp_path/a/'seed-2'/'policy.pt').exists() for a in ['dqn', 'reinforce', 'a2c'])
+
+
+def test_train_cli_resume_and_learning_plot(tmp_path):
+    out = tmp_path/'train'
+    args = ['train', '--algorithm', 'a2c', '--grid', '8', '--horizon', '6',
+            '--seed', '3', '--checkpoint-interval', '1', '--progress-interval', '0',
+            '--device', 'cpu', '--validation-seeds', '5000', '--validation-interval', '1',
+            '--out', str(out)]
+    main(args+['--episodes', '1'])
+    main(args+['--episodes', '2', '--resume', str(out/'training_state.pt')])
+    main(['plot-learning', '--csv', str(out/'training.csv'), '--out', str(tmp_path/'curve.png')])
+    rows = list(csv.DictReader((out/'training.csv').open()))
+    assert len(rows) == 2 and [int(r['episode']) for r in rows] == [1, 2]
+    with Image.open(tmp_path/'curve.png') as image:
+        assert image.width > 500 and image.height > 200
+
+
+def test_compare_rejects_validation_test_overlap_before_writing(tmp_path):
+    with pytest.raises(ValueError, match='validation'):
+        main(['compare', '--episodes', '1', '--validation-seeds', '5000',
+              '--scenario-seeds', '5000', '--out', str(tmp_path/'out')])
+    assert not (tmp_path/'out').exists()
+
+
+def test_compare_preflights_all_resume_settings_before_advancing_any_run(tmp_path):
+    from dataclasses import replace
+
+    import torch
+
+    from wild_drone.learning import TrainConfig, train
+    config = EnvConfig(grid_size=8, horizon=2)
+    settings = TrainConfig(episodes=1, warmup_steps=4, batch_size=4)
+    train('dqn', config, settings, tmp_path/'dqn'/'seed-0')
+    train('dqn', config, replace(settings, seed=1, gamma=0.5), tmp_path/'dqn'/'seed-1')
+    with pytest.raises(ValueError, match='resume'):
+        main(['compare', '--grid', '8', '--horizon', '2', '--episodes', '2',
+              '--training-seeds', '0', '1', '--warmup-steps', '4', '--batch-size', '4',
+              '--resume-auto', '--scenario-seeds', '6000', '--out', str(tmp_path)])
+    state = torch.load(tmp_path/'dqn'/'seed-0'/'training_state.pt', weights_only=True)
+    assert state['completed_episodes'] == 1
