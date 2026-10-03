@@ -94,11 +94,15 @@ for tuning. No long experiment is launched automatically by installing or runnin
 ## Resumable validation and Colab
 
 Open [the Colab experiment notebook](notebooks/colab_experiments.ipynb) in Colab (File → Open
-notebook → GitHub, or download and upload it). Select an A100 runtime and run sections 1–6,
+notebook → GitHub, or download and upload it). Select a GPU runtime (T4 is sufficient) and run sections 1–6,
 then section 8. The notebook handles the private repo with transient hidden credential entry,
 benchmarks CPU/CUDA, saves to Drive and runs 1,000 episodes per method for three training seeds.
 The optional 40x40 run is disabled until the 20x20 results have been assessed. Send the downloaded
 `wild-drone-results.zip` for analysis; checkpoints remain in Drive by default.
+The completed T4 study and failure diagnosis are in [the 1,000-episode report](docs/colab1000-results.md).
+See [the dated experiment folder](docs/experiments/colab-2026-10-03/README.md) for the
+original ZIP, extracted-results and executed-notebook upload paths. Future runs show live
+progress and stop their training child when the cell is interrupted.
 
 A bounded local repeated-seed validation study:
 

@@ -1,0 +1,222 @@
+{
+  "archive_sha256": "d9c0dccfbdb15de453731a8f29ae4e03d9264d03d225e02cb1d7d41c2bcc049f",
+  "source_commit": "93716b264ad568c0a7c9c754f140f4969880d8ba",
+  "raw_upload_directory": "docs/experiments/colab-2026-10-03/raw",
+  "files": [
+    {
+      "path": "runtime-benchmark.csv",
+      "bytes": 355,
+      "sha256": "9d569000081e1c2dfc7c5f5c804c2105faee1bcaa76fcc5d02ce43738e7f796e"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-0/metadata.json",
+      "bytes": 1999,
+      "sha256": "cdfda52e149bfd198c1a51e4d9ac3f35579a15ac56bf25ed127162c64e403adc"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-0/training.csv",
+      "bytes": 153353,
+      "sha256": "51741b373d8abc02e009af47aaa8f27f522f7c15b0ae74d776735f62e61f8722"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-0/training_summary.json",
+      "bytes": 26304,
+      "sha256": "33cff93a028ebed6eada119a49ad932fd8b7330318e39e0988db3e86bf573a59"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-0/validation.csv",
+      "bytes": 29750,
+      "sha256": "cee30ce827f6bb4768a37d1b1a85a104973c9f9eb45f781773f7eca053ea1aa5"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-1/metadata.json",
+      "bytes": 1999,
+      "sha256": "927185aeb9d297e4523a8094622342a39306cc0dc199227f26d11f6c590727d9"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-1/training.csv",
+      "bytes": 153051,
+      "sha256": "447500fcc5489faa911d637098313d7cfc3c52a90dc12cbe9236e637692e3794"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-1/training_summary.json",
+      "bytes": 26253,
+      "sha256": "a133303d090b981a12be2b4fd6a8ee5145721dd526949a83763eb6b753a9da99"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-1/validation.csv",
+      "bytes": 29826,
+      "sha256": "d2e303466438450c16df6d2cd478ac4335b2505d66f917a3ce737a94084ef768"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-2/metadata.json",
+      "bytes": 1999,
+      "sha256": "87b6ed929e73a30705e985dc88224efdabe226b2e780aab7d126c1403626ba8a"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-2/training.csv",
+      "bytes": 153054,
+      "sha256": "9a5849eb9517a273ba3bc0c31482058920a8ecd25f2b1cbb55bf3f9c33392c9e"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-2/training_summary.json",
+      "bytes": 26273,
+      "sha256": "eaa07ea76d3d520d26ec632ab38b8d33f52575eef6b41d9e42371cd2b159b956"
+    },
+    {
+      "path": "validation20-v2/a2c/seed-2/validation.csv",
+      "bytes": 29814,
+      "sha256": "863c48e240f3af6a2a3400c0e9a16b7aba99d5ee200a90325abacac25242603f"
+    },
+    {
+      "path": "validation20-v2/a2c-learning.png",
+      "bytes": 265990,
+      "sha256": "cac01bd4cf44e995382cffc7174eed0d106a1174360a5f4c3aec4edae44a3c00"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-0/metadata.json",
+      "bytes": 1999,
+      "sha256": "4b42f8ce9edee70063061ed96554cc05e8e0146cb8321d6ab1b5a5063fdc0039"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-0/training.csv",
+      "bytes": 136745,
+      "sha256": "1dc3445618a9dffc2a6872eff183b853273bb026c6b65e989be16b89ed01da53"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-0/training_summary.json",
+      "bytes": 26178,
+      "sha256": "5c2713cdda7ec66278de4361566dc9a5ec74952ed7d29b17fc30a6c693469490"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-0/validation.csv",
+      "bytes": 29930,
+      "sha256": "011e1c1dcff361e789bf132759a25152cdfebe30a22aee401d52ee214460e154"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-1/metadata.json",
+      "bytes": 1999,
+      "sha256": "f7affaa2688cc4e1b1bbbb2b2d6497421ac6a78243d45cbb85afbbb5159252d9"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-1/training.csv",
+      "bytes": 137003,
+      "sha256": "c5ac7484808e9c3c87f6c2d99835229f6cfc6061f9b940945fa60387c41f571a"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-1/training_summary.json",
+      "bytes": 26153,
+      "sha256": "81bed0f918f840ade947fe1192600b7ede31b32393f15bd69fa4c37cc16875d9"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-1/validation.csv",
+      "bytes": 29820,
+      "sha256": "7450f7fddff82c24324f51abd765384bf24605606e38737a20dd900325edf196"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-2/metadata.json",
+      "bytes": 1999,
+      "sha256": "5dab66c3f9e286f23ee95d0d5200373500a813b1fb22a41b2e78bd566d158598"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-2/training.csv",
+      "bytes": 136817,
+      "sha256": "9199fa99db5236a26ccbedd7032a285e20265742a81e1ca6609e31516693ecac"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-2/training_summary.json",
+      "bytes": 26168,
+      "sha256": "9483b0f4d5e2d72b8de18618aa808220ccc7d60638320acbd3f7247da9f90c11"
+    },
+    {
+      "path": "validation20-v2/dqn/seed-2/validation.csv",
+      "bytes": 29787,
+      "sha256": "d022d429d71556e2ba6dd7073983ea852e40120c23caa80b3cc43b995c984430"
+    },
+    {
+      "path": "validation20-v2/dqn-learning.png",
+      "bytes": 260848,
+      "sha256": "19a24c9b2fa1e6a92b6d242e3d1515f3e55044a548ab5c155b35da4cb4bf2b72"
+    },
+    {
+      "path": "validation20-v2/metadata.json",
+      "bytes": 2211,
+      "sha256": "0c7e07f756334f76da5b60a1bce05c6456971fc98f4b85f88bf2046c63db074d"
+    },
+    {
+      "path": "validation20-v2/protocol.json",
+      "bytes": 1457,
+      "sha256": "2f83ee8235cc32045d55ec67fb375e27fbc3805850831cc11723a4a317321d5a"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-0/metadata.json",
+      "bytes": 2005,
+      "sha256": "bf1e48faab13a16c688cb0d36c14a575d51df84867057d50035ff65fe5928fff"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-0/training.csv",
+      "bytes": 152610,
+      "sha256": "510074a462d21e16c8185b12dc0f962bcdba71fb1054abc52925b938b0c467e3"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-0/training_summary.json",
+      "bytes": 26276,
+      "sha256": "bd654a9102f927c9d8b7cc0f5bddb141a4cb35d51aba63dabf5ce8caecafab48"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-0/validation.csv",
+      "bytes": 31607,
+      "sha256": "4edea896baabf8d3732e0b3186220a7d1d9c75a31c807103bb6cbe83256904ed"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-1/metadata.json",
+      "bytes": 2005,
+      "sha256": "84491a9749c47c1f1212c3d04777719031eccff0102c8c52d40fbd0897e50b65"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-1/training.csv",
+      "bytes": 152932,
+      "sha256": "79c199ca13ae7e566ba6af5a07f6b168d440e16037a76c1d363bb633796572ae"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-1/training_summary.json",
+      "bytes": 26269,
+      "sha256": "187d7dc39a7e39494d946a95027f4227692936f69757be89f8a3ce7c95d6707b"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-1/validation.csv",
+      "bytes": 31633,
+      "sha256": "014621ba24a7158faf8aeef80eb7cce8496838d3b54ed322d162bd5a3277e0aa"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-2/metadata.json",
+      "bytes": 2005,
+      "sha256": "3348dc72267bb23c57cc0bb89d0a20b0845a4482c556bb5c23b929935f6748ac"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-2/training.csv",
+      "bytes": 152609,
+      "sha256": "481cee879fdb95f631720b0343ee0d877bfd1c2fcbe511ff1ac307e099769697"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-2/training_summary.json",
+      "bytes": 26274,
+      "sha256": "a0367c79a897991e7f50954a9801bb9090d407adbabc6a79894c3aa5da7008fd"
+    },
+    {
+      "path": "validation20-v2/reinforce/seed-2/validation.csv",
+      "bytes": 31231,
+      "sha256": "6c06d57601ce1c9505336efe57eaf17f02cf256ccf11756ad24c31e6c5dc00a2"
+    },
+    {
+      "path": "validation20-v2/reinforce-learning.png",
+      "bytes": 224686,
+      "sha256": "778f2fd237e03013362c31a876dd22641574bf964c95754a948110382858660e"
+    },
+    {
+      "path": "validation20-v2/validation_comparison.csv",
+      "bytes": 13514,
+      "sha256": "4c868945c6b31b39f2f07674b1e6668a9e49f2c61f0f9c8416ad41b858243e94"
+    }
+  ]
+}

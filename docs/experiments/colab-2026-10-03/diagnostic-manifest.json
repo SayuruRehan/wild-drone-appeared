@@ -1,0 +1,152 @@
+{
+  "purpose": "validation diagnosis only; original deterministic protocol retained",
+  "evaluation_device": "cpu",
+  "torch": "2.5.1+cpu",
+  "sampling": "NumPy categorical, 3 sampling repetitions per actor/scenario, seed=100000+100*scenario+repetition",
+  "scenarios": [
+    5000,
+    5001,
+    5002,
+    5003,
+    5004
+  ],
+  "checkpoints": [
+    {
+      "algorithm": "dqn",
+      "training_seed": 0,
+      "file": "policy.pt",
+      "sha256": "b34a0e45a8ce86097498c474f0cbbd066980ddce907154285a2df2d5d0a3cfb1",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "dqn",
+      "training_seed": 0,
+      "file": "best_policy.pt",
+      "sha256": "7ce5c80c4d14db1ec5b6e17fd3c7c50a14a17039626b448ca385dbf52c640a74",
+      "completed_episodes": 680
+    },
+    {
+      "algorithm": "dqn",
+      "training_seed": 1,
+      "file": "best_policy.pt",
+      "sha256": "e33d7bde78371b61166c9041b7fdc43eeafb0cb3e54a3abe7bbdd35e8731fe05",
+      "completed_episodes": 760
+    },
+    {
+      "algorithm": "dqn",
+      "training_seed": 1,
+      "file": "policy.pt",
+      "sha256": "f141214ca93368208d468a65263e4423e89117be824dcc3b79089b46b1ed7c17",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "dqn",
+      "training_seed": 2,
+      "file": "best_policy.pt",
+      "sha256": "225eae806fed7ce6b5521cda2fc9572035f21cad297816ae2ee7a94b7a6e1a0c",
+      "completed_episodes": 180
+    },
+    {
+      "algorithm": "dqn",
+      "training_seed": 2,
+      "file": "policy.pt",
+      "sha256": "b2dc2aa8d35d200cf171a5ecd218937f8fae1a5b5f1874d2de563f81b799ad08",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 0,
+      "file": "best_policy.pt",
+      "sha256": "197f75bd9eb1710e3219888d8c3ff7c4e6ae392c0f2884e503bfe9fd50e131c1",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 0,
+      "file": "policy.pt",
+      "sha256": "9d139b1e7d6f663bbadf833f084563109785ce3c48f8f408b76166d69f91adaf",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 1,
+      "file": "best_policy.pt",
+      "sha256": "a4d9d7aa305c8a464b6ee4d12a332125c6be4c23bcaa3e94df38234da0301224",
+      "completed_episodes": 60
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 1,
+      "file": "policy.pt",
+      "sha256": "f189619cc84856ccaacc5b9fec9d31023448f275669fb0efb4b13df2ce93c9b0",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 2,
+      "file": "best_policy.pt",
+      "sha256": "45e7636b08c332a7733ff7faa6d41960d700cd4d87865335d87ab5c45d8ed73e",
+      "completed_episodes": 440
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 2,
+      "file": "policy.pt",
+      "sha256": "50ff6fa02e0ef0fbed0e300e7dc2f27ac285d6e4d11822404a96f6f901fa7b4d",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 0,
+      "file": "best_policy.pt",
+      "sha256": "bc3a5b9b85b3031739f2b84d33efacd2b406c68cfb566c962f5bca38a0c8addd",
+      "completed_episodes": 400
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 0,
+      "file": "policy.pt",
+      "sha256": "409cd749490bb661035a75d4736cb02d3b548662e02b73b2b56476ca456ae020",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 1,
+      "file": "best_policy.pt",
+      "sha256": "8875548c8776b9370535c76d550e6c06d2e6a24473a4c48f28c015d3b8d801be",
+      "completed_episodes": 640
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 1,
+      "file": "policy.pt",
+      "sha256": "62312e4c64f741a5d7f466130f635dc1e64eb6650abf097a4c9bfdaa752c2670",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 2,
+      "file": "policy.pt",
+      "sha256": "1065961671ba098d08031062a02229e64a1f6d4dfef4930ba58e792f541d6261",
+      "completed_episodes": 1000
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 2,
+      "file": "best_policy.pt",
+      "sha256": "315d26b3e7448098b8fc97e0318ee0552ef317bd7b183607b41d8a9db49f31a4",
+      "completed_episodes": 340
+    }
+  ],
+  "sampling_generator": "numpy.random.default_rng (PCG64)",
+  "recovery": {
+    "algorithm": "reinforce",
+    "training_seed": 1,
+    "policy_file": "policy.pt",
+    "recovered_from": "authoritative training_state.pt",
+    "training_state_sha256": "9eb058c2f3c943b5afee98ece3d2da459974123b19bcd28260130d3086b944a5",
+    "training_state_completed_episodes": 1000,
+    "stale_export_completed_episodes": 820,
+    "note": "Drive policy export was stale; final weights recovered from complete state. Other17 policy episode boundaries match expected archive boundaries."
+  }
+}

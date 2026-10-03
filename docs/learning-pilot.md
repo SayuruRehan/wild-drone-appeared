@@ -104,3 +104,10 @@ The pilots ran in a dirty implementation checkout, recorded transparently in met
 this limits exact source provenance. Later changes in this PR add source histories and
 resume preflight checks. Repeat results from the merged revision for a final study. Original
 binary replay/policy snapshots stay outside Git; the committed CSVs retain the diagnostics.
+
+## Completed Colab follow-up
+
+The owner completed the 1,000-episode, three-fit T4 study. [The follow-up report](colab1000-results.md)
+records all runs, unstable DQN values, deterministic actor repetition, categorical sampling
+diagnostics and upload destinations. None of the learned controllers beats greedy or sweep.
+This supersedes the request above to run and return that same pilot; preserve its dated data.

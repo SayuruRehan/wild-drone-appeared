@@ -69,3 +69,13 @@ Independent phase-2 review found three important failure paths, now covered by r
 - Unavailable CUDA could overwrite study records before rejection. The runner now checks device
   availability before writing. CLI comparison also preflights every requested resume, and the
   notebook consistently benchmarks/selects CPU when CUDA is unavailable.
+
+# Completed T4 follow-up
+
+The owner returned the complete 1,000-episode, three-fit archive and executed notebook.
+[Analysis](colab1000-results.md) verifies all nine completed fits and clean source metadata,
+replays the 18 Drive policy checkpoints, and diagnoses excessive DQN Q values and weak actor
+coordination. Categorical evaluation reduces repeated blocked commands but still loses the
+whole fleet. Final test seeds remain unused. Live notebook progress and interruption cleanup
+are implemented. [Dated upload paths](experiments/colab-2026-10-03/README.md) keep the owner’s
+raw results and executed notebook separate from the reusable template.
