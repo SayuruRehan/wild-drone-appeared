@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wild-drone-appeared"
+version = "0.1.0"
+description = "Fully observable wildfire inspection and drone fleet scheduling research simulator"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3", "gymnasium>=1.1,<2", "matplotlib>=3.8,<4", "pillow>=10,<13"]
+
+[project.optional-dependencies]
+rl = ["torch>=2.5,<3"]
+dev = ["pytest>=8,<10", "ruff>=0.9,<1"]
+
+[project.scripts]
+wild-drone = "wild_drone.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
