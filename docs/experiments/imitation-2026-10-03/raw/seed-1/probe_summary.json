@@ -1,0 +1,37 @@
+{
+  "method": "supervised-greedy-imitation-probe",
+  "completed_epochs": 100,
+  "updates": 5000,
+  "best_validation_joint_accuracy": 0.09875000268220901,
+  "selected_epoch": 90,
+  "probe_config": {
+    "epochs": 100,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "seed": 1,
+    "evaluation_interval": 10,
+    "max_grad_norm": 0.5
+  },
+  "final_train_metrics": {
+    "cross_entropy": 0.14171059429645538,
+    "joint_accuracy": 0.9643750190734863,
+    "live_command_accuracy": 0.9832291603088379,
+    "critical_joint_accuracy": 0.9778393507003784,
+    "critical_command_accuracy": 0.9919742941856384,
+    "critical_toward_base_command_fraction": 1.0,
+    "charging_hold_fraction": 0.9982527494430542,
+    "critical_drone_states": 623,
+    "charging_drone_states": 1717
+  },
+  "final_validation_metrics": {
+    "cross_entropy": 15.755221366882324,
+    "joint_accuracy": 0.0925000011920929,
+    "live_command_accuracy": 0.39625000953674316,
+    "critical_joint_accuracy": 0.04838709533214569,
+    "critical_command_accuracy": 0.26119402050971985,
+    "critical_toward_base_command_fraction": 0.36567163467407227,
+    "charging_hold_fraction": 0.756147563457489,
+    "critical_drone_states": 134,
+    "charging_drone_states": 488
+  }
+}

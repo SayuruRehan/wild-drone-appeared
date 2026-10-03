@@ -1,0 +1,73 @@
+{
+  "env_config": {
+    "grid_size": 20,
+    "horizon": 160,
+    "battery_capacity": 80,
+    "move_cost": 1.0,
+    "hover_cost": 0.25,
+    "recharge_rate": 5,
+    "sensor_radius": 1,
+    "inspection_deadline": 25,
+    "max_fuel": 100,
+    "initial_fires": 3,
+    "spread_probability": 0.04,
+    "wind_multiplier": 2.0,
+    "wind_change_probability": 0.06,
+    "freshness_reward": 1.0,
+    "overdue_penalty": 0.1,
+    "energy_penalty": 0.02,
+    "collision_penalty": 0.2,
+    "loss_penalty": 5.0
+  },
+  "python": "3.12.14",
+  "packages": {
+    "numpy": "2.3.5",
+    "gymnasium": "1.3.0",
+    "torch": "2.5.1+cpu",
+    "matplotlib": "3.10.8",
+    "pillow": "12.3.0"
+  },
+  "git_revision": "1770c33dfb41e121541adea7e86c4643aab07fa3",
+  "git_dirty": false,
+  "method": "supervised-greedy-imitation-probe",
+  "probe_config": {
+    "epochs": 100,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "seed": 0,
+    "evaluation_interval": 10,
+    "max_grad_norm": 0.5
+  },
+  "training_scenarios": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "validation_scenarios": [
+    5000,
+    5001,
+    5002,
+    5003,
+    5004
+  ],
+  "device": "cpu",
+  "training_data_sha256": "0ab582e4d922974b01fc2361b1bc2461ac314d11c9202d1d7c7d5bc53e51090c",
+  "validation_data_sha256": "475e8f7794bf384db44585530bad659a488daf567a559a50bffbc92c861dd8e0"
+}

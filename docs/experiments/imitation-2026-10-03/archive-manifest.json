@@ -1,0 +1,25 @@
+{
+  "sha256": {
+    "archive-analysis.py": "89916edcb110c3a0c5a1e540eb977129a7f4abf1d3796cd310d9e1fc042e149a",
+    "label-agreement.svg": "74a63fd54781566a5da480336f52d735e07099a46e0831daefab73bccba19c39",
+    "per-fit.csv": "96cc5aefcb9d72663c19d606201683148ad0a76f54653e6e19c71c7968a3355d",
+    "raw/example-trace.csv": "8d788726f74196bc93caa2894d92ff55549a5e6ba1ccdd6c6890d6b48dfbde89",
+    "raw/fits.json": "ac7e6b5fe82517eb5995c1c7a8462bb0d16e3eee45e4e67c2485f584dd5e5e0f",
+    "raw/protocol.json": "01a88f3c98324d102a5a75662a6e25795e0abe1b68055c3ff485c03fdd871481",
+    "raw/seed-0/label_metrics.csv": "65e104531710fbf6f8014eee6829e07df5231b0ec1b8486d3847f8fa22ba57b9",
+    "raw/seed-0/metadata.json": "9f579cfb5b4da853e666da0d45ad43183ff780048c5a7747cc743318495cef65",
+    "raw/seed-0/probe_manifest.json": "7e0847075cf13551d95858ce3da1c878f94d5da7f73b815fbbbf2e06d7f964bd",
+    "raw/seed-0/probe_summary.json": "1e741e2717fa7912a68d4ca9f1e25051303a24bd97f21cf48b453fe7a5db65e1",
+    "raw/seed-1/label_metrics.csv": "95e8a766376701a346132629f7375aace19545f25de0cf4e68aaaa72529784f7",
+    "raw/seed-1/metadata.json": "4f91ab6752bc7469b5692c0974d2cee997e6859dbd890207738a18f5f95dc933",
+    "raw/seed-1/probe_manifest.json": "05b5cf8cc620faaa64a806030d79af43f3632b3301deffdd35ecc866977b5ccf",
+    "raw/seed-1/probe_summary.json": "dbe04e51d6f99b8aeada8c3d251cf956eedcbd99fe024bee044df11ceec531b6",
+    "raw/seed-2/label_metrics.csv": "0cb81d80ab669a994373deb734ddcbaff6ab0edd24e9e4abcb33f2b6bbec9225",
+    "raw/seed-2/metadata.json": "bdc84a66793357b6878fa1fe9392cdb079f2e4bcc26cfcbbf5509187c004994e",
+    "raw/seed-2/probe_manifest.json": "c693239610f28b597a5728d77a74810f6c8c2e6b04d7de8ccb964f84dd62872b",
+    "raw/seed-2/probe_summary.json": "07889afe1393fb879a9a1fe0838b6f714048784260d815a049a8fa5d85edc598",
+    "raw/validation_missions.csv": "0a071c2e7b04af85f6e4c0986c6f16117f727cca1ab2d26484831a46cd4d904c",
+    "return-energy.svg": "e8b6884ccbe990944aa72713452614b432e22e1b1ef527875d83f2241f6333f3",
+    "summary.json": "fccd850db197f1d1d21ef4a33e8cd2df6369d620c5655bd9610e4c551efbc2e7"
+  }
+}
