@@ -43,3 +43,29 @@ not learning or superiority claims.
 
 Validation commands and final results are recorded in the pull request. Repeat them after
 changes; do not reuse the original smoke CSV as evidence for a modified simulator.
+
+# Phase 2: training runtime and validation pilot
+
+Foundation PR #1 was reviewed, passed CI and merged. Version 2 now supports CPU/CUDA/auto,
+atomic episode-boundary state with Adam/target/replay/RNG restoration, strict resume checks,
+validation checkpoint selection, diagnostic CSVs, learning curves, ablatable spatial location
+maps and a Monte Carlo baseline for REINFORCE. A private-repo-compatible Colab notebook
+includes a bounded CPU/GPU benchmark, Drive persistence, automatic resume, optional 40x40
+training and a downloadable archive. It does not consume final test scenarios during tuning.
+
+Original and revised 80-episode pilots and a revised 200-episode study across three independent
+training seeds are recorded in [the pilot report](learning-pilot.md). None outperformed greedy
+on validation. Best-checkpoint scores are selection-biased; convergence, final generalisation,
+GPU throughput and research novelty are not demonstrated. CUDA is unavailable locally and
+must be verified by the notebook. Remaining research includes validation-only tuning/ablations,
+a frozen repeated held-out study and simulator sensitivity/calibration.
+
+Independent phase-2 review found three important failure paths, now covered by regressions:
+
+- Inherited Git credential helpers could persist a hidden token. Clone now clears helpers; a
+  local authenticated Git fixture confirms fake credentials are not stored.
+- An interrupted first export could leave a policy without resume state. Authoritative state
+  now commits before regenerable exports; interruption at every export restarts/resumes exactly.
+- Unavailable CUDA could overwrite study records before rejection. The runner now checks device
+  availability before writing. CLI comparison also preflights every requested resume, and the
+  notebook consistently benchmarks/selects CPU when CUDA is unavailable.

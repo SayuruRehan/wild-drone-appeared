@@ -67,3 +67,17 @@ def test_invalid_training_settings_fail_early():
         TrainConfig(episodes=0)
     with pytest.raises(ValueError):
         TrainConfig(gamma=2)
+
+
+def test_reinforce_baseline_uses_full_monte_carlo_targets_and_detached_advantage():
+    from wild_drone.learning import monte_carlo_terms
+    logs = torch.tensor([-1., -2.], requires_grad=True)
+    values = torch.tensor([9., 8.], requires_grad=True)
+    actor, critic = monte_carlo_terms(logs, [1., 2.], 0.5, horizon=4, values=values)
+    assert actor.item() == pytest.approx(-3.25)
+    assert critic.item() == pytest.approx(42.5)
+    actor.backward()
+    torch.testing.assert_close(logs.grad, torch.tensor([1.75, 0.75]))
+    assert values.grad is None
+    critic.backward()
+    torch.testing.assert_close(values.grad, torch.tensor([7., 6.]))

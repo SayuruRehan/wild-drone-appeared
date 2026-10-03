@@ -8,6 +8,7 @@ from pathlib import Path
 from wild_drone.baselines import make_policy
 from wild_drone.config import EnvConfig
 from wild_drone.experiments import (
+    plot_learning,
     plot_results,
     run_episode,
     validate_seed_split,
@@ -36,19 +37,33 @@ def parser():
             cmd.add_argument('--policy', choices=['random', 'sweep', 'greedy', 'planner'],
                              default='greedy')
             cmd.add_argument('--checkpoint', type=Path)
+            cmd.add_argument('--device', choices=['cpu', 'cuda', 'auto'], default='cpu')
         if name in ('train', 'compare'):
             cmd.add_argument('--episodes', type=int)
             cmd.add_argument('--warmup-steps', type=int)
             cmd.add_argument('--batch-size', type=int)
             cmd.add_argument('--train-scenario-start', type=int)
+            cmd.add_argument('--device', choices=['cpu', 'cuda', 'auto'])
+            cmd.add_argument('--checkpoint-interval', type=int)
+            cmd.add_argument('--progress-interval', type=int)
+            cmd.add_argument('--validation-interval', type=int)
+            cmd.add_argument('--validation-seeds', nargs='+', type=int)
+            cmd.add_argument('--spatial-encoding', action=argparse.BooleanOptionalAction)
+            cmd.add_argument('--monte-carlo-baseline', action=argparse.BooleanOptionalAction)
         if name == 'train':
             cmd.add_argument('--algorithm', choices=['dqn', 'reinforce', 'a2c'], required=True)
             cmd.add_argument('--seed', type=int, default=0)
+            cmd.add_argument('--resume', type=Path)
         if name == 'compare':
             cmd.add_argument('--training-seeds', nargs='+', type=int, default=[0, 1, 2])
+            cmd.add_argument('--resume-auto', action='store_true')
+            cmd.add_argument('--checkpoint-selection', choices=['final', 'best'], default='final')
     plot = sub.add_parser('plot')
     plot.add_argument('--csv', type=Path, required=True)
     plot.add_argument('--out', type=Path, default=Path('runs/comparison.png'))
+    curve = sub.add_parser('plot-learning')
+    curve.add_argument('--csv', type=Path, nargs='+', required=True)
+    curve.add_argument('--out', type=Path, default=Path('runs/learning.png'))
     return root
 
 
@@ -57,6 +72,10 @@ def main(argv=None):
     if args.command == 'plot':
         plot_results(args.csv, args.out)
         print(f'Plot: {args.out}')
+        return
+    if args.command == 'plot-learning':
+        plot_learning(args.csv, args.out)
+        print(f'Learning curves: {args.out}')
         return
     raw = json.loads(args.config.read_text()) if args.config else {}
     config = EnvConfig(**raw.get('environment', {}))
@@ -69,7 +88,7 @@ def main(argv=None):
     if args.command in ('demo', 'evaluate'):
         if args.checkpoint:
             from wild_drone.learning import load_policy
-            policy = load_policy(args.checkpoint)
+            policy = load_policy(args.checkpoint, device=args.device)
             if not args.config and args.grid is None and args.horizon is None:
                 config = policy.env_config
             if config != policy.env_config:
@@ -93,24 +112,49 @@ def main(argv=None):
                        planner=planner)
         print(f'{args.command}: {len(rows)} episodes -> {args.out}')
         return
-    from wild_drone.learning import TrainConfig, train
+    from wild_drone.learning import TrainConfig, resolve_device, train
     settings = TrainConfig(**raw.get('training', {}))
     for option, field in [('episodes', 'episodes'), ('warmup_steps', 'warmup_steps'),
                           ('batch_size', 'batch_size'),
-                          ('train_scenario_start', 'scenario_seed_start')]:
+                          ('train_scenario_start', 'scenario_seed_start'),
+                          ('device', 'device'), ('checkpoint_interval', 'checkpoint_interval'),
+                          ('progress_interval', 'progress_interval'),
+                          ('validation_interval', 'validation_interval'),
+                          ('validation_seeds', 'validation_seeds'),
+                          ('spatial_encoding', 'spatial_encoding'),
+                          ('monte_carlo_baseline', 'monte_carlo_baseline')]:
         if getattr(args, option) is not None:
             settings = replace(settings, **{field: getattr(args, option)})
     if args.command == 'train':
         settings = replace(settings, seed=args.seed)
-        result = train(args.algorithm, config, settings, args.out)
-        write_metadata(args.out, config, command='train', algorithm=args.algorithm,
-                       train_config=result['train_config'])
+        result = train(args.algorithm, config, settings, args.out, resume_from=args.resume)
         print(f'{args.algorithm}: {result["steps"]} steps, {result["updates"]} updates -> '
               f'{args.out}')
         return
     validate_seed_split(settings.scenario_seed_start, settings.episodes, args.scenario_seeds)
+    validate_seed_split(settings.scenario_seed_start, settings.episodes, settings.validation_seeds)
+    if set(settings.validation_seeds) & set(args.scenario_seeds):
+        raise ValueError('comparison test seeds overlap validation checkpoint-selection seeds')
+    if args.checkpoint_selection == 'best' and not settings.validation_seeds:
+        raise ValueError('best checkpoint selection requires validation seeds')
     if len(set(args.training_seeds)) != len(args.training_seeds):
         raise ValueError('training seeds must be distinct')
+    import torch
+
+    from wild_drone.training_io import validate_resume
+    resolve_device(settings.device)
+    for algorithm in ('dqn', 'reinforce', 'a2c'):
+        for seed in args.training_seeds:
+            current = replace(settings, seed=seed)
+            out = args.out/algorithm/f'seed-{seed}'
+            state = out/'training_state.pt'
+            if state.exists():
+                if not args.resume_auto:
+                    raise ValueError('existing training state: use --resume-auto or another output')
+                saved = torch.load(state, map_location='cpu', weights_only=True)
+                validate_resume(saved, algorithm, config, current)
+            elif (out/'policy.pt').exists():
+                raise ValueError('existing policy has no resume state: use another output')
     rows = []
     for name in ('random', 'sweep', 'greedy', 'planner'):
         for scenario in args.scenario_seeds:
@@ -120,20 +164,21 @@ def main(argv=None):
         for seed in args.training_seeds:
             out = args.out/algorithm/f'seed-{seed}'
             current = replace(settings, seed=seed)
-            result = train(algorithm, config, current, out)
+            state = out/'training_state.pt'
+            result = train(algorithm, config, current, out,
+                           resume_from=state if args.resume_auto and state.exists() else None)
             from wild_drone.learning import load_policy
-            policy = load_policy(out/'policy.pt')
+            file = 'best_policy.pt' if args.checkpoint_selection == 'best' else 'policy.pt'
+            policy = load_policy(out/file, device=current.device)
             for scenario in args.scenario_seeds:
                 rows.append(run_episode(config, policy, scenario, name=algorithm,
                                         training_seed=seed))
-            write_metadata(out, config, command='train', algorithm=algorithm,
-                           train_config=result['train_config'])
             print(f'{algorithm} seed {seed}: {result["updates"]} updates')
     write_rows(args.out/'comparison.csv', rows)
     write_metadata(args.out, config, command='compare', training_seeds=args.training_seeds,
-                   scenario_seeds=args.scenario_seeds, train_config=raw.get('training', {}) |
-                   {k: getattr(settings, k) for k in settings.__dataclass_fields__},
-                   planner=planner, policy_seed=args.policy_seed)
+                   scenario_seeds=args.scenario_seeds, train_config=settings.to_dict(),
+                   planner=planner, policy_seed=args.policy_seed,
+                   checkpoint_selection=args.checkpoint_selection)
     print(f'Comparison: {len(rows)} rows -> {args.out}')
 
 

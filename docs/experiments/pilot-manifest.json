@@ -1,0 +1,430 @@
+{
+  "purpose": "validation diagnostics, not final scientific conclusions",
+  "runtime": {
+    "python": "3.12.14",
+    "torch": "2.5.1+cpu",
+    "device": "CPU"
+  },
+  "original80_source": "Foundation PR #1 content (merged as 3328d984be5eb6ea6a8a65ee60ac34bd851dcc8e)",
+  "revised_source": "Version-2 learning code in this PR; runs executed in a dirty implementation checkout. Later edits add provenance/preflight validation and extract the equivalent Monte Carlo objective without changing simulator or numerical training updates.",
+  "original80_budget": {
+    "episodes": 80,
+    "training_seeds": [
+      0
+    ],
+    "spatial_encoding": false,
+    "monte_carlo_baseline": false
+  },
+  "revised80_budget": {
+    "episodes": 80,
+    "training_seeds": [
+      0
+    ],
+    "spatial_encoding": true,
+    "monte_carlo_baseline": true,
+    "validation_interval": 20
+  },
+  "repeated200_runs": [
+    {
+      "algorithm": "dqn",
+      "training_seed": 0,
+      "completed_episodes": 200,
+      "steps": 21196,
+      "updates": 21069,
+      "elapsed_seconds": 107.75125696499981,
+      "model_config": {
+        "critic": false,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 0,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    },
+    {
+      "algorithm": "dqn",
+      "training_seed": 1,
+      "completed_episodes": 200,
+      "steps": 21171,
+      "updates": 21044,
+      "elapsed_seconds": 106.78390098699992,
+      "model_config": {
+        "critic": false,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 1,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    },
+    {
+      "algorithm": "dqn",
+      "training_seed": 2,
+      "completed_episodes": 200,
+      "steps": 20921,
+      "updates": 20794,
+      "elapsed_seconds": 108.29848329299966,
+      "model_config": {
+        "critic": false,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 2,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 0,
+      "completed_episodes": 200,
+      "steps": 20494,
+      "updates": 200,
+      "elapsed_seconds": 27.91084412600003,
+      "model_config": {
+        "critic": true,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 0,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 1,
+      "completed_episodes": 200,
+      "steps": 22959,
+      "updates": 200,
+      "elapsed_seconds": 30.824008011999922,
+      "model_config": {
+        "critic": true,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 1,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    },
+    {
+      "algorithm": "reinforce",
+      "training_seed": 2,
+      "completed_episodes": 200,
+      "steps": 22285,
+      "updates": 200,
+      "elapsed_seconds": 30.76118514599966,
+      "model_config": {
+        "critic": true,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 2,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 0,
+      "completed_episodes": 200,
+      "steps": 19768,
+      "updates": 1333,
+      "elapsed_seconds": 27.20623677599997,
+      "model_config": {
+        "critic": true,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 0,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 1,
+      "completed_episodes": 200,
+      "steps": 19551,
+      "updates": 1312,
+      "elapsed_seconds": 27.931728779999958,
+      "model_config": {
+        "critic": true,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 1,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    },
+    {
+      "algorithm": "a2c",
+      "training_seed": 2,
+      "completed_episodes": 200,
+      "steps": 19832,
+      "updates": 1352,
+      "elapsed_seconds": 26.72970922200011,
+      "model_config": {
+        "critic": true,
+        "spatial_encoding": true
+      },
+      "train_config": {
+        "episodes": 200,
+        "seed": 2,
+        "scenario_seed_start": 0,
+        "learning_rate": 0.0003,
+        "gamma": 0.99,
+        "batch_size": 32,
+        "replay_size": 2000,
+        "warmup_steps": 128,
+        "target_update_steps": 100,
+        "epsilon_start": 1.0,
+        "epsilon_end": 0.05,
+        "epsilon_decay_steps": 10000,
+        "n_steps": 16,
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "max_grad_norm": 0.5,
+        "device": "cpu",
+        "spatial_encoding": true,
+        "monte_carlo_baseline": true,
+        "checkpoint_interval": 20,
+        "progress_interval": 20,
+        "validation_interval": 20,
+        "validation_seeds": [
+          5000,
+          5001,
+          5002,
+          5003,
+          5004
+        ]
+      }
+    }
+  ],
+  "validation_scenarios": [
+    5000,
+    5001,
+    5002,
+    5003,
+    5004
+  ],
+  "final_scenarios_20x20": "10000+ not consumed; no final claim",
+  "planner": {
+    "horizon": 3,
+    "candidates": 8,
+    "samples": 2
+  },
+  "analysis_notes": "Best-validation scores are selection-biased; fitted-seed SD is descriptive with n=3, not a confidence interval. Baseline SD is scenario SD with n=5; units differ."
+}

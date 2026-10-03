@@ -105,3 +105,20 @@ fuel exhaustion, state-space membership, episode endings and immutable observati
 Run Gymnasium's checker, short baseline episodes and learning updates for all three RL methods.
 Render a labelled animation; inspect it visually. Keep generated pilot outputs under ignored
 `runs/`; configuration and reproduction commands are versioned.
+
+## Version-2 learning runtime
+
+The simulator observation and physical/reward semantics remain unchanged. Neural input may
+now derive three live-drone location maps and one base map from observed coordinates, alongside
+the original five maps and 24-value vector. This is an ablatable feature transform using existing
+full information. REINFORCE may fit a shared-encoder value baseline to full episode Monte Carlo
+returns; its actor uses `return - detached value` and still has no TD bootstrap. A2C retains
+n-step bootstrapping and DQN retains replay/target TD updates. Checkpoints explicitly identify
+these architecture choices; version-1 policy files load with the old five-channel network.
+
+Training state is saved at an episode boundary with optimizer, DQN target/replay, CPU/CUDA and
+sampling RNGs, completed rows, validation selection and source/runtime history. The atomic
+state is committed before regenerable exports so an interrupted first save remains recoverable. Cross-device or
+cross-version bitwise equality is not promised. A no-op resume regenerates exports; a disconnect
+may lose work since the last boundary. Checkpoint selection uses declared validation scenarios,
+with final and selected models stored separately and final-test scenarios kept outside selection.

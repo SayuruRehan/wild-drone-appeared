@@ -38,6 +38,7 @@ def write_metadata(out, env_config, **details):
     metadata = {'env_config': env_config.to_dict(), 'python': platform.python_version(),
                 'packages': versions, 'git_revision': revision, 'git_dirty': dirty, **details}
     (path/'metadata.json').write_text(json.dumps(metadata, indent=2)+'\n')
+    return metadata
 
 
 def write_rows(path, rows):
@@ -118,6 +119,49 @@ def plot_results(csv_path, out):
         ax.grid(axis='y', alpha=0.2)
         ax.set_axisbelow(True)
     fig.suptitle('Pilot comparison — mean ± sample SD; see CSV for seeds and budgets')
+    path = Path(out)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+
+
+def plot_learning(csv_paths, out):
+    """Per-run curves; validation mean is over scenarios, not independent fitted models."""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4), layout='constrained')
+    for index, csv_path in enumerate(csv_paths):
+        path = Path(csv_path)
+        with path.open() as f:
+            rows = list(csv.DictReader(f))
+        if not rows:
+            raise ValueError(f'no training rows in {path}')
+        episodes = [int(r['episode']) for r in rows]
+        returns = [float(r['return']) for r in rows]
+        label = path.parent.name
+        color = f'C{index % 10}'
+        axes[0].plot(episodes, returns, alpha=0.2, color=color)
+        window = min(10, len(rows))
+        axes[0].plot(episodes[window-1:], np.convolve(returns, np.ones(window)/window,
+                                                   mode='valid'), label=label, color=color)
+        validation = path.parent/'validation.csv'
+        if validation.exists():
+            with validation.open() as f:
+                records = list(csv.DictReader(f))
+            checkpoints = sorted({int(r['episode']) for r in records})
+            means = [np.mean([float(r['return']) for r in records if int(r['episode']) == ep])
+                     for ep in checkpoints]
+            axes[1].plot(checkpoints, means, marker='o', label=label, color=color)
+    axes[0].set_title('Training return (raw and up to 10-episode moving mean)', fontsize=11)
+    axes[1].set_title('Deterministic validation return (scenario mean)', fontsize=11)
+    for ax in axes:
+        ax.set_xlabel('Completed episodes')
+        ax.set_ylabel('Undiscounted mission return')
+        ax.grid(alpha=0.2)
+        if ax.lines:
+            ax.legend(fontsize=8)
     path = Path(out)
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=160)

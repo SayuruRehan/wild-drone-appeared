@@ -7,9 +7,10 @@ fuel, terrain, wind, inspection-age, drone and charging state is available. Visi
 fresh close-range inspections of known hazards; the task is sustained inspection and
 recharge coordination, rather than discovering an unknown fire map.
 
-This is the starting implementation of the approved Group 7 project. Simulator mechanics,
-baseline comparisons and all three RL training pipelines are implemented. Short runs are
-integration checks, **not evidence that the agents have learned or outperform planners**.
+This implements the approved Group 7 project, with resumable CPU/CUDA training and a Colab
+experiment workflow. Simulator mechanics, baseline comparisons and all three RL pipelines
+are implemented. Validation pilots remain weaker than the greedy controller; **successful
+learning and an RL advantage have not been demonstrated**.
 Grid sizes and every fire/energy parameter are illustrative, uncalibrated simulation settings.
 
 ![40x40 simulator: true fire state, inspection freshness and drone batteries](docs/assets/simulator-preview.png)
@@ -36,8 +37,9 @@ slower; use a shorter horizon for a quick check.
 
 Install PyTorch first (the following CPU command is sufficient for the starting experiments),
 then install the RL extra. A compatible GPU build can be selected from the
-[official PyTorch installer](https://pytorch.org/get-started/locally/); this starting trainer
-executes on CPU.
+[official PyTorch installer](https://pytorch.org/get-started/locally/). Use `--device cpu`,
+`--device cuda` or `--device auto`. The NumPy simulator runs on CPU; benchmark the training
+runtime before assuming GPU acceleration helps this small network.
 
 ```bash
 python -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
@@ -54,13 +56,17 @@ transfer across grid sizes are future experiment work, not silently supported ev
 | Method | Family | Implemented update |
 |---|---|---|
 | DQN | Deep value-based | Replay, target network, joint-action TD values |
-| REINFORCE | Monte Carlo policy gradient | Complete episode returns, categorical policy |
+| REINFORCE | Monte Carlo policy gradient | Complete episode returns, learned Monte Carlo baseline |
 | A2C | Actor–critic | n-step bootstrap, shared actor/value encoder |
 
 The A2C implementation is a synchronous, single-environment n-step advantage actor–critic.
 It does not use asynchronous workers. All three are model-free; actor–critic also belongs
 to the broad policy-gradient family. Full-grid convolutional input and 125 joint actions are
-shared across methods. There is no learned-policy action mask or safety shield.
+shared across methods. Version 2 adds three live-drone location channels and one base channel
+to the five environmental maps, all derived from the existing complete state. REINFORCE uses
+an optional value baseline trained on full Monte Carlo returns, without TD bootstrap. Disable
+these choices with `--no-spatial-encoding` and `--no-monte-carlo-baseline` for ablations.
+There is no learned-policy action mask or safety shield.
 REINFORCE weights reward-to-go by absolute-time discount and uses a fixed mission-horizon
 normaliser; A2C also uses absolute-time weights with its rollout-length normaliser. The
 configurable entropy term is a local policy regulariser, separate from mission reward.
@@ -84,6 +90,48 @@ convergence threshold. Tune budgets and hyperparameters using separate validatio
 (e.g. 5000–5999), freeze the choices, then use final test seeds (e.g. 10000+). The CLI rejects
 evaluation seeds that overlap training scenarios; it cannot detect manual reuse of test results
 for tuning. No long experiment is launched automatically by installing or running tests.
+
+## Resumable validation and Colab
+
+Open [the Colab experiment notebook](notebooks/colab_experiments.ipynb) in Colab (File → Open
+notebook → GitHub, or download and upload it). Select an A100 runtime and run sections 1–6,
+then section 8. The notebook handles the private repo with transient hidden credential entry,
+benchmarks CPU/CUDA, saves to Drive and runs 1,000 episodes per method for three training seeds.
+The optional 40x40 run is disabled until the 20x20 results have been assessed. Send the downloaded
+`wild-drone-results.zip` for analysis; checkpoints remain in Drive by default.
+
+A bounded local repeated-seed validation study:
+
+```bash
+python scripts/run_validation_pilot.py --config configs/development.json --episodes 200 --training-seeds 0 1 2 --device cpu --out runs/validation20
+```
+
+Rerun the same command to resume. To extend it, increase `--episodes` (the **total** budget).
+The script evaluates final and best-validation policies on seeds 5000–5004, with learning
+curves and per-scenario CSVs. Its best score is selection-biased validation evidence, not a
+held-out final result. See [the pilot report](docs/learning-pilot.md) for observed failures.
+
+For one method:
+
+```bash
+python -m wild_drone train --config configs/development.json --algorithm a2c --episodes 200 --validation-seeds 5000 5001 5002 5003 5004 --checkpoint-interval 20 --validation-interval 20 --device auto --out runs/a2c
+python -m wild_drone train --config configs/development.json --algorithm a2c --episodes 400 --validation-seeds 5000 5001 5002 5003 5004 --checkpoint-interval 20 --validation-interval 20 --device auto --resume runs/a2c/training_state.pt --out runs/a2c
+python -m wild_drone plot-learning --csv runs/a2c/training.csv --out runs/a2c/learning.png
+```
+
+`training_state.pt` restores model/target, Adam, DQN replay, RNGs and metrics at a complete
+episode boundary. Files are replaced atomically; the authoritative state is committed before
+regenerable exports, so an interrupted first save can restart or resume safely. Work since the last checkpoint
+may be lost. Changing learning or environment settings requires a new output folder; resume
+allows total episodes, device, checkpoint frequency and progress frequency to change.
+Do not run two writers into the same folder. CPU resumption is tested against uninterrupted
+training; equality across devices or PyTorch versions is not promised.
+
+`policy.pt` is the final policy; `best_policy.pt` is selected by maximum mean validation return.
+Keep both. Original version-1 policies remain loadable, but their files do not contain enough
+state to resume training. Source/runtime histories are recorded on resume. Only after freezing
+the validation protocol, use `compare --checkpoint-selection best --validation-seeds ...`
+on separate final scenarios; `compare` rejects training/validation/test overlaps.
 
 ## Baselines and fair evaluation
 
@@ -126,7 +174,7 @@ runs/              ignored local GIFs, CSVs, metadata and checkpoints
 
 ```bash
 python -m pytest -q
-python -m ruff check src tests
+python -m ruff check src tests scripts
 ```
 
 See [design](docs/design.md) for transition order, observation schema and reward semantics,
