@@ -1,0 +1,85 @@
+{
+  "env_config": {
+    "grid_size": 20,
+    "horizon": 160,
+    "battery_capacity": 80,
+    "move_cost": 1.0,
+    "hover_cost": 0.25,
+    "recharge_rate": 5,
+    "sensor_radius": 1,
+    "inspection_deadline": 25,
+    "max_fuel": 100,
+    "initial_fires": 3,
+    "spread_probability": 0.04,
+    "wind_multiplier": 2.0,
+    "wind_change_probability": 0.06,
+    "freshness_reward": 1.0,
+    "overdue_penalty": 0.1,
+    "energy_penalty": 0.02,
+    "collision_penalty": 0.2,
+    "loss_penalty": 5.0
+  },
+  "python": "3.13.15",
+  "packages": {
+    "numpy": "2.1.3",
+    "gymnasium": "1.3.0",
+    "torch": "2.11.0+cu130",
+    "matplotlib": "3.10.0",
+    "pillow": "11.3.0"
+  },
+  "git_revision": "93716b264ad568c0a7c9c754f140f4969880d8ba",
+  "git_dirty": false,
+  "command": "train",
+  "algorithm": "a2c",
+  "train_config": {
+    "episodes": 1000,
+    "seed": 0,
+    "scenario_seed_start": 0,
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "batch_size": 32,
+    "replay_size": 2000,
+    "warmup_steps": 128,
+    "target_update_steps": 100,
+    "epsilon_start": 1.0,
+    "epsilon_end": 0.05,
+    "epsilon_decay_steps": 10000,
+    "n_steps": 16,
+    "entropy_weight": 0.01,
+    "value_weight": 0.5,
+    "max_grad_norm": 0.5,
+    "device": "cuda",
+    "spatial_encoding": true,
+    "monte_carlo_baseline": true,
+    "checkpoint_interval": 20,
+    "progress_interval": 20,
+    "validation_interval": 20,
+    "validation_seeds": [
+      5000,
+      5001,
+      5002,
+      5003,
+      5004
+    ]
+  },
+  "device": "cuda",
+  "torch_device_name": "Tesla T4",
+  "resume_from": null,
+  "source_history": [
+    {
+      "git_revision": "93716b264ad568c0a7c9c754f140f4969880d8ba",
+      "git_dirty": false,
+      "python": "3.13.15",
+      "packages": {
+        "numpy": "2.1.3",
+        "gymnasium": "1.3.0",
+        "torch": "2.11.0+cu130",
+        "matplotlib": "3.10.0",
+        "pillow": "11.3.0"
+      },
+      "device": "cuda",
+      "torch_device_name": "Tesla T4",
+      "resumed_episode": 0
+    }
+  ]
+}
