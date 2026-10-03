@@ -78,8 +78,8 @@
       "algorithm": "reinforce",
       "training_seed": 1,
       "file": "policy.pt",
-      "sha256": "65ab0628f2d955f5ae7deff778894585dfa32d986a3f3d105d3187e37f906e05",
-      "completed_episodes": 820
+      "sha256": "f189619cc84856ccaacc5b9fec9d31023448f275669fb0efb4b13df2ce93c9b0",
+      "completed_episodes": 1000
     },
     {
       "algorithm": "reinforce",
@@ -137,5 +137,16 @@
       "sha256": "315d26b3e7448098b8fc97e0318ee0552ef317bd7b183607b41d8a9db49f31a4",
       "completed_episodes": 340
     }
-  ]
+  ],
+  "sampling_generator": "numpy.random.default_rng (PCG64)",
+  "recovery": {
+    "algorithm": "reinforce",
+    "training_seed": 1,
+    "policy_file": "policy.pt",
+    "recovered_from": "authoritative training_state.pt",
+    "training_state_sha256": "9eb058c2f3c943b5afee98ece3d2da459974123b19bcd28260130d3086b944a5",
+    "training_state_completed_episodes": 1000,
+    "stale_export_completed_episodes": 820,
+    "note": "Drive policy export was stale; final weights recovered from complete state. Other17 policy episode boundaries match expected archive boundaries."
+  }
 }

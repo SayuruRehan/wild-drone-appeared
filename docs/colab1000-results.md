@@ -67,12 +67,19 @@ while inspecting very little. Their low loss count is not evidence of effective 
 
 ## Checkpoint diagnosis
 
-The 18 final/selected policy files were read from the matching Drive seed folders and loaded
-with `weights_only=True`. Each file's saved config, training seed and source history matched
-the archive. Checkpoint SHA-256 and selected episode boundaries are retained in
+Checkpoint configurations, seeds and source histories were checked against the archive
+and loaded with `weights_only=True`. One Drive export was stale: REINFORCE seed 1
+`policy.pt` declared episode 820. Its authoritative `training_state.pt` contains all 1,000
+completed rows and the final weights; the final policy was recovered from that state before
+recomputing diagnostics. All other 17 policy boundaries match their expected final or selected
+episodes. The cause of the stale external Drive export is not established here; retain the
+original archive unchanged. Checkpoint SHA-256 and selected episode boundaries are retained in
 [the diagnostic manifest](experiments/colab-2026-10-03/diagnostic-manifest.json).
-CPU replay using PyTorch 2.5.1 reproduced all 90 deterministic RL returns exactly, despite
-the runtime difference. This replay is validation diagnosis, not a new independent fit.
+CPU replay using PyTorch 2.5.1, including the recovered final weights, reproduced all 90
+deterministic RL returns exactly. The stale export also gave the same argmax score, so score
+agreement alone was insufficient to verify checkpoint identity. The recovery and original
+state hash are recorded in the diagnostic manifest. This replay is validation diagnosis,
+not a new independent fit.
 
 **DQN value instability:** the maximum predicted Q over each selected policy's validation
 trajectories was 73,980.56, 7,916.49 and 3,422.39 for seeds 0, 1, 2. Final maxima were
@@ -92,15 +99,16 @@ commands do not imply that the stochastic distribution has concentrated on one a
 Final REINFORCE seed 1 and A2C seed 1 each accumulate 320 blocked proposals per mission.
 
 As a separately declared diagnostic, evaluate the **same actor checkpoints** by categorical
-sampling, using three fixed action-sampling repetitions per scenario, without training or
-changing reward/safety rules. NumPy categorical sampling uses seed
+sampling with `numpy.random.default_rng` (PCG64), using three fixed action-sampling
+repetitions per scenario, without training or changing reward/safety rules.
+The CSV records both repetition and actual RNG seed. NumPy categorical sampling uses seed
 `100000 + 100*scenario_seed + repetition`. Average repetitions and scenarios within each fit
 before computing SD across fits. This does not replace the original deterministic comparison.
 
 | Actor checkpoint | Sampled return mean ± fit SD | Freshness | Drone losses |
 |---|---:|---:|---:|
 | selected REINFORCE | −28.548 ± 0.162 | 0.093 | 3.00 |
-| final REINFORCE | −28.472 ± 0.076 | 0.096 | 3.00 |
+| final REINFORCE | −28.481 ± 0.072 | 0.094 | 3.00 |
 | selected A2C | −28.810 ± 0.169 | 0.085 | 3.00 |
 | final A2C | −29.020 ± 0.235 | 0.085 | 3.00 |
 
