@@ -43,6 +43,7 @@ def parser():
             cmd.add_argument('--warmup-steps', type=int)
             cmd.add_argument('--batch-size', type=int)
             cmd.add_argument('--learning-rate', type=float)
+            cmd.add_argument('--epsilon-decay-steps', type=int)
             cmd.add_argument('--double-dqn', action=argparse.BooleanOptionalAction)
             cmd.add_argument('--train-scenario-start', type=int)
             cmd.add_argument('--device', choices=['cpu', 'cuda', 'auto'])
@@ -119,6 +120,7 @@ def main(argv=None):
     for option, field in [('episodes', 'episodes'), ('warmup_steps', 'warmup_steps'),
                           ('batch_size', 'batch_size'),
                           ('learning_rate', 'learning_rate'), ('double_dqn', 'double_dqn'),
+                          ('epsilon_decay_steps', 'epsilon_decay_steps'),
                           ('train_scenario_start', 'scenario_seed_start'),
                           ('device', 'device'), ('checkpoint_interval', 'checkpoint_interval'),
                           ('progress_interval', 'progress_interval'),

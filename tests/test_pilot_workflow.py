@@ -49,16 +49,20 @@ def test_dqn_only_variant_records_settings_and_rejects_changed_target(tmp_path):
     out = tmp_path/'double'
     args = ['--config', str(config), '--episodes', '1', '--training-seeds', '0',
             '--validation-seeds', '5000', '--algorithms', 'dqn', '--learning-rate', '0.00003',
-            '--out', str(out)]
+            '--epsilon-decay-steps', '40', '--out', str(out)]
     main = runner()
     main(args+['--double-dqn'])
     state = torch.load(out/'dqn'/'seed-0'/'training_state.pt', weights_only=True)
     assert state['train_config']['double_dqn']
     assert state['train_config']['learning_rate'] == 0.00003
+    assert state['train_config']['epsilon_decay_steps'] == 40
     assert not (out/'reinforce').exists() and not (out/'a2c').exists()
     before = (out/'protocol.json').read_bytes()
     with pytest.raises(ValueError, match='double_dqn'):
         main(args+['--no-double-dqn'])
+    assert (out/'protocol.json').read_bytes() == before
+    with pytest.raises(ValueError, match='epsilon_decay_steps'):
+        main(args+['--double-dqn', '--epsilon-decay-steps', '80'])
     assert (out/'protocol.json').read_bytes() == before
 
 

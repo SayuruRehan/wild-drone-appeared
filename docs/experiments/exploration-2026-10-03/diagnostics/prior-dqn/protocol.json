@@ -1,0 +1,131 @@
+{
+  "validation_scenarios": [
+    5000,
+    5001,
+    5002,
+    5003,
+    5004
+  ],
+  "environment": {
+    "grid_size": 20,
+    "horizon": 160,
+    "battery_capacity": 80,
+    "move_cost": 1.0,
+    "hover_cost": 0.25,
+    "recharge_rate": 5,
+    "sensor_radius": 1,
+    "inspection_deadline": 25,
+    "max_fuel": 100,
+    "initial_fires": 3,
+    "spread_probability": 0.04,
+    "wind_multiplier": 2.0,
+    "wind_change_probability": 0.06,
+    "freshness_reward": 1.0,
+    "overdue_penalty": 0.1,
+    "energy_penalty": 0.02,
+    "collision_penalty": 0.2,
+    "loss_penalty": 5.0
+  },
+  "checkpoint_audits": {
+    "runs/dqn-stability-v3/standard/dqn/seed-0": {
+      "format_version": 1,
+      "algorithm": "dqn",
+      "completed_episodes": 200,
+      "authority_sha256": "ababe082f0e092ea535fd7ab05d0242eb70f0e0410adff98ad9ef38c7554b8e5",
+      "exports": {
+        "policy.pt": {
+          "completed_episodes": 200,
+          "sha256": "c59e5adcac6001889af38e89c064332d63ea226211f4688453dbcaa81344aeab"
+        },
+        "best_policy.pt": {
+          "completed_episodes": 140,
+          "sha256": "dd4393271049827a1d5096659bf42aa33ac3e3119567cbbf707a8e43276c71d8"
+        }
+      }
+    },
+    "runs/dqn-stability-v3/standard/dqn/seed-1": {
+      "format_version": 1,
+      "algorithm": "dqn",
+      "completed_episodes": 200,
+      "authority_sha256": "05dc45fe02d5b1bb4706084264db56eca819ad28781f38196b3cea45d5bf6d39",
+      "exports": {
+        "policy.pt": {
+          "completed_episodes": 200,
+          "sha256": "677ce907452995448f9362bf00d46e50c6e4246cd44cf5af8e78ddda4fef2851"
+        },
+        "best_policy.pt": {
+          "completed_episodes": 120,
+          "sha256": "de53ad5945011d519ae7c1c9d04cbd3adac17828255ca3d0d8783c8ba4eb7603"
+        }
+      }
+    },
+    "runs/dqn-stability-v3/standard/dqn/seed-2": {
+      "format_version": 1,
+      "algorithm": "dqn",
+      "completed_episodes": 200,
+      "authority_sha256": "38939dcb87e712965fa3820d046c3f7cc29d393d70b77f5a09a158c1e886303a",
+      "exports": {
+        "policy.pt": {
+          "completed_episodes": 200,
+          "sha256": "435ca0624059cb878294b5376acc1d90ff8b6223101ca610fe57aa4fe1209945"
+        },
+        "best_policy.pt": {
+          "completed_episodes": 180,
+          "sha256": "4461fc6188a85053d4b7484e7c6e39e0d42646e0e8a75056a00273fe98f402d9"
+        }
+      }
+    },
+    "runs/dqn-stability-v3/double/dqn/seed-0": {
+      "format_version": 1,
+      "algorithm": "dqn",
+      "completed_episodes": 200,
+      "authority_sha256": "7f2d6f6cd5b2d487ed7de45ac6a58a0dc36fc094dd1962830d7f4fcc0bcc2b4c",
+      "exports": {
+        "policy.pt": {
+          "completed_episodes": 200,
+          "sha256": "bcbc5f326537720e88692645873a8e02164b0505357286a249e6cdfb92aabe16"
+        },
+        "best_policy.pt": {
+          "completed_episodes": 160,
+          "sha256": "fdc4c63bda062dd6b556e627029451d100cfcd2f78e4031d163a7b768373652e"
+        }
+      }
+    },
+    "runs/dqn-stability-v3/double/dqn/seed-1": {
+      "format_version": 1,
+      "algorithm": "dqn",
+      "completed_episodes": 200,
+      "authority_sha256": "6ae2b504098a9b0c4d9ce88c8781c88ddb2a0c9dc3c4e6103f2ada5542dc3448",
+      "exports": {
+        "policy.pt": {
+          "completed_episodes": 200,
+          "sha256": "e6fa1d9f68b16edec27c81780960572631d2da0c79bad57f82aa0ce06496bd40"
+        },
+        "best_policy.pt": {
+          "completed_episodes": 40,
+          "sha256": "e100d6de7078c6c522ec4b02205f8fe5e1b9c7b7ca03bc9dc3661c3cb4bc71ea"
+        }
+      }
+    },
+    "runs/dqn-stability-v3/double/dqn/seed-2": {
+      "format_version": 1,
+      "algorithm": "dqn",
+      "completed_episodes": 200,
+      "authority_sha256": "23d9449692aeb783e08952f741bbd25d33f2e8dffe0c918f63da0b35ef308002",
+      "exports": {
+        "policy.pt": {
+          "completed_episodes": 200,
+          "sha256": "5cb16060ac3bada55f62a73dfc29f98d656feb0fa4fe801415332b708d2cbe14"
+        },
+        "best_policy.pt": {
+          "completed_episodes": 160,
+          "sha256": "720121a4431b0265dab0b5b4cd5e4458dc5e597f5154625f4c743aa9481bcf7c"
+        }
+      }
+    }
+  },
+  "critical_margin": "0 through three move costs; battery units",
+  "return_bound": "Manhattan distance * move cost; necessary, not sufficient",
+  "epsilon_counts": "expected schedule selections, not observed branch counts",
+  "example_trace": "first directory, final policy, first validation scenario"
+}

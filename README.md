@@ -186,6 +186,22 @@ poor mission performance despite no observed Q-bound violations in the short rep
 Use separate output folders for variants; all study runners audit completed exports through
 `train` before evaluating them. Final test scenarios remain outside this tuning workflow.
 
+The [return-behavior and exploration report](docs/experiments/exploration-2026-10-03/README.md)
+traces repeated boundary commands and failed battery returns. A matched slower-exploration
+screen covered more joint actions but did not improve final coordination. The default
+10,000-step decay remains unchanged. Override it with `--epsilon-decay-steps` for an explicitly
+declared experiment; resume rejects changing it. The observational diagnostic runner is:
+
+```bash
+python scripts/diagnose_behavior.py runs/validation20/dqn/seed-* --out runs/behavior
+```
+
+It checks authority first, reports commands/return-energy margins and final replay coverage,
+and includes random, sweep, greedy and all-stay diagnostic controls on the same scenarios.
+It also writes one example trace, including the terminal transition, without changing policy
+actions or live environment randomness. Tracing adds timing overhead; its decision times
+must not be used as uninstrumented policy throughput measurements.
+
 ## Baselines and fair evaluation
 
 | Baseline | Behaviour |
