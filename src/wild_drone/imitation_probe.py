@@ -152,7 +152,7 @@ def load_probe(path):
     return ProbePolicy(model, config)
 
 
-def _export(checkpoint, path):
+def _export(checkpoint, path, *, progress_key='completed_epochs'):
     atomic_torch_save(checkpoint, path)
     raw = path.read_bytes()
     actual = torch.load(io.BytesIO(raw), map_location='cpu', weights_only=True)
@@ -164,7 +164,7 @@ def _export(checkpoint, path):
             expected[key].dtype != saved[key].dtype or
             not torch.equal(expected[key], saved[key]) for key in expected):
         raise ValueError(f'{path.name}: exported probe tensors differ')
-    return {'completed_epochs': actual['completed_epochs'],
+    return {progress_key: actual[progress_key],
             'sha256': hashlib.sha256(raw).hexdigest()}
 
 

@@ -1,0 +1,106 @@
+{
+  "dagger/seed-0/collection-round-2.csv": {
+    "zip": "raw/dagger/seed-0/collection-records.zip",
+    "sha256": "c8b15d1d3fd4900688e1e187e8d201eecd4e3765d456bd2c3b472a584044eb51"
+  },
+  "dagger/seed-0/collection-round-3.csv": {
+    "zip": "raw/dagger/seed-0/collection-records.zip",
+    "sha256": "8fc14ca363f0fc258f537c6fe960c262643e40401d35adf059fd62cc8d05b354"
+  },
+  "dagger/seed-0/collection-round-4.csv": {
+    "zip": "raw/dagger/seed-0/collection-records.zip",
+    "sha256": "47f1a85fb069557d547d1cfae68e333e5e5c958ddbe28ada7f422ac5b5286a46"
+  },
+  "dagger/seed-0/collection-round-5.csv": {
+    "zip": "raw/dagger/seed-0/collection-records.zip",
+    "sha256": "29e327ad535e62d0733dabdd84eb11869f2241309472477bd321dae761ce7ab4"
+  },
+  "dagger/seed-1/collection-round-2.csv": {
+    "zip": "raw/dagger/seed-1/collection-records.zip",
+    "sha256": "d4ef1cfbeec24e27550a2f932307b24815a1398bf3187d3e49c356c54d1b2bf7"
+  },
+  "dagger/seed-1/collection-round-3.csv": {
+    "zip": "raw/dagger/seed-1/collection-records.zip",
+    "sha256": "516cb5f374262406adda59554f8db6d9a076ed20de0de7dadda8454ca740c2dc"
+  },
+  "dagger/seed-1/collection-round-4.csv": {
+    "zip": "raw/dagger/seed-1/collection-records.zip",
+    "sha256": "e9bf68e889e7be8ba30fc49b5e498f929dcf42412a37ad3bbcb91d76bb5f18ea"
+  },
+  "dagger/seed-1/collection-round-5.csv": {
+    "zip": "raw/dagger/seed-1/collection-records.zip",
+    "sha256": "15cdcc5c83fbe8d86464e719adeadd6e1d81cd75c75e21c159d25164a8303ee9"
+  },
+  "dagger/seed-2/collection-round-2.csv": {
+    "zip": "raw/dagger/seed-2/collection-records.zip",
+    "sha256": "c27bd49684ac0f70df23bb554967e9638a1a466039fdd3ad1f4dbdcfd1f018f0"
+  },
+  "dagger/seed-2/collection-round-3.csv": {
+    "zip": "raw/dagger/seed-2/collection-records.zip",
+    "sha256": "e47bd5e6e1317291079ed4fa15d3092abebc6244de84bcd2bb4124223f0f64b9"
+  },
+  "dagger/seed-2/collection-round-4.csv": {
+    "zip": "raw/dagger/seed-2/collection-records.zip",
+    "sha256": "12a96e6f9e33dcf20bb55bc76eca2a25ef94460c8b59b146efb32c3ddd2f4e4d"
+  },
+  "dagger/seed-2/collection-round-5.csv": {
+    "zip": "raw/dagger/seed-2/collection-records.zip",
+    "sha256": "0ec04a7d40c6d4736ed520025b4e688a0d69235fdab756201ac02e393b4d1ccb"
+  },
+  "initial-collection.csv": {
+    "zip": "raw/collection-records.zip",
+    "sha256": "f1b49fbb6f3f00bc46375a73b0ee0c5c5c9a9eb490cebd910ab251e666e791a3"
+  },
+  "validation-collection.csv": {
+    "zip": "raw/collection-records.zip",
+    "sha256": "131e2f20126778fc2993323cf9c09c56e5ef3a6c8d5628ec1c65cacb17c2294a"
+  },
+  "teacher/seed-0/collection-round-2.csv": {
+    "zip": "raw/teacher/seed-0/collection-records.zip",
+    "sha256": "65edcaa36b69de7ccbd1041de6b8d3905338d9621f7b8b101f80eae573b16907"
+  },
+  "teacher/seed-0/collection-round-3.csv": {
+    "zip": "raw/teacher/seed-0/collection-records.zip",
+    "sha256": "a6b0df7cad4b450634eee848d3c62b142a472a35df727fa54be1677f038c930a"
+  },
+  "teacher/seed-0/collection-round-4.csv": {
+    "zip": "raw/teacher/seed-0/collection-records.zip",
+    "sha256": "5d350235c7085c69bb4d109a72ae4bc215f20dc2e1f159e68442182428796771"
+  },
+  "teacher/seed-0/collection-round-5.csv": {
+    "zip": "raw/teacher/seed-0/collection-records.zip",
+    "sha256": "a4a99d9093617a52b02e45495bf6b32cb42d09c5e7d404dab489d83aab2c8a36"
+  },
+  "teacher/seed-1/collection-round-2.csv": {
+    "zip": "raw/teacher/seed-1/collection-records.zip",
+    "sha256": "65edcaa36b69de7ccbd1041de6b8d3905338d9621f7b8b101f80eae573b16907"
+  },
+  "teacher/seed-1/collection-round-3.csv": {
+    "zip": "raw/teacher/seed-1/collection-records.zip",
+    "sha256": "a6b0df7cad4b450634eee848d3c62b142a472a35df727fa54be1677f038c930a"
+  },
+  "teacher/seed-1/collection-round-4.csv": {
+    "zip": "raw/teacher/seed-1/collection-records.zip",
+    "sha256": "5d350235c7085c69bb4d109a72ae4bc215f20dc2e1f159e68442182428796771"
+  },
+  "teacher/seed-1/collection-round-5.csv": {
+    "zip": "raw/teacher/seed-1/collection-records.zip",
+    "sha256": "a4a99d9093617a52b02e45495bf6b32cb42d09c5e7d404dab489d83aab2c8a36"
+  },
+  "teacher/seed-2/collection-round-2.csv": {
+    "zip": "raw/teacher/seed-2/collection-records.zip",
+    "sha256": "65edcaa36b69de7ccbd1041de6b8d3905338d9621f7b8b101f80eae573b16907"
+  },
+  "teacher/seed-2/collection-round-3.csv": {
+    "zip": "raw/teacher/seed-2/collection-records.zip",
+    "sha256": "a6b0df7cad4b450634eee848d3c62b142a472a35df727fa54be1677f038c930a"
+  },
+  "teacher/seed-2/collection-round-4.csv": {
+    "zip": "raw/teacher/seed-2/collection-records.zip",
+    "sha256": "5d350235c7085c69bb4d109a72ae4bc215f20dc2e1f159e68442182428796771"
+  },
+  "teacher/seed-2/collection-round-5.csv": {
+    "zip": "raw/teacher/seed-2/collection-records.zip",
+    "sha256": "a4a99d9093617a52b02e45495bf6b32cb42d09c5e7d404dab489d83aab2c8a36"
+  }
+}

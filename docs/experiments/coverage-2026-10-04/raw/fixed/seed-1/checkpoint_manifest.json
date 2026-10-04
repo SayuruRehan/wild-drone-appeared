@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "d0b0e32ebde18c224b486c5acd4fc5ab6e8991d93eb63811f969d313c59e2c28",
+    "completed_round": 0,
+    "model_sha256": "74522b8bf6118730626418784a3835a0c15508124a83c448f53bc7ce959c3734"
+  },
+  "round-1.pt": {
+    "completed_updates": 1000,
+    "sha256": "942921d434fe34cbbb3db60c6baf32b44e02225898e695f1feb4e92a0abbdf48",
+    "completed_round": 1,
+    "model_sha256": "878fb9f459058ce0761d3ac4992fd490e19a7e9785ffab3b472c8fe613e55181"
+  },
+  "round-2.pt": {
+    "completed_updates": 2000,
+    "sha256": "e48d914c0088ae28970fd8e5048dd99ae41d0bebc92e617efe699823b3f0f31d",
+    "completed_round": 2,
+    "model_sha256": "04c8820299ecacda271efdcfb380a9ce0dc9972bbeaa1905ecff9b500f75d4aa"
+  },
+  "round-3.pt": {
+    "completed_updates": 3000,
+    "sha256": "47cf45adf8928c14e142b5e3b4e7f3c7c1e03837f68830c0bf77a61718138b38",
+    "completed_round": 3,
+    "model_sha256": "77c6ce113bef42950a1d5ff72f360771509423ba9c00dca077f411ea009b6857"
+  },
+  "round-4.pt": {
+    "completed_updates": 4000,
+    "sha256": "f44f356cf7c6961ae7772d6e15f0e12b0e4be1996e2b64e218e51148daf01f7b",
+    "completed_round": 4,
+    "model_sha256": "c8ad6cd2fa6bb652adbe3f46b0f4afdc1e799eb13e05e9faa93482c7925b6020"
+  },
+  "round-5.pt": {
+    "completed_updates": 5000,
+    "sha256": "ca056d0a2c7a35ffe57a42bd2f54abb54a2215a4ae81d93a5ca6c51614a61f18",
+    "completed_round": 5,
+    "model_sha256": "2aa62a86c2bc59c8dfdb6865c0f7542ebb071bda0cc086defd95dc850bcb1fd9"
+  },
+  "final_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "5ab9dc7afc80e54bfa55b8cb9dff569802b2eebdfb24501d3fdb6e4b55659118",
+    "completed_round": 5,
+    "model_sha256": "2aa62a86c2bc59c8dfdb6865c0f7542ebb071bda0cc086defd95dc850bcb1fd9"
+  },
+  "selected_coverage.pt": {
+    "completed_updates": 4000,
+    "sha256": "0d3c7b6af9119e62fc026d4b21b2ae66b30b8a1773df8006dd46b7b57241ef3e",
+    "completed_round": 4,
+    "model_sha256": "c8ad6cd2fa6bb652adbe3f46b0f4afdc1e799eb13e05e9faa93482c7925b6020"
+  }
+}

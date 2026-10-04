@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "ff69ece4ed09e3a64d4014d38b1e53ab18bb235485c6bb747cdb6f76f3550df6",
+    "completed_round": 0,
+    "model_sha256": "e7fe51d03957f16796de639a1ecd7b3f925a10de363f2619f964dbe78851348f"
+  },
+  "round-1.pt": {
+    "completed_updates": 1000,
+    "sha256": "d37c6e77df2737f6b597c9bda374db047a85ebdbe926b5954305e7a3b53f6a22",
+    "completed_round": 1,
+    "model_sha256": "9aaf078c398812ba65ed564cb50304ccbc9b64ebeee6c571059ad25ac7e5826d"
+  },
+  "round-2.pt": {
+    "completed_updates": 2000,
+    "sha256": "5c53e34728eaaec4f58c9b7594f218073a0f5e6ba1d817908baec1c094237ac9",
+    "completed_round": 2,
+    "model_sha256": "be6afa483bff517d0b49f86cfc675f978a3e7ed4f3ccb67427fc51149cb6d360"
+  },
+  "round-3.pt": {
+    "completed_updates": 3000,
+    "sha256": "a6c95ed262a9e86ff0116fcd6cd680dfcff01cf57587129becb84c7c3e4eaee5",
+    "completed_round": 3,
+    "model_sha256": "0e087259a728294795d272ba4465835a1ac32f79dcff1da38dd79714b9f5f141"
+  },
+  "round-4.pt": {
+    "completed_updates": 4000,
+    "sha256": "40bff8e7264009b5402c08bf5a24a17ebd9f0300d96549b36df7d3aad4a9aee8",
+    "completed_round": 4,
+    "model_sha256": "5f699497fb91407cb5d1051b48371415eb59e05ec275033465c862cab743ff92"
+  },
+  "round-5.pt": {
+    "completed_updates": 5000,
+    "sha256": "315315613206e6ffb20aa23001757172fcb07469143417a2871035bdfafff6c5",
+    "completed_round": 5,
+    "model_sha256": "dcf9ef1d3af423f686a0a5c5a8aee40483caa7b59e0203186fe343141985805b"
+  },
+  "final_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "3d84b9ecc6cb0b9aa2fa11fae9181c1cf22db1293f07a9a8df86b45bf0e81d20",
+    "completed_round": 5,
+    "model_sha256": "dcf9ef1d3af423f686a0a5c5a8aee40483caa7b59e0203186fe343141985805b"
+  },
+  "selected_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "ac8bb97ce2ce94cc8aa432f38da7835b16874295bc9b95d82e21edc643766f3c",
+    "completed_round": 5,
+    "model_sha256": "dcf9ef1d3af423f686a0a5c5a8aee40483caa7b59e0203186fe343141985805b"
+  }
+}

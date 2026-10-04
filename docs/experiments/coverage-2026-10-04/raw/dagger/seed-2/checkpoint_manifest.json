@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "936172d0874071d91de6d7df425dd55373fcf17e651aac9fd9e42c9b893e7c0c",
+    "completed_round": 0,
+    "model_sha256": "e7fe51d03957f16796de639a1ecd7b3f925a10de363f2619f964dbe78851348f"
+  },
+  "round-1.pt": {
+    "completed_updates": 1000,
+    "sha256": "af080250201e2bed5655edfe7be3237dc16c6f7b8a1f45e9fcc71be735beff76",
+    "completed_round": 1,
+    "model_sha256": "9aaf078c398812ba65ed564cb50304ccbc9b64ebeee6c571059ad25ac7e5826d"
+  },
+  "round-2.pt": {
+    "completed_updates": 2000,
+    "sha256": "3ef978d6fef6eecef877bd9f7c5ad83b73ecf1c816e004140daebbc91ba88397",
+    "completed_round": 2,
+    "model_sha256": "ff9aee56d8af390d401904b7dd157072ead8eb2a330ca3b1225b22365664303f"
+  },
+  "round-3.pt": {
+    "completed_updates": 3000,
+    "sha256": "453d7cc1245fdce43d202eeb1ff878d9412a3246d8b089c4d7a1dafb2f6df200",
+    "completed_round": 3,
+    "model_sha256": "8fc0effb9154d5599b1b4c5478c30302f372643696a01a760fd71ad3c89ea0cf"
+  },
+  "round-4.pt": {
+    "completed_updates": 4000,
+    "sha256": "d2625304ee46f5354e4f2ddfa60004c8373e19557fb17cff5ed500f414b8862d",
+    "completed_round": 4,
+    "model_sha256": "a758dfffa130e51361b37f540a258ed672008e2329a997ca06aedd66bf760718"
+  },
+  "round-5.pt": {
+    "completed_updates": 5000,
+    "sha256": "35ed73a286c8c0bb37e1aecf571921a559e319947b91228fe3d125ccfafef729",
+    "completed_round": 5,
+    "model_sha256": "9c0e421d89fbeeebc9b9d15c2d04481f2ab98cdc6c50e5c5a75b569a9ca68c6b"
+  },
+  "final_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "aa8ccdec7ac4d16d865f2afb0d3b61732eeb1982d063078df32429033af313f0",
+    "completed_round": 5,
+    "model_sha256": "9c0e421d89fbeeebc9b9d15c2d04481f2ab98cdc6c50e5c5a75b569a9ca68c6b"
+  },
+  "selected_coverage.pt": {
+    "completed_updates": 4000,
+    "sha256": "a1064eadbef4f9476138e3d1527e20d93611fb81e6a872ee4039ee660b2250ea",
+    "completed_round": 4,
+    "model_sha256": "a758dfffa130e51361b37f540a258ed672008e2329a997ca06aedd66bf760718"
+  }
+}
