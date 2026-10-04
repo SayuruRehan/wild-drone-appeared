@@ -1,0 +1,106 @@
+{
+  "training-collection.csv": {
+    "zip": "raw/training-collection.zip",
+    "sha256": "91886144eacb81115ce02e86238c7028ff8a8287294dc82f84c4a1659f530b19"
+  },
+  "validation-collection.csv": {
+    "zip": "raw/validation-collection.zip",
+    "sha256": "131e2f20126778fc2993323cf9c09c56e5ef3a6c8d5628ec1c65cacb17c2294a"
+  },
+  "assisted/seed-0/collection-round-2.csv": {
+    "zip": "raw/assisted/seed-0/collection-part-1.zip",
+    "sha256": "2605452993a25cc5e79c8b30bd1accf48bee4e9a12497d948e4433628d18a39b"
+  },
+  "assisted/seed-0/collection-round-3.csv": {
+    "zip": "raw/assisted/seed-0/collection-part-1.zip",
+    "sha256": "aa242c9c7c4cf4509a70ec7070fa098ece9b195e61d7d6fb76af177c6ccd03cf"
+  },
+  "assisted/seed-0/collection-round-4.csv": {
+    "zip": "raw/assisted/seed-0/collection-part-2.zip",
+    "sha256": "05bdbb8c764e42a2425e1dc509330e8e2936d7f643d3db1db6eb8b3fa5178cc9"
+  },
+  "assisted/seed-0/collection-round-5.csv": {
+    "zip": "raw/assisted/seed-0/collection-part-2.zip",
+    "sha256": "49bd3646db98476e31c6d51de1a9efb8913667678233719ec9af2a5912c1f527"
+  },
+  "assisted/seed-1/collection-round-2.csv": {
+    "zip": "raw/assisted/seed-1/collection-part-1.zip",
+    "sha256": "c5140f9d8467eabd187ee02be4a979e401ba034635aa70576682965eedf9977c"
+  },
+  "assisted/seed-1/collection-round-3.csv": {
+    "zip": "raw/assisted/seed-1/collection-part-1.zip",
+    "sha256": "9b49b730188226d682ece70a993d55abba51eadd3c1bd00710a7f41da370b917"
+  },
+  "assisted/seed-1/collection-round-4.csv": {
+    "zip": "raw/assisted/seed-1/collection-part-2.zip",
+    "sha256": "1d01c1239475319c5141d0086410d2e064abfa8dff226d5186a8ff471c0cda10"
+  },
+  "assisted/seed-1/collection-round-5.csv": {
+    "zip": "raw/assisted/seed-1/collection-part-2.zip",
+    "sha256": "6eadb8f5c19cdd1c1a8c5a4614e01448bd837b624880c4c9db5e75aed59295da"
+  },
+  "assisted/seed-2/collection-round-2.csv": {
+    "zip": "raw/assisted/seed-2/collection-part-1.zip",
+    "sha256": "bdd97c0334a0e1a01bc2a3ec77d89bf8495d11df275ca3a8642c6977b0fc99f4"
+  },
+  "assisted/seed-2/collection-round-3.csv": {
+    "zip": "raw/assisted/seed-2/collection-part-1.zip",
+    "sha256": "c18872649af4ecccacc2761fa178d161938c171bfce7311e33642b21ae4e8407"
+  },
+  "assisted/seed-2/collection-round-4.csv": {
+    "zip": "raw/assisted/seed-2/collection-part-2.zip",
+    "sha256": "7bb9bfddd24b21f7508b3dce8db22827a08747245f2229d72dca60a6c3761f2a"
+  },
+  "assisted/seed-2/collection-round-5.csv": {
+    "zip": "raw/assisted/seed-2/collection-part-2.zip",
+    "sha256": "1ac0807e396b2b14fff9f75962243a31f3a8ec462eeb73961ed60e2a6f38f0bb"
+  },
+  "learner/seed-0/collection-round-2.csv": {
+    "zip": "raw/learner/seed-0/collection-part-1.zip",
+    "sha256": "ea641c1cf6991a3fd011e375bc295a4b702be6c9e208e49c7550906edb2910d7"
+  },
+  "learner/seed-0/collection-round-3.csv": {
+    "zip": "raw/learner/seed-0/collection-part-1.zip",
+    "sha256": "a169af59a4e788be651e1cd734daa90c321666075f9ed5188f2c68fe39558f4e"
+  },
+  "learner/seed-0/collection-round-4.csv": {
+    "zip": "raw/learner/seed-0/collection-part-1.zip",
+    "sha256": "f12eba899458651a113ccab985267033d1cbb760e8da2ceb4f407c54845c78e6"
+  },
+  "learner/seed-0/collection-round-5.csv": {
+    "zip": "raw/learner/seed-0/collection-part-1.zip",
+    "sha256": "7d003fcacca48c942bcb7fbb35354328ffa1dfc8cb6c4905e07260fa713daa8d"
+  },
+  "learner/seed-1/collection-round-2.csv": {
+    "zip": "raw/learner/seed-1/collection-part-1.zip",
+    "sha256": "f5bac953c93a6ee3663517081338810adf1bf140467ac7521421501ba0e7eaf8"
+  },
+  "learner/seed-1/collection-round-3.csv": {
+    "zip": "raw/learner/seed-1/collection-part-1.zip",
+    "sha256": "f0c679df3c893e2c3681ba3d94e569aff0140f79e22f39767b289c33935116c9"
+  },
+  "learner/seed-1/collection-round-4.csv": {
+    "zip": "raw/learner/seed-1/collection-part-1.zip",
+    "sha256": "c9ec4e71c882d1fa8b297dc989628e8a8ce8f3008712749d81a252c3a981e1a3"
+  },
+  "learner/seed-1/collection-round-5.csv": {
+    "zip": "raw/learner/seed-1/collection-part-1.zip",
+    "sha256": "84ac833162c8ca563e4c1a8f8827c0a5bf9a66e88331a3b21ab87fba213e3208"
+  },
+  "learner/seed-2/collection-round-2.csv": {
+    "zip": "raw/learner/seed-2/collection-part-1.zip",
+    "sha256": "849c91671243428125e6d7c3710c169f1b14096df9f6174b124318221c1adf4e"
+  },
+  "learner/seed-2/collection-round-3.csv": {
+    "zip": "raw/learner/seed-2/collection-part-1.zip",
+    "sha256": "632bf3a2a68b73d9536f00d5093c211b6b712f0b521bd13bf425ae8a066c33f9"
+  },
+  "learner/seed-2/collection-round-4.csv": {
+    "zip": "raw/learner/seed-2/collection-part-1.zip",
+    "sha256": "c5973ede69ef1dfb5e371109b7fb03eb91c22b71f5742ce7b92cf0ffe887e3ed"
+  },
+  "learner/seed-2/collection-round-5.csv": {
+    "zip": "raw/learner/seed-2/collection-part-1.zip",
+    "sha256": "da635a46ea95fdbaea4ba25d722c4650b2ec515596accd06ff9f90b745795326"
+  }
+}

@@ -1,0 +1,7 @@
+fixed seed 0, round 0/1, states 160, train 0.013, validation 0.004
+fixed seed 0, round 1/1, states 160, train 1.000, validation 0.013
+fixed seed 1, round 0/1, states 160, train 0.013, validation 0.002
+fixed seed 1, round 1/1, states 160, train 1.000, validation 0.009
+fixed seed 2, round 0/1, states 160, train 0.013, validation 0.002
+fixed seed 2, round 1/1, states 160, train 1.000, validation 0.010
+Post-hoc competence check complete; keep trained-world results separate.

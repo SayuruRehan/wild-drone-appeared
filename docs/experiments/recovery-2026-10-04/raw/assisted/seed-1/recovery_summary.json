@@ -1,0 +1,43 @@
+{
+  "method": "supervised-recovery-coverage-probe",
+  "arm": "assisted",
+  "seed": 1,
+  "coverage_config": {
+    "rounds": 5,
+    "updates_per_round": 4000,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "max_grad_norm": 0.5
+  },
+  "collection_config": {
+    "teacher_probability": 0.5,
+    "return_margin_move_costs": 6.0
+  },
+  "completed_updates": 20000,
+  "final_training_states": 31728,
+  "final_training_data_sha256": "0406c0576b42db7e8630bd4014065e953b3eab4597a29841a822308de069db53",
+  "selected_round": 5,
+  "selected_validation_joint_accuracy": 0.15625,
+  "final_train_metrics": {
+    "cross_entropy": 1.5156093835830688,
+    "joint_accuracy": 0.5445032715797424,
+    "live_command_accuracy": 0.7684484720230103,
+    "critical_joint_accuracy": 0.47040319442749023,
+    "critical_command_accuracy": 0.7386067509651184,
+    "critical_toward_base_command_fraction": 0.8489583134651184,
+    "charging_hold_fraction": 0.9954590201377869,
+    "critical_drone_states": 6144,
+    "charging_drone_states": 17177
+  },
+  "final_validation_metrics": {
+    "cross_entropy": 6.404091835021973,
+    "joint_accuracy": 0.15625,
+    "live_command_accuracy": 0.4633333384990692,
+    "critical_joint_accuracy": 0.032258063554763794,
+    "critical_command_accuracy": 0.34328359365463257,
+    "critical_toward_base_command_fraction": 0.44029849767684937,
+    "charging_hold_fraction": 0.9303278923034668,
+    "critical_drone_states": 134,
+    "charging_drone_states": 488
+  }
+}

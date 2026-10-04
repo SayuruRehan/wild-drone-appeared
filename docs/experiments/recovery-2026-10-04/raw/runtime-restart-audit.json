@@ -1,0 +1,13 @@
+{
+  "reason": "Host runtime reset interrupted the earlier run; restart used a fresh folder and no resumed optimizer state.",
+  "training_data_semantic_sha256": "c6e9e4fd6d1b80e70a653c9b8c32a92001d03f5529be9eaa3539d8cff4d8943b",
+  "same_initial_model_sha256": "00862896f4644ff8ac2f956f30e92d5b3dd92b175320804a6262c278a947ec9e",
+  "fresh_recovery_4k_model_sha256": "718029b0cd58479d222bda5072a68ecfa7357451975d694a31a9a568a5f50f88",
+  "same_runtime_original_fixed_4k_model_sha256": "718029b0cd58479d222bda5072a68ecfa7357451975d694a31a9a568a5f50f88",
+  "earlier_runtime_recovery_4k_model_sha256": "e7179b5cc50d6ad2cc88d17e05df55634b9d60ec4cc4197cf65bac9d0423e255",
+  "package_versions_equal": true,
+  "same_source_revision": true,
+  "current_cpu_capability": "AVX512",
+  "cause": "Exact source, corpus, initialization and package versions match, and original fixed fitter matches on the current runtime. Cross-runtime trained tensor equality failed. The particular host/numerical difference is unresolved; old CPU details were not recorded. Do not pool partial/historical runs as current replicates.",
+  "matched_comparison": "All six fresh fits run on the current runtime; runner requires equal initial/first-round model digests within each arm pair."
+}

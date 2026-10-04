@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "cccfc3a6ccc944733b49f3eb5e15c963d8ccdbc2b992557d287b860b9f57d0e3",
+    "completed_round": 0,
+    "model_sha256": "e7fe51d03957f16796de639a1ecd7b3f925a10de363f2619f964dbe78851348f"
+  },
+  "round-1.pt": {
+    "completed_updates": 4000,
+    "sha256": "5b4730ff21560dfefd211e9e5cd9d9fc4f44dde3f5ff556c819cbc49e9a57b18",
+    "completed_round": 1,
+    "model_sha256": "a0fce839c48da8eaa4acdf3a45ddac5d520ee79ab051b26794e80a2ef1c7f7f9"
+  },
+  "round-2.pt": {
+    "completed_updates": 8000,
+    "sha256": "1f646c1dad7be77194952cbccdf1249bda00ca1881a91aff5ead9f9101920d48",
+    "completed_round": 2,
+    "model_sha256": "15c1c5bebb48e2904cd909f0102052570f73a6dd01e01ffe9bc979f40d5735b1"
+  },
+  "round-3.pt": {
+    "completed_updates": 12000,
+    "sha256": "277f2eab9d9b51445f7edf1d96b0948d9d274085dc9bc5f06e38a881c5ad6a58",
+    "completed_round": 3,
+    "model_sha256": "d8e085aa58ead81648e08b8aac45d7756c660edbdc5602191432e0e4cb059ce7"
+  },
+  "round-4.pt": {
+    "completed_updates": 16000,
+    "sha256": "b01a2408a4b7bad8eec8b950e6f0b5535870d9cd67435e15b6c04c61e8a3e165",
+    "completed_round": 4,
+    "model_sha256": "7736f2edb2ad0741d5410bc102561e783bc7ee994510ac10fcee32d1588428e6"
+  },
+  "round-5.pt": {
+    "completed_updates": 20000,
+    "sha256": "35a29a378738b6ba66ad46facb5087ebc8c8e811dd52711465524934eb9698c3",
+    "completed_round": 5,
+    "model_sha256": "85449d8b84b1163e9b3e0bffaaf2128fc974f485e67546cb7735dba0b8f60958"
+  },
+  "final_recovery.pt": {
+    "completed_updates": 20000,
+    "sha256": "f8406aee6e44fa202b9d29dfa508de393a2361480c9494dc01de363f2648a89d",
+    "completed_round": 5,
+    "model_sha256": "85449d8b84b1163e9b3e0bffaaf2128fc974f485e67546cb7735dba0b8f60958"
+  },
+  "selected_recovery.pt": {
+    "completed_updates": 16000,
+    "sha256": "d452316bc55980d7473c9bf407565223b1dd62da92be732f1f7cc5b0244c247f",
+    "completed_round": 4,
+    "model_sha256": "7736f2edb2ad0741d5410bc102561e783bc7ee994510ac10fcee32d1588428e6"
+  }
+}

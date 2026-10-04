@@ -243,6 +243,19 @@ preserves deployment action authority and separately reports selected policies:
 python scripts/run_representation_probe.py --out runs/representation-v8
 ```
 
+The [recovery collection study](docs/experiments/recovery-2026-10-04/README.md) adds
+teacher execution during collection to retain useful return and charging trajectories.
+The autonomous learner still fails: final fleet losses are 14/15 with learner-only
+collection and 15/15 with assistance. A separate single-world competence check reproduces
+Greedy's complete training trajectory in all three fits, including return and recharge,
+but fails on all 15 validation missions. Basic trajectory memorization works; reliable
+behavior across worlds remains unresolved. The [protocol](docs/recovery-protocol.md)
+keeps deployment free of teacher intervention:
+
+```bash
+python scripts/run_recovery_probe.py --out runs/recovery-v9
+```
+
 ## Baselines and fair evaluation
 
 | Baseline | Behaviour |
