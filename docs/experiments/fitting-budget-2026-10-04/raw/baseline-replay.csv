@@ -1,0 +1,6 @@
+policy,training_seed,scenario_seed,grid_size,horizon,steps,return,weighted_freshness,overdue_fraction,energy_used,total_losses,safe_returns,charge_completions,collision_attempts,decision_ms,live_drone_steps,wall_commands,unmoved_move_commands,unsafe_drone_steps,critical_drone_steps,critical_return_commands,critical_return_moves,first_unreachable_step,first_unreachable_drones,distinct_joint_actions,dominant_joint_fraction,longest_joint_repeat,critical_return_move_fraction
+greedy,,5000,20,160,160,-4.915759221112424,0.3017676380949105,0.5153487405710167,376.0,0,4,4,0,1.139753768745777,480,0,0,0,22,22,22,,0,62,0.1,16,1.0
+greedy,,5001,20,160,160,-4.246161868599863,0.3405319148852898,0.48460886123265523,384.0,0,3,3,0,1.154689518750729,480,0,0,0,26,26,26,,0,57,0.1,16,1.0
+greedy,,5002,20,160,160,-5.553425412342627,0.2912748076027158,0.5497055832178427,384.0,0,3,3,0,1.1251736874982043,480,0,0,0,35,35,35,,0,58,0.1,16,1.0
+greedy,,5003,20,160,160,-4.434667558020508,0.33729939400393333,0.4959928125892934,384.0,0,3,3,0,1.2139568499947018,480,0,0,0,25,25,25,,0,57,0.1,16,1.0
+greedy,,5004,20,160,160,-5.460720718553358,0.29457245203385835,0.5388128382560037,384.0,0,3,3,0,1.1921440812415085,480,0,0,0,26,26,26,,0,54,0.1,16,1.0

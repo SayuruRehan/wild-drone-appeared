@@ -133,7 +133,8 @@ def fit_coverage(config, initial, validation, scenario_batches, settings, seed, 
     for data in (initial, validation):
         _validate_data(data, config)
     validate_ids([seed])
-    if arm not in ARMS or len(scenario_batches) != settings.rounds-1:
+    if arm not in ARMS or (len(scenario_batches) != settings.rounds-1 and
+                           not (arm == 'fixed' and not scenario_batches)):
         raise ValueError('invalid arm or scenario batch count')
     initial_ids = initial['scenario_seeds'].unique().tolist()
     validation_ids = validation['scenario_seeds'].unique().tolist()

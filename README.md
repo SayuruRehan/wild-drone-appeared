@@ -223,6 +223,16 @@ with [fixed collection and validation rules](docs/coverage-probe-protocol.md):
 python scripts/run_coverage_probe.py --out runs/coverage-v6
 ```
 
+The [fixed-corpus budget study](docs/experiments/fitting-budget-2026-10-04/README.md)
+extends fitting to 20,000 updates. Training agreement improves, but all 15 final validation
+flights still lose the fleet; the learned controller also fails on familiar training worlds.
+More fitting alone has not produced reliable return and recharge behavior. The
+[declared comparison](docs/fitting-budget-protocol.md) keeps the network and physics fixed:
+
+```bash
+python scripts/run_fitting_budget_probe.py --out runs/fitting-budget-v7
+```
+
 ## Baselines and fair evaluation
 
 | Baseline | Behaviour |

@@ -1,0 +1,33 @@
+{
+  "sha256": {
+    "archive-analysis.py": "1e769bfcb0864040116aef61271edd3f8c7ccff9a140e3863b182875bf3341f1",
+    "budget-comparison.svg": "d46bcb5608a0f94e3db2aaa1e2b0b838e65c263a1ed033eef3b7393be284b38b",
+    "collection-members.json": "cdbbcaae90aa288c4101b9369f2de08df11baa9b0658426e5b38d27e3b95b441",
+    "per-fit.csv": "c3607b81bc0446ab4593e0d95012bc30ad7d21666fa109d441b8b6af5bced377",
+    "raw/baseline-replay.csv": "362fc0a32908122fe0dfc05c1054e691b6940dc4be1b76c3378cb0aed146d063",
+    "raw/example-trace.csv": "8f3035fb3ac916575fb75ffefa09c7150576f195c4ca8fd05e86447444de73bf",
+    "raw/fits.json": "17378a1ae1f4ce6334f96001d7c8e654c0bdc5e0ccd3dd05b0634e1aeccc2b3b",
+    "raw/posthoc-training-missions.csv": "463559efbe206aa764919a9f8ca7cc552d4546e3b4e204173596a414c2af3619",
+    "raw/protocol.json": "0b2b6b4a90daba7f6101297acac45185154c824637fa68ac0c8bccb289bd4df4",
+    "raw/replay-verification.json": "f5287a20a077b46c132f6fc7ace176865807f6b75c0f027c2ea290bf57cd0aca",
+    "raw/run-log.txt": "9e564715802c8187e5e02adf679e7b77e307f1af2b15a45ce645e2d953e6da2c",
+    "raw/seed-0/checkpoint_manifest.json": "7c2b06093dc682a4d0e4f1f124b3b0569126c6f24a65fb728abc63409732440c",
+    "raw/seed-0/coverage_summary.json": "e62e808d810e48070a16619f7513ea7abca5f690c110c4fdc8003488a8781847",
+    "raw/seed-0/label_metrics.csv": "c254c291ade08e2c8945d33ddd63d97743f26a82a3300229a56a183d9b1e1da5",
+    "raw/seed-0/metadata.json": "bcda316dc4d3cd1ae109d8deeb463c553ed91149f9b28f01924d063e764e6660",
+    "raw/seed-1/checkpoint_manifest.json": "37802bfd53c7d6c005e5c70f1fd3fe1d39c54485f777086dbc18cec3d3ea6c3f",
+    "raw/seed-1/coverage_summary.json": "e2532c211bb74d2f7448540bf6d73ed875dbfd9e2b7d77fd28f7d94b8d9e5a4d",
+    "raw/seed-1/label_metrics.csv": "7670c274c025eed1337050f54437bf98d5ffc6d44622a32e85c6d53858d490d0",
+    "raw/seed-1/metadata.json": "c92803441e7bc20ed0315d5ff42ffd63840e8ea20a002fe510ceeff216a5a582",
+    "raw/seed-2/checkpoint_manifest.json": "a6d7081c1832b22d92cf2437db19560a2ba63db5311420673f72fcbe3476d705",
+    "raw/seed-2/coverage_summary.json": "c81fc1e2460e5fdf7e4f24a73325ec25f118b22aa604e7b017aee385a793670b",
+    "raw/seed-2/label_metrics.csv": "27bc8e40cec872d77c5c235677099d1f983daed869a1fdf1201b3b8a867a28f3",
+    "raw/seed-2/metadata.json": "5c95d03fea34ae267da5a24607b4b0429eba1a9626e84d90eb6a10a9b9c93064",
+    "raw/training-collection.zip": "17a7f599821a23086a4712b3ba358617b3fd5312c013217f89be8a4859403eea",
+    "raw/validation-collection.zip": "438de5ec6f2449982a2d7fcbe2354061c72061188463bc94c36ce64a9ae4115f",
+    "raw/validation_missions.csv": "45947ec235baa42d971d5a5b5e272354abb4e68367d67eaa0bc319050a5dae21",
+    "replay-diagnostics.py": "628a4abd7e8a48f70ec6fde51d10278fe725ee98879f99b9821a2e0f07e41034",
+    "return-energy.svg": "fc8b9319839eb13b5c013f9789deeb1b11fb83da8d5fdc059631806bd68cd0fc",
+    "summary.json": "b6d9f9a28b5dc5d2cafa9135b15d33443900da7ee8ae59e8d2f8d62311938648"
+  }
+}
