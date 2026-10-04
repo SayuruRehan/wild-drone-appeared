@@ -1,0 +1,15 @@
+{
+  "original_learned_missions": 75,
+  "exact_non_timing_comparisons": 2025,
+  "baseline_replay_missions": 5,
+  "posthoc_training_scenarios": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "posthoc_training_missions": 20,
+  "original_csv_sha256": "45947ec235baa42d971d5a5b5e272354abb4e68367d67eaa0bc319050a5dae21",
+  "original_csv_note": "Run log reports 80 missions, but persisted CSV has 75 learned missions. Preserve it unchanged; replay the five declared Greedy baseline missions separately. Cause is unresolved."
+}
