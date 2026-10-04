@@ -256,6 +256,17 @@ keeps deployment free of teacher intervention:
 python scripts/run_recovery_probe.py --out runs/recovery-v9
 ```
 
+The [joint-versus-conditional action-head diagnostic](docs/experiments/action-2026-10-04/README.md)
+first verifies complete single-world return and recharge in all six fits. On the fixed
+100-world corpus, conditional commands improve validation action agreement from 14.8%
+to 17.8%, but both final arms still lose all 15 validation fleets. This change does not
+establish autonomous competence and is not promoted into RL defaults. The
+[predeclared comparison](docs/action-protocol.md) preserves exact joint-MAP decoding:
+
+```bash
+python scripts/run_action_probe.py --out runs/action-v11
+```
+
 ## Baselines and fair evaluation
 
 | Baseline | Behaviour |

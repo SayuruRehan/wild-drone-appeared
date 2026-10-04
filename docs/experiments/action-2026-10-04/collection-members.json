@@ -1,0 +1,22 @@
+{
+  "main/training-collection.csv": {
+    "zip": "raw/training-collection.zip",
+    "member": "training-collection.csv",
+    "sha256": "91886144eacb81115ce02e86238c7028ff8a8287294dc82f84c4a1659f530b19"
+  },
+  "main/validation-collection.csv": {
+    "zip": "raw/validation-collection.zip",
+    "member": "validation-collection.csv",
+    "sha256": "131e2f20126778fc2993323cf9c09c56e5ef3a6c8d5628ec1c65cacb17c2294a"
+  },
+  "sanity/training-collection.csv": {
+    "zip": "sanity/raw/training-collection.zip",
+    "member": "training-collection.csv",
+    "sha256": "9273f11266494e6aef92acea71ef04195ba90c53d9538e05fb99b55e0f72413f"
+  },
+  "sanity/validation-collection.csv": {
+    "zip": "sanity/raw/validation-collection.zip",
+    "member": "validation-collection.csv",
+    "sha256": "131e2f20126778fc2993323cf9c09c56e5ef3a6c8d5628ec1c65cacb17c2294a"
+  }
+}

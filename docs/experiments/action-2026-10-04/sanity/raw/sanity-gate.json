@@ -1,0 +1,22 @@
+{
+  "gate_passed": true,
+  "joint_training_agreements": {
+    "joint/seed-0": 1.0,
+    "joint/seed-1": 1.0,
+    "joint/seed-2": 1.0,
+    "conditional/seed-0": 1.0,
+    "conditional/seed-1": 1.0,
+    "conditional/seed-2": 1.0
+  },
+  "exact_teacher_mission_matches": {
+    "joint/seed-0": true,
+    "joint/seed-1": true,
+    "joint/seed-2": true,
+    "conditional/seed-0": true,
+    "conditional/seed-1": true,
+    "conditional/seed-2": true
+  },
+  "training_world": 0,
+  "training_missions": 7,
+  "meaning": "known-trajectory competence only"
+}

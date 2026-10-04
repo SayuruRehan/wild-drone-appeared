@@ -1,0 +1,13 @@
+joint seed 0, round 0/1, train 0.013, validation 0.004
+joint seed 0, round 1/1, train 1.000, validation 0.013
+joint seed 1, round 0/1, train 0.013, validation 0.002
+joint seed 1, round 1/1, train 1.000, validation 0.009
+joint seed 2, round 0/1, train 0.013, validation 0.002
+joint seed 2, round 1/1, train 1.000, validation 0.010
+conditional seed 0, round 0/1, train 0.019, validation 0.009
+conditional seed 0, round 1/1, train 1.000, validation 0.014
+conditional seed 1, round 0/1, train 0.019, validation 0.007
+conditional seed 1, round 1/1, train 1.000, validation 0.011
+conditional seed 2, round 0/1, train 0.000, validation 0.001
+conditional seed 2, round 1/1, train 1.000, validation 0.015
+Representation probe complete: 65 persisted missions -> runs/action-sanity-v11
