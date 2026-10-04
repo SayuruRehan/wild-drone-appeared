@@ -1,0 +1,10 @@
+{
+  "checkpoints": 48,
+  "missions": 185,
+  "non_timing_fields": 4995,
+  "example_trace_fields": 4560,
+  "datasets": 2,
+  "source_files": 12,
+  "recomputed_label_rows": 72,
+  "training_mission_fields": 0
+}
