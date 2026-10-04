@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "8d31655a36358b3cf2135886299b963b7535f81615182ac239f841ac44a545a5",
+    "completed_round": 0,
+    "model_sha256": "00862896f4644ff8ac2f956f30e92d5b3dd92b175320804a6262c278a947ec9e"
+  },
+  "round-1.pt": {
+    "completed_updates": 1000,
+    "sha256": "8eef1f484667bd41cea9fbfbcd1f12abb85d7959d972fe77bb6be57a3ffa52cb",
+    "completed_round": 1,
+    "model_sha256": "1ed821939ba86696000a5f48267d8c003a963df855a7146e6774dcd142094759"
+  },
+  "round-2.pt": {
+    "completed_updates": 2000,
+    "sha256": "418a542f5c3ba26067e5f0515b1a9b9715110ecb9b74af61055b6c16cbeb1ebc",
+    "completed_round": 2,
+    "model_sha256": "2fcd190ab992b0fb417f35830a465afbc7f1c4e16512a0c2aeed78d73daa1ec9"
+  },
+  "round-3.pt": {
+    "completed_updates": 3000,
+    "sha256": "e6d9f92d6f8cd696ba23141e90ba24f2ac601f574e9bc5ec3d2066011317641d",
+    "completed_round": 3,
+    "model_sha256": "062864166e5efa8de335a678bf18664099edd1c8c12a195113755f7a28bd82c3"
+  },
+  "round-4.pt": {
+    "completed_updates": 4000,
+    "sha256": "c056c26346d0fa4a1ec7b0a108c2bd9b2eba48977b8cc793536f9804aa6f6f52",
+    "completed_round": 4,
+    "model_sha256": "d5e15176c1d26f50a8d977f2db2f254de14cfc82a79712aa802b2ff333b4f73a"
+  },
+  "round-5.pt": {
+    "completed_updates": 5000,
+    "sha256": "933be4a0c678f7ee1f07278d27d597e9156877b30468831f32735ff14820073f",
+    "completed_round": 5,
+    "model_sha256": "8ec5258c9584ec20ca16ef3e79f297aba05970be9a15beba919d52b5d9e797ec"
+  },
+  "final_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "2fe49e6e71bfed5df3b2166ba638401c363a685141f24a866c1d4debf537bfd4",
+    "completed_round": 5,
+    "model_sha256": "8ec5258c9584ec20ca16ef3e79f297aba05970be9a15beba919d52b5d9e797ec"
+  },
+  "selected_coverage.pt": {
+    "completed_updates": 1000,
+    "sha256": "0708984b80650c7a80f7edfabc3e2648400552ca9302540d703014c5385d0f69",
+    "completed_round": 1,
+    "model_sha256": "1ed821939ba86696000a5f48267d8c003a963df855a7146e6774dcd142094759"
+  }
+}

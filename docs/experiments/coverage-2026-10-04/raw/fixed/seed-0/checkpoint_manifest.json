@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "9c34c0f4ed35b7ef5bd7f23c5564a8efab46ff80eca2c0dc3ddb8823c9e2d786",
+    "completed_round": 0,
+    "model_sha256": "00862896f4644ff8ac2f956f30e92d5b3dd92b175320804a6262c278a947ec9e"
+  },
+  "round-1.pt": {
+    "completed_updates": 1000,
+    "sha256": "8d67c5f8f25f640322a9d4956e1bbc57448be15598271b4a45aa5f41f6bb1e62",
+    "completed_round": 1,
+    "model_sha256": "1ed821939ba86696000a5f48267d8c003a963df855a7146e6774dcd142094759"
+  },
+  "round-2.pt": {
+    "completed_updates": 2000,
+    "sha256": "a022145f7dcd41b4ce850ad4c0ab2f9264ac0da6615c07e82d92403a96b8b3df",
+    "completed_round": 2,
+    "model_sha256": "f5115b4ebc3526c3adfc4daa2cc0864f949ee86a6c0a1c47992d2ebbf47d0b8e"
+  },
+  "round-3.pt": {
+    "completed_updates": 3000,
+    "sha256": "5f0e94ce8f130ad64b7a8e71332a54984d4127a0e762521345904a1d755e3cb7",
+    "completed_round": 3,
+    "model_sha256": "e81013c3871564d4a31549db0b5086c501d796dea4888065570718dd2d401d34"
+  },
+  "round-4.pt": {
+    "completed_updates": 4000,
+    "sha256": "3f82da684d1715cd1d73d11f4e44eae22652a70ee26bed5b782e6e8f7f0bd93f",
+    "completed_round": 4,
+    "model_sha256": "95f13de101f8362c2e464ab9af5495caedda61afa03444e0be2e579c99f64805"
+  },
+  "round-5.pt": {
+    "completed_updates": 5000,
+    "sha256": "1c0442ff0e5be9f3598bbc462f64ff153e492316586a073bb12892e8e2609dd5",
+    "completed_round": 5,
+    "model_sha256": "3d961898c109ae2e7e44dc8d600fbcc968fd2db0beddccbd3041766411f38c6e"
+  },
+  "final_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "ac25485de5c619097bf72cc546d93208fcdb27937a3d5af950aa23f017e10d69",
+    "completed_round": 5,
+    "model_sha256": "3d961898c109ae2e7e44dc8d600fbcc968fd2db0beddccbd3041766411f38c6e"
+  },
+  "selected_coverage.pt": {
+    "completed_updates": 3000,
+    "sha256": "d2a9319a83e5a92f62f3a49a5eba2e4cc9f86550ea52ce3a71537d7465f30733",
+    "completed_round": 3,
+    "model_sha256": "e81013c3871564d4a31549db0b5086c501d796dea4888065570718dd2d401d34"
+  }
+}

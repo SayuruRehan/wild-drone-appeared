@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "d2b008fc1e52b737dddd5d781d047af338a153978b553ea63be31a82a23aa033",
+    "completed_round": 0,
+    "model_sha256": "74522b8bf6118730626418784a3835a0c15508124a83c448f53bc7ce959c3734"
+  },
+  "round-1.pt": {
+    "completed_updates": 1000,
+    "sha256": "494c948f2c4f6acea7bce4729befcba5b3e180a97c21c9d9199d6ec89c9c8494",
+    "completed_round": 1,
+    "model_sha256": "878fb9f459058ce0761d3ac4992fd490e19a7e9785ffab3b472c8fe613e55181"
+  },
+  "round-2.pt": {
+    "completed_updates": 2000,
+    "sha256": "889b7329f5fdb655c0d3b0db98d04b126d567597217e69565aa57c2109adec68",
+    "completed_round": 2,
+    "model_sha256": "7909a6adb093313b41c20e08c237ab0e6e9b8382061029c6d34c5648dae946a5"
+  },
+  "round-3.pt": {
+    "completed_updates": 3000,
+    "sha256": "6335bea1c7c99774a148e8f5127a7468e7f877667a92b4cfcd13a6eb290d64b5",
+    "completed_round": 3,
+    "model_sha256": "594add64aa5548fe55881b4c57ad07696753a72e88a0289751aad02fd794bcf0"
+  },
+  "round-4.pt": {
+    "completed_updates": 4000,
+    "sha256": "ef66159efe1fbe665cfc442899a559dd3214b1be9915f844f144edfb66c81da7",
+    "completed_round": 4,
+    "model_sha256": "a019cd3255f46f03e6944abd7bbf7d1937f673acc457d37cc8b54cb2b0df174d"
+  },
+  "round-5.pt": {
+    "completed_updates": 5000,
+    "sha256": "4d25b9115722df13e4203a58f5449d898b2ae197e3f2a51f26ccea7913eaae23",
+    "completed_round": 5,
+    "model_sha256": "1a16204affeae3a97b5566967d614c6dd20819e325f0d4bc58a05e663eae8d28"
+  },
+  "final_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "6202f066b42b866d7644ccbac869f09eec0be6334854bf90df8470d883efc2ff",
+    "completed_round": 5,
+    "model_sha256": "1a16204affeae3a97b5566967d614c6dd20819e325f0d4bc58a05e663eae8d28"
+  },
+  "selected_coverage.pt": {
+    "completed_updates": 3000,
+    "sha256": "326d5b7621677e1b061ec9b60788aa373bf67be10d5f42cc4ff565cae18ae818",
+    "completed_round": 3,
+    "model_sha256": "594add64aa5548fe55881b4c57ad07696753a72e88a0289751aad02fd794bcf0"
+  }
+}

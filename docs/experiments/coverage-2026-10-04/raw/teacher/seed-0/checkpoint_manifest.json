@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "b3e7600f251a7b0e11145bc409cd365a720c4eda055956968d354e31be36b143",
+    "completed_round": 0,
+    "model_sha256": "00862896f4644ff8ac2f956f30e92d5b3dd92b175320804a6262c278a947ec9e"
+  },
+  "round-1.pt": {
+    "completed_updates": 1000,
+    "sha256": "90f959fcf3c6775f938e3471bd4f55fd9ba614e431c3cedd7afc6f3b1da35246",
+    "completed_round": 1,
+    "model_sha256": "1ed821939ba86696000a5f48267d8c003a963df855a7146e6774dcd142094759"
+  },
+  "round-2.pt": {
+    "completed_updates": 2000,
+    "sha256": "fd53df054cce8c41b9b219952b162c4f98d37e77a0d4bce435eb6cbef80bb877",
+    "completed_round": 2,
+    "model_sha256": "1eb9df5268ebbb90d1245273a1be2e27e5ec2193212a14861908cd34141bfaaf"
+  },
+  "round-3.pt": {
+    "completed_updates": 3000,
+    "sha256": "0b43f9c35a6b98ebd9efdacac4ee588647cc3c2a4f85e19c7474a07afc8ae82d",
+    "completed_round": 3,
+    "model_sha256": "4266a02a7d8dd0962bbed4a26e787ed57d7c9971205d4a21d58be550e34a7417"
+  },
+  "round-4.pt": {
+    "completed_updates": 4000,
+    "sha256": "59de50f2e9a112d263642b7146e1e937ba3b3f024b693ec06d6eb50c51f820bb",
+    "completed_round": 4,
+    "model_sha256": "9293a75b30e0f902f3c5cbeaabf2cfa973b6168deca64f805b4d4f74e25b3c78"
+  },
+  "round-5.pt": {
+    "completed_updates": 5000,
+    "sha256": "cecc548865093d8b0717723acda7df90af19fb09e5d826a04cb02b417ca68df4",
+    "completed_round": 5,
+    "model_sha256": "61aecad6c8471d6470a78bc124e55e08332c46e6ab352bbd7a62849536aef3d8"
+  },
+  "final_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "8796e2a367b475dc8ed13529ee9ddce2d759d90b9594b121cdad1ee1f46ef099",
+    "completed_round": 5,
+    "model_sha256": "61aecad6c8471d6470a78bc124e55e08332c46e6ab352bbd7a62849536aef3d8"
+  },
+  "selected_coverage.pt": {
+    "completed_updates": 5000,
+    "sha256": "787fb66f995aae74d5af12bb831cbcc3f1685eb8cae825555fe92ad131ce4862",
+    "completed_round": 5,
+    "model_sha256": "61aecad6c8471d6470a78bc124e55e08332c46e6ab352bbd7a62849536aef3d8"
+  }
+}

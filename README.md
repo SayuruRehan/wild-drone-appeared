@@ -213,6 +213,16 @@ Run the bounded CPU diagnostic into a fresh folder:
 python scripts/run_imitation_probe.py --out runs/imitation-v5
 ```
 
+The [matched coverage comparison](docs/experiments/coverage-2026-10-04/README.md) tests
+additional teacher trajectories and Greedy labels on learner-generated states at the same
+5,000-update budget. Broader teacher data improves held-out decision agreement, while
+fleet-return coordination remains unresolved. Both additions are supervised experiments,
+with [fixed collection and validation rules](docs/coverage-probe-protocol.md):
+
+```bash
+python scripts/run_coverage_probe.py --out runs/coverage-v6
+```
+
 ## Baselines and fair evaluation
 
 | Baseline | Behaviour |
