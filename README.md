@@ -233,6 +233,16 @@ More fitting alone has not produced reliable return and recharge behavior. The
 python scripts/run_fitting_budget_probe.py --out runs/fitting-budget-v7
 ```
 
+The [matched input-representation diagnostic](docs/experiments/representation-2026-10-04/README.md)
+tests explicit base-relative coordinates and return-energy margin against an equal-sized
+zero-padded control. Both final arms lose the fleet in all 15 missions, so this input change
+is not promoted into RL defaults. Its [fixed comparison](docs/representation-protocol.md)
+preserves deployment action authority and separately reports selected policies:
+
+```bash
+python scripts/run_representation_probe.py --out runs/representation-v8
+```
+
 ## Baselines and fair evaluation
 
 | Baseline | Behaviour |
