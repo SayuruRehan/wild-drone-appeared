@@ -1,0 +1,8 @@
+Implementation revision: e465a226539d5f508beb7e8909fb1da245018712
+Command: .venv/bin/python -m pytest -q
+........................................................................ [ 57%]
+..................................ssss.....s.........                    [100%]
+120 passed, 5 skipped in 27.39s
+
+Command: .venv/bin/ruff check src tests scripts
+All checks passed.

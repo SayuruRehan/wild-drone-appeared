@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "28afdf59c39bf45537a0b3f8dbc7ac34c95c44f6df77a5295372260f8120f0de",
+    "completed_round": 0,
+    "model_sha256": "e7fe51d03957f16796de639a1ecd7b3f925a10de363f2619f964dbe78851348f"
+  },
+  "round-1.pt": {
+    "completed_updates": 4000,
+    "sha256": "c1abde161e8881446de2b221dca5e5a336b7299fb2ad70b5693f63b486007a7d",
+    "completed_round": 1,
+    "model_sha256": "a0fce839c48da8eaa4acdf3a45ddac5d520ee79ab051b26794e80a2ef1c7f7f9"
+  },
+  "round-2.pt": {
+    "completed_updates": 8000,
+    "sha256": "1aefddfc409afa503dd86fc9cfd5be775d161c53ad97717dbf480a1e55feee9b",
+    "completed_round": 2,
+    "model_sha256": "a4264f2a71c84b18c7c0715f4eb83f4f4adf159219df267ffbdb79096f4418e4"
+  },
+  "round-3.pt": {
+    "completed_updates": 12000,
+    "sha256": "9858382754016a8e3787e7794713c273111779f342002c098a7476bb110ea333",
+    "completed_round": 3,
+    "model_sha256": "126d8930cff447aa7a7346f74164ec7690f529ec11cf8c36da37f5897dfc43b8"
+  },
+  "round-4.pt": {
+    "completed_updates": 16000,
+    "sha256": "928e2427ea20f5df360a9290bec5a19098e4eec75fe22d9cdaf86b9653ec1259",
+    "completed_round": 4,
+    "model_sha256": "980ecb62771e3b6fe0110553687db39462ce0349c48bc9112483b7528c34534d"
+  },
+  "round-5.pt": {
+    "completed_updates": 20000,
+    "sha256": "5a6291d8e8d482364f5559ae5ad7a1ac93db765c3b0af32088b3281adab9d438",
+    "completed_round": 5,
+    "model_sha256": "a2290a039842b450bc286a61487c46de5ce3bc374daff06c6ea1c381bdba7e97"
+  },
+  "final_recovery.pt": {
+    "completed_updates": 20000,
+    "sha256": "82280435f03c93fd190e4fc658427934ea1202d790a2a4943bab9f06f314a0b5",
+    "completed_round": 5,
+    "model_sha256": "a2290a039842b450bc286a61487c46de5ce3bc374daff06c6ea1c381bdba7e97"
+  },
+  "selected_recovery.pt": {
+    "completed_updates": 20000,
+    "sha256": "3d232b1cb673b0c8991c95b642094faca7f1e756a39033639d8317f4adc03a4b",
+    "completed_round": 5,
+    "model_sha256": "a2290a039842b450bc286a61487c46de5ce3bc374daff06c6ea1c381bdba7e97"
+  }
+}

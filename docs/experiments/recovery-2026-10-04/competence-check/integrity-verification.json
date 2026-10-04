@@ -1,0 +1,6 @@
+{
+  "checkpoints": 12,
+  "missions": 24,
+  "non_timing_fields": 648,
+  "training_world_matches_teacher_all_three_fits": true
+}

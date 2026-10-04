@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "46de54ccc09bdba7556e68ea0f97f160ccc1f313e38aebb8aaa19fc126c9ea8b",
+    "completed_round": 0,
+    "model_sha256": "00862896f4644ff8ac2f956f30e92d5b3dd92b175320804a6262c278a947ec9e"
+  },
+  "round-1.pt": {
+    "completed_updates": 4000,
+    "sha256": "63dc7512dacceaf1d56f9870005e06cedead61aeb2e1ce8843d7784f38cfbdae",
+    "completed_round": 1,
+    "model_sha256": "718029b0cd58479d222bda5072a68ecfa7357451975d694a31a9a568a5f50f88"
+  },
+  "round-2.pt": {
+    "completed_updates": 8000,
+    "sha256": "0ffea4f5eb0089c8991f31e5719300e0023ebca83dcc9b58e9b770a6776e81fd",
+    "completed_round": 2,
+    "model_sha256": "ee1f373e88c2949bf29eaa46e0d81e792e753d298a2b4d0c13126311d3593ad6"
+  },
+  "round-3.pt": {
+    "completed_updates": 12000,
+    "sha256": "22a6acd4833a3dd770c385de24e3aa778601edd7a400792bed71d1df7bdc340e",
+    "completed_round": 3,
+    "model_sha256": "f1562054077d0edf6e94ea1070beb248c3807164ca33dc267acd2c5353c06391"
+  },
+  "round-4.pt": {
+    "completed_updates": 16000,
+    "sha256": "73d1b86c96ab656fc6a7242b7dc447862e47ffa77038074a148e9dc58eddcfcb",
+    "completed_round": 4,
+    "model_sha256": "9d92b501a3957d9c2f2e7234eeb66740443ea71dbd02127361fff57fbb4ebad0"
+  },
+  "round-5.pt": {
+    "completed_updates": 20000,
+    "sha256": "e3818dcf4bd2d679890a8af8144c368bcfcce4a7f08d192513bf5b198d99beab",
+    "completed_round": 5,
+    "model_sha256": "a87cf1c99c3822ce56f97a3fc9fd47e79d5b98e7e6f1e33407177fdcf2ee9808"
+  },
+  "final_recovery.pt": {
+    "completed_updates": 20000,
+    "sha256": "a82f4fa7941c15e3f69ee9f1f719eb79b9d980f5d9af8438d44823b3d7444afa",
+    "completed_round": 5,
+    "model_sha256": "a87cf1c99c3822ce56f97a3fc9fd47e79d5b98e7e6f1e33407177fdcf2ee9808"
+  },
+  "selected_recovery.pt": {
+    "completed_updates": 4000,
+    "sha256": "2479a42bf72a2d1f2e09b1e271f975ce7e969f3e336db3b15d9d48cfe67ad4a8",
+    "completed_round": 1,
+    "model_sha256": "718029b0cd58479d222bda5072a68ecfa7357451975d694a31a9a568a5f50f88"
+  }
+}

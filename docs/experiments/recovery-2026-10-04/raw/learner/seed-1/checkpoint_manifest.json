@@ -1,0 +1,50 @@
+{
+  "round-0.pt": {
+    "completed_updates": 0,
+    "sha256": "0fe9b2ac8fe59d3f6ab036a0d84f31c3fe0993676576b4360ad2e6d481c99829",
+    "completed_round": 0,
+    "model_sha256": "74522b8bf6118730626418784a3835a0c15508124a83c448f53bc7ce959c3734"
+  },
+  "round-1.pt": {
+    "completed_updates": 4000,
+    "sha256": "cb80355e371ad43af947bdf2ff219572be64e03e43e24a1f1fd95294fb480d3b",
+    "completed_round": 1,
+    "model_sha256": "b115beb512677c7f9f4106a182aaba56a35ed9f28d903e56c74ca6cbcc5592d2"
+  },
+  "round-2.pt": {
+    "completed_updates": 8000,
+    "sha256": "f1b3b326c6bbc88d68ffd678632773ea69b1f495d8c3825c1fe985f6276d1631",
+    "completed_round": 2,
+    "model_sha256": "085c228ea3613f28ddc550d242004d7f5daef9bbe08c1ae9dbff97f304d5cf5d"
+  },
+  "round-3.pt": {
+    "completed_updates": 12000,
+    "sha256": "2a2a760fb93444b27552d309cd11e8809ff350ee960b32fcdecb40e8adb2fc4b",
+    "completed_round": 3,
+    "model_sha256": "8d51b9bef28b2c4a29c5e795e58ac6bba93f165bc074598f74925ffb69d25b35"
+  },
+  "round-4.pt": {
+    "completed_updates": 16000,
+    "sha256": "bb524f788bfcef5b7eb05b9d4c139c05090127aaa49ca577a77e8ee9e9c95c22",
+    "completed_round": 4,
+    "model_sha256": "7052ecfb1302b788b4c9707f5808137db2ed08afc67a2ab1d76831e749a9d41f"
+  },
+  "round-5.pt": {
+    "completed_updates": 20000,
+    "sha256": "faf4e348a38b10984da8af7f57b628246cb03fa4bfcd6ac6c738fc59102662a1",
+    "completed_round": 5,
+    "model_sha256": "e50ffe108a254d53ad3272c3a444621c3661cc14b3b6b40c7c52cc07f35e4f09"
+  },
+  "final_recovery.pt": {
+    "completed_updates": 20000,
+    "sha256": "e7c962674f7c33d808e53520ee40507fff35c9ca175abdb009bbddbb39d5d3f3",
+    "completed_round": 5,
+    "model_sha256": "e50ffe108a254d53ad3272c3a444621c3661cc14b3b6b40c7c52cc07f35e4f09"
+  },
+  "selected_recovery.pt": {
+    "completed_updates": 4000,
+    "sha256": "2d0b9b95d966ef919e3c8b0204eae75e6566eb461d779c32415e78b497101a07",
+    "completed_round": 1,
+    "model_sha256": "b115beb512677c7f9f4106a182aaba56a35ed9f28d903e56c74ca6cbcc5592d2"
+  }
+}

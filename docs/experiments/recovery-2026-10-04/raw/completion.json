@@ -1,0 +1,14 @@
+{
+  "persisted_missions": 185,
+  "mission_csv_sha256": "7b9b399991ecfc15314f6a85eca7babf61f27cdb69ad7524c02d4e6e4f495c96",
+  "paired_initial_model_sha256": {
+    "0": "00862896f4644ff8ac2f956f30e92d5b3dd92b175320804a6262c278a947ec9e",
+    "1": "74522b8bf6118730626418784a3835a0c15508124a83c448f53bc7ce959c3734",
+    "2": "e7fe51d03957f16796de639a1ecd7b3f925a10de363f2619f964dbe78851348f"
+  },
+  "paired_first_round_model_sha256": {
+    "0": "718029b0cd58479d222bda5072a68ecfa7357451975d694a31a9a568a5f50f88",
+    "1": "b115beb512677c7f9f4106a182aaba56a35ed9f28d903e56c74ca6cbcc5592d2",
+    "2": "a0fce839c48da8eaa4acdf3a45ddac5d520ee79ab051b26794e80a2ef1c7f7f9"
+  }
+}

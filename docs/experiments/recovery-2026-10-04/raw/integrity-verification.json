@@ -1,0 +1,12 @@
+{
+  "checkpoints": 48,
+  "missions": 185,
+  "non_timing_fields": 4995,
+  "example_trace_fields": 4560,
+  "datasets": 26,
+  "source_files": 12,
+  "added_collections": 24,
+  "collection_states_replayed": 73648,
+  "historical_initial_prefixes": 3,
+  "same_runtime_original_4k_prefixes": 1
+}

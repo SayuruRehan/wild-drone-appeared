@@ -1,0 +1,51 @@
+{
+  "training": {
+    "full_fleet_losses": 0,
+    "missions": 3,
+    "return": {
+      "mean": -5.020112261217571,
+      "sample_sd": 0.0
+    },
+    "weighted_freshness": {
+      "mean": 0.3041717670547125,
+      "sample_sd": 0.0
+    },
+    "total_losses": {
+      "mean": 0.0,
+      "sample_sd": 0.0
+    },
+    "safe_returns": {
+      "mean": 3.0,
+      "sample_sd": 0.0
+    },
+    "charge_completions": {
+      "mean": 3.0,
+      "sample_sd": 0.0
+    }
+  },
+  "validation": {
+    "full_fleet_losses": 15,
+    "missions": 15,
+    "return": {
+      "mean": -28.659940213890707,
+      "sample_sd": 0.6421025765283084
+    },
+    "weighted_freshness": {
+      "mean": 0.06352074305155923,
+      "sample_sd": 0.016995919763029454
+    },
+    "total_losses": {
+      "mean": 3.0,
+      "sample_sd": 0.0
+    },
+    "safe_returns": {
+      "mean": 0.06666666666666667,
+      "sample_sd": 0.11547005383792518
+    },
+    "charge_completions": {
+      "mean": 0.0,
+      "sample_sd": 0.0
+    }
+  },
+  "training_joint_accuracy": 1.0
+}
