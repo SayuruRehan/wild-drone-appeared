@@ -1,0 +1,21 @@
+{
+  "thresholds": {
+    "return_gain": 0.5,
+    "freshness_gain": 0.01,
+    "candidate_losses": 0
+  },
+  "comparisons": {
+    "unshaped double dqn": {
+      "return_gain": -0.2756574225727679,
+      "freshness_gain": -0.007412754463197524,
+      "passed": false
+    },
+    "masked random": {
+      "return_gain": 0.5612669721247265,
+      "freshness_gain": 0.002073439834851439,
+      "passed": false
+    }
+  },
+  "candidate_losses": 0,
+  "passed": false
+}

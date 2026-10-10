@@ -8,6 +8,7 @@ from pathlib import Path
 
 import torch
 
+from wild_drone.coordination import SIGNAL_RULE
 from wild_drone.learning import load_policy
 from wild_drone.masked_learning import MASK_RULE
 
@@ -42,12 +43,18 @@ def validate_cached_fit(masked, algorithm, config, settings, output_dir):
                 'action_mask': MASK_RULE if masked else None}
     if masked and algorithm == 'dqn' and settings.double_dqn:
         expected['dqn_target_rule'] = 'masked-double-dqn-v1'
+    if masked and settings.coordination_shaping_weight:
+        expected['learning_signal'] = SIGNAL_RULE
     try:
         saved = json.loads(summary.read_text())
         policy = torch.load(out/'policy.pt', map_location='cpu', weights_only=True)
         for label, data in [('summary', saved), ('checkpoint', policy)]:
             for key, value in expected.items():
-                if data.get(key) != value:
+                actual = data.get(key)
+                if key == 'train_config' and isinstance(actual, dict):
+                    # This optional field did not exist in historical zero-weight fits.
+                    actual = {'coordination_shaping_weight': 0.0, **actual}
+                if actual != value:
                     raise ValueError(f'{label} {key} differs from the requested fit')
         if saved['model_config'] != policy['model_config']:
             raise ValueError('checkpoint model differs from summary')
@@ -57,6 +64,9 @@ def validate_cached_fit(masked, algorithm, config, settings, output_dir):
                    'energy_used', 'safe_returns', 'charge_completions', 'collision_attempts',
                    'steps', 'training_seed', 'scenario_seed', 'episode')
         rows = _metric_rows(out/'training.csv', metrics + ('updates',))
+        if settings.coordination_shaping_weight:
+            _metric_rows(out/'training.csv', ('learning_return', 'shaping_return',
+                         'discounted_shaping_return', 'initial_potential'))
         episodes = list(range(1, settings.episodes+1))
         if [int(r['episode']) for r in rows] != episodes:
             raise ValueError('training CSV is incomplete')

@@ -1,0 +1,22 @@
+{
+  "unshaped": {
+    "policy.pt": {
+      "sha256": "0f51229eac87d64c4cf5ca4728d1c72dd7d7f0884672f2f4e6430ba8e01a5abc",
+      "bytes": 515480
+    },
+    "best_policy.pt": {
+      "sha256": "16f31b83c26c720d76272d086635d1a7ee403897263ece3f9f3827fe46c11010",
+      "bytes": 515604
+    }
+  },
+  "shaped": {
+    "policy.pt": {
+      "sha256": "e2c58045c8db7cd2f1c8cc5688fabc84d085515a2b5e3df240f5f0386d0edae1",
+      "bytes": 515480
+    },
+    "best_policy.pt": {
+      "sha256": "ae25e4d4057c6712ef453b74d879c54ae00e520b75edbf858c605be8a5942485",
+      "bytes": 515604
+    }
+  }
+}
