@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "source_hashes_verified": 26,
+  "checkpoint_files_verified": 6,
+  "dataset_files_verified": 3,
+  "natural_states_replayed": 446,
+  "probe_variants_replayed": 160,
+  "raw_score_vectors_exactly_reproduced": 3636,
+  "original_step_inspection_rewards_checked": 67750,
+  "unique_target_states_checked": 542,
+  "balanced_urgency_pairs_verified": 32,
+  "one_cell_pose_pairs_verified": 32,
+  "pair_reference_best_sets_disjoint": true,
+  "supervised_exports_rejected_by_rl_loaders": true,
+  "initial_networks_exact_fresh_seed_initialisation": true,
+  "split_and_target_normalisation_verified": true
+}

@@ -1,0 +1,86 @@
+{
+  "capability_criterion_passed": false,
+  "per_seed_criterion": [
+    {
+      "seed": 0,
+      "checks": {
+        "training_regret_le_005": true,
+        "heldout_regret_le_020": false,
+        "improves_initial_ge_015": false,
+        "improves_action_mean_ge_015": false,
+        "heldout_best_match_ge_025": false
+      },
+      "passed": false
+    },
+    {
+      "seed": 1,
+      "checks": {
+        "training_regret_le_005": true,
+        "heldout_regret_le_020": false,
+        "improves_initial_ge_015": false,
+        "improves_action_mean_ge_015": false,
+        "heldout_best_match_ge_025": false
+      },
+      "passed": false
+    },
+    {
+      "seed": 2,
+      "checks": {
+        "training_regret_le_005": true,
+        "heldout_regret_le_020": false,
+        "improves_initial_ge_015": true,
+        "improves_action_mean_ge_015": false,
+        "heldout_best_match_ge_025": false
+      },
+      "passed": false
+    }
+  ],
+  "heldout_fit_mean_sd": {
+    "normalised_gain_regret": {
+      "mean": 0.46241337838874214,
+      "sample_sd": 0.00821878840096407
+    },
+    "one_step_optimal": {
+      "mean": 0.07795698924731183,
+      "sample_sd": 0.018624202231923414
+    },
+    "masked_regression_error": {
+      "mean": 0.12710561413287877,
+      "sample_sd": 0.008783333110682358
+    }
+  },
+  "missing_snapshots": {
+    "training": [
+      {
+        "scenario_seed": 20,
+        "collector": "greedy",
+        "step": 96,
+        "reason": "collector terminated before snapshot"
+      }
+    ],
+    "heldout": [
+      {
+        "scenario_seed": 6000,
+        "collector": "greedy",
+        "step": 96,
+        "reason": "collector terminated before snapshot"
+      }
+    ]
+  },
+  "planned_training_states": 320,
+  "planned_heldout_states": 128,
+  "observed_states": {
+    "training": 319,
+    "heldout": 127,
+    "probes": 160
+  },
+  "probe_coverage_cases": 32,
+  "probe_pair_counts": {
+    "noop": 32,
+    "urgency": 32,
+    "position": 32
+  },
+  "elapsed_seconds": 163.9382013699999,
+  "representation_changed": false,
+  "rl_or_mission_improvement_claim": false
+}

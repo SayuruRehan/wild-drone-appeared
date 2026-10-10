@@ -1,0 +1,98 @@
+{
+  "README.md": {
+    "bytes": 9009,
+    "sha256": "a23ad597af273897601e9ea62ce7641713181ce98b19550ed84fc19f685ad920"
+  },
+  "action-mean-control.json": {
+    "bytes": 4221,
+    "sha256": "7fd20d56a816bc08a890176b5bfa85241058d266a0679e580415bf288bb32a01"
+  },
+  "checkpoints.json": {
+    "bytes": 1302,
+    "sha256": "8c41a6747c045cd94f36b52eaef19757579bbee0144afdf14fc41814891866d6"
+  },
+  "completion.json": {
+    "bytes": 2082,
+    "sha256": "2e0f0353635b7eb2d09225b84d30286ce3aa6b3313e4fcd4dcb886e63b07fe8b"
+  },
+  "datasets.json": {
+    "bytes": 501,
+    "sha256": "7de3aaaeb68a734aa6370422462034b7e4eff9aa42a36520591b5cce175bfde4"
+  },
+  "inputs.json.gz": {
+    "bytes": 322177,
+    "sha256": "208f0dcefe6e4db2fdeaa78cd007de72fdf798a606cd5da7ddfcadb150cc371b"
+  },
+  "launch.json": {
+    "bytes": 4215,
+    "sha256": "7c0c18e7788ceccdc0a67999ecf6306088b604c89cda6d42293b541f59040aa8"
+  },
+  "metric-verification.json": {
+    "bytes": 417,
+    "sha256": "36f6e08c3dd1b69069e943fe46a6013fe8496ca964df4665aae662711d8010fe"
+  },
+  "natural.csv": {
+    "bytes": 893891,
+    "sha256": "3a7e7b5052e430db6c4c88bebad014ce880d17a796aa72a2f0fce1f974aea480"
+  },
+  "pairs.csv": {
+    "bytes": 285947,
+    "sha256": "324c5475b73aac829b0382b49a7c0704b3b9e1b8099dac035b638ff1e8949f5c"
+  },
+  "per-fit.csv": {
+    "bytes": 2249,
+    "sha256": "dcb48f7488fc2f00970cd1d2d67bed26ed342e10457a2013d3d21548853bf9e0"
+  },
+  "probe-plan.json": {
+    "bytes": 49126,
+    "sha256": "14ff1ce6bf905c44cd3ad3002a228fdf68ae87648c1d893f1835b5d0dedf55b0"
+  },
+  "recompute.py": {
+    "bytes": 8517,
+    "sha256": "4fbb9d085c00ccbb54e0b8fad11ef6f23d234f635f27b199e998534761c501bf"
+  },
+  "replay-verification.json": {
+    "bytes": 616,
+    "sha256": "9345f5baa71812b59fe8382c45008b449e796719f51edbb02c1c20ead8f49244"
+  },
+  "seed-0/final-scores.json.gz": {
+    "bytes": 632828,
+    "sha256": "a10985e257c86e33db5d5a1b42a7eff4ca9a2bf3e7e6aec476ddf6fbee42b608"
+  },
+  "seed-0/initial-scores.json.gz": {
+    "bytes": 655749,
+    "sha256": "d5add05290a150c930ea28ad132d7fd86075dd0efbccb9f780185869991c0186"
+  },
+  "seed-0/training.csv": {
+    "bytes": 53878,
+    "sha256": "dcbaeb811b73f6998a68f62c5262f7a250cdcabbee45d310a773bc35efc492a9"
+  },
+  "seed-1/final-scores.json.gz": {
+    "bytes": 632864,
+    "sha256": "92cf041c5746b2d6a89176baa7cc1f5d9c41ba42f79343decb31f1a9de59f5c4"
+  },
+  "seed-1/initial-scores.json.gz": {
+    "bytes": 658843,
+    "sha256": "c9d337c533a2199f66ba0dc99d82341945703c6f8eafc9c16e22613ab2e22725"
+  },
+  "seed-1/training.csv": {
+    "bytes": 53951,
+    "sha256": "31615952083f6867054d7ccd6d7d1c939333cfa7de494b3fdb49d2e5ee63fe16"
+  },
+  "seed-2/final-scores.json.gz": {
+    "bytes": 632238,
+    "sha256": "b89fd583c1d4c147a32dbc9b7f6fb82dcd56e47ed0a8ed9163c2cfa8151a47c5"
+  },
+  "seed-2/initial-scores.json.gz": {
+    "bytes": 658122,
+    "sha256": "0391792aada4a58259c02d22aa6e3c5b5a75b6cfd3c25b398829debe6327cbce"
+  },
+  "seed-2/training.csv": {
+    "bytes": 54235,
+    "sha256": "49a26f7068d1e2cad48b2fed22d6efb3040d159111a47c852d964737d0252e7f"
+  },
+  "verification.json": {
+    "bytes": 1635,
+    "sha256": "66ee55b7386e05b623d4792f564499ea82b7f2a3d551457209a2eb83edca961b"
+  }
+}

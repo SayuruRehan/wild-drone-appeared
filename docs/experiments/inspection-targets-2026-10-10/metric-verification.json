@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "natural_rows": 3568,
+  "pair_rows": 768,
+  "per_fit_rows": 16,
+  "world_split_disjoint": true,
+  "no_op_vectors_exact": true,
+  "state_blind_pair_orders_unchanged": true,
+  "aggregate_mean_sd_verified": true,
+  "predeclared_capability_criterion_verified": true,
+  "implementation": "Independent scalar argmax/ties and explicit action-pair loops; no production metric or fitting functions."
+}
