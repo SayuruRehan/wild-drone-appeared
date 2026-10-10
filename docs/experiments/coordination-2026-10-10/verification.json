@@ -1,0 +1,43 @@
+{
+  "tests": {
+    "passed": 176,
+    "cuda_only_skipped": 5,
+    "command": "python -m pytest -q"
+  },
+  "lint": {
+    "command": "python -m ruff check src tests scripts",
+    "passed": true,
+    "broader_notebook_lint": "Existing 58 style violations found by ruff check .; notebooks unchanged"
+  },
+  "default_off_parity": {
+    "small_reference": {
+      "grid_size": 8,
+      "horizon": 12,
+      "episodes": 2,
+      "training_seed": 7,
+      "batch_size": 4,
+      "warmup_steps": 4,
+      "model_tensors_exactly_equal": true,
+      "all_existing_training_csv_fields_exactly_equal": true
+    },
+    "full_reference": {
+      "episodes": 100,
+      "training_seed": 0,
+      "reference": "Previous corrected masked Double DQN pilot",
+      "model_tensors_exactly_equal": true
+    }
+  },
+  "max_discounted_shaping_identity_residual": 2.6645352591003757e-15,
+  "complete_training_rows_per_fit": 100,
+  "monitoring_rows_per_fit": 5,
+  "screening_missions": 80,
+  "paired_comparisons": 40,
+  "behavior_replay_missions": 80,
+  "behavior_replay_original_metrics_exactly_equal": true,
+  "fit_elapsed_seconds": {
+    "unshaped": 121.72422229600033,
+    "shaped": 120.3083009539996
+  },
+  "source_revision": "503189cc66d137aefadebba933573a233d13bbb9",
+  "source_verification": "Created Git tree blob hashes checked against local snapshot; all unrelated source and repository blobs preserved. PYTHONPATH explicitly bound to snapshot/src."
+}

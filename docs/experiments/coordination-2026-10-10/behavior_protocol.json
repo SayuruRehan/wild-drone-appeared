@@ -1,0 +1,31 @@
+{
+  "kind": "Post hoc nonintervening behavior diagnosis; not used to tune candidate",
+  "source_revision": "503189cc66d137aefadebba933573a233d13bbb9",
+  "scenario_seeds": [
+    5700,
+    5701,
+    5702,
+    5703,
+    5704,
+    5705,
+    5706,
+    5707,
+    5708,
+    5709,
+    5710,
+    5711,
+    5712,
+    5713,
+    5714,
+    5715,
+    5716,
+    5717,
+    5718,
+    5719
+  ],
+  "checkpoint_choice": "final policy.pt",
+  "training_seed": 0,
+  "implementation": "wild_drone.behavior.behavior_episode",
+  "original_metrics_check": "All80 replays matched screen return,freshness,overdue,losses,energy,returns,charges,collisions,steps exactly; decision timings are machine-dependent.",
+  "command_diversity_note": "Joint-action diversity/repetition is descriptive, not a coordination-quality objective."
+}
