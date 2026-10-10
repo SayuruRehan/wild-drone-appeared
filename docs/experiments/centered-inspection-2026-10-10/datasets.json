@@ -1,0 +1,26 @@
+{
+  "training": {
+    "sha256": "226229d1e32ea98ceca4d4d6aa0f0f079a9666cc8932530e09fde7830731564e",
+    "bytes": 5145392,
+    "states": 319,
+    "informative": 303
+  },
+  "heldout": {
+    "sha256": "5a125b064a824f7bf35fa3365eff521c75b1b90b4f7556156d1ad8cb6820e689",
+    "bytes": 2049958,
+    "states": 127,
+    "informative": 124
+  },
+  "probes": {
+    "sha256": "2d6977cf61c5806cfbededde39549ee191cd0dd6782ecd35cdcb910ee0d05123",
+    "bytes": 2581980,
+    "states": 160,
+    "informative": 160
+  },
+  "fresh": {
+    "sha256": "5de671ffac4e0d85432d01a1343bed573facb75d2825e2e5efa5f2a641d7896c",
+    "bytes": 2066130,
+    "states": 128,
+    "informative": 125
+  }
+}
