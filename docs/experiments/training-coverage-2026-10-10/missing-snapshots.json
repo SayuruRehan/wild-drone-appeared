@@ -1,0 +1,68 @@
+{
+  "original_training": [
+    {
+      "scenario_seed": 20,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    }
+  ],
+  "appended_training": [
+    {
+      "scenario_seed": 98,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 134,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 146,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 147,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 158,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 160,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 174,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 192,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    }
+  ],
+  "fresh": [
+    {
+      "scenario_seed": 6412,
+      "collector": "greedy",
+      "step": 96,
+      "reason": "collector terminated before snapshot"
+    }
+  ]
+}

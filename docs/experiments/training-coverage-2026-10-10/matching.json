@@ -1,0 +1,20 @@
+[
+  {
+    "seed": 0,
+    "initial_tensors_exactly_equal": true,
+    "parameters_per_corpus": 127677,
+    "small_final_and_training_history_match_parent": true
+  },
+  {
+    "seed": 1,
+    "initial_tensors_exactly_equal": true,
+    "parameters_per_corpus": 127677,
+    "small_final_and_training_history_match_parent": true
+  },
+  {
+    "seed": 2,
+    "initial_tensors_exactly_equal": true,
+    "parameters_per_corpus": 127677,
+    "small_final_and_training_history_match_parent": true
+  }
+]

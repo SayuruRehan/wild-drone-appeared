@@ -1,0 +1,26 @@
+{
+  "small": {
+    "sha256": "7b2d1c605fc20121790010e2b0149cfbf57e71e21c07bacdbe093bac7ceb4d4c",
+    "bytes": 5145362,
+    "states": 319,
+    "informative": 303
+  },
+  "expanded": {
+    "sha256": "a266e68708db674ddba85e77834ea08b34e6dda87e5f076a4b2f90bff7789dbd",
+    "bytes": 25652528,
+    "states": 1591,
+    "informative": 1521
+  },
+  "fresh": {
+    "sha256": "d3fced0de817931b5be4ab7d1698a8b11c1498f3fd856c0c9f50dfdcab700d1c",
+    "bytes": 2049938,
+    "states": 127,
+    "informative": 121
+  },
+  "reused": {
+    "sha256": "1ee1a9e24e89b2fb1a908a10e4eaaee5ae65aef94c6a9748928afe012edea454",
+    "bytes": 2066140,
+    "states": 128,
+    "informative": 125
+  }
+}
