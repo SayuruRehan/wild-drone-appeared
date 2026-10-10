@@ -1,0 +1,18 @@
+{
+  "zero_losses": true,
+  "comparisons": {
+    "standard": {
+      "return_gain": 0.5840522436125815,
+      "freshness_gain": 0.01956088803138753,
+      "return_gain_pass": true,
+      "freshness_gain_pass": true
+    },
+    "masked random": {
+      "return_gain": 0.46869154706851346,
+      "freshness_gain": 0.0020110907932775423,
+      "return_gain_pass": false,
+      "freshness_gain_pass": false
+    }
+  },
+  "passed": false
+}
