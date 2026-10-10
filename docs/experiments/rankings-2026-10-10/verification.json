@@ -1,0 +1,49 @@
+{
+  "source_revision": "2da69d657d0fca901c28af8e35a25e4285311e73",
+  "source_verification": "Published Git tree blob hashes checked against local snapshot before execution; all 761 previous repository blobs preserved. PYTHONPATH explicitly bound to snapshot/src. All 25 prelaunch source SHA-256 hashes still match after execution.",
+  "tests": {
+    "command": "python -m pytest -q",
+    "passed": 184,
+    "cuda_only_skipped": 5
+  },
+  "lint": {
+    "command": "python -m ruff check src tests scripts",
+    "passed": true
+  },
+  "source_commit_ci": {
+    "head": "2da69d657d0fca901c28af8e35a25e4285311e73",
+    "successful_test_job_ids": [
+      114169320316,
+      114169296203
+    ]
+  },
+  "observed_snapshots": 32,
+  "planned_snapshots": 32,
+  "missing_snapshots": [],
+  "raw_json_files": 192,
+  "csv_rows": {
+    "natural": 160,
+    "pairs": 415,
+    "summary": 20,
+    "coverage": 32
+  },
+  "pair_cases": {
+    "urgency": 28,
+    "position": 27,
+    "noop": 28
+  },
+  "no_op_scores_exactly_equal": true,
+  "independent_audit": {
+    "report": "independent-audit.json",
+    "status": "PASS",
+    "metric_implementation": "Independent scalar first-argmax/tie handling and action-pair enumeration; no production metric functions used.",
+    "collector_snapshot_hashes_replayed": 32,
+    "state_variants_including_noop_replayed": 147,
+    "exact_one_step_action_rewards_checked": 14375,
+    "checkpoint_files_sha256_and_bytes_verified": 4
+  },
+  "training_performed": false,
+  "policy_or_representation_changes": false,
+  "launch_deviations": [],
+  "interpretation_limit": "One training seed per recipe; selected local counterfactuals; urgency age maps may be outside training support; immediate inspection gain is not a long-term value oracle."
+}

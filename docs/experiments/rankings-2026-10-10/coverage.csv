@@ -1,0 +1,33 @@
+case,scenario_seed,collector,step,natural_feasible_actions,urgency_eligible,position_eligible,noop_eligible,urgency_skip_reason,position_skip_reason
+5900-masked_random-16,5900,masked_random,16,120,True,True,True,,
+5900-masked_random-80,5900,masked_random,80,4,True,False,True,,no valid one-cell move with shared disjoint optimum
+5900-greedy-16,5900,greedy,16,125,True,True,True,,
+5900-greedy-80,5900,greedy,80,1,False,False,False,fewer than two feasible actions,fewer than two feasible actions
+5901-masked_random-16,5901,masked_random,16,125,True,True,True,,
+5901-masked_random-80,5901,masked_random,80,115,True,True,True,,
+5901-greedy-16,5901,greedy,16,125,True,True,True,,
+5901-greedy-80,5901,greedy,80,5,True,True,True,,
+5902-masked_random-16,5902,masked_random,16,125,True,True,True,,
+5902-masked_random-80,5902,masked_random,80,50,True,True,True,,
+5902-greedy-16,5902,greedy,16,125,True,True,True,,
+5902-greedy-80,5902,greedy,80,1,False,False,False,fewer than two feasible actions,fewer than two feasible actions
+5903-masked_random-16,5903,masked_random,16,125,True,True,True,,
+5903-masked_random-80,5903,masked_random,80,125,True,True,True,,
+5903-greedy-16,5903,greedy,16,125,True,True,True,,
+5903-greedy-80,5903,greedy,80,5,True,True,True,,
+5904-masked_random-16,5904,masked_random,16,125,True,True,True,,
+5904-masked_random-80,5904,masked_random,80,125,True,True,True,,
+5904-greedy-16,5904,greedy,16,125,True,True,True,,
+5904-greedy-80,5904,greedy,80,1,False,False,False,fewer than two feasible actions,fewer than two feasible actions
+5905-masked_random-16,5905,masked_random,16,125,True,True,True,,
+5905-masked_random-80,5905,masked_random,80,120,True,True,True,,
+5905-greedy-16,5905,greedy,16,125,True,True,True,,
+5905-greedy-80,5905,greedy,80,5,True,True,True,,
+5906-masked_random-16,5906,masked_random,16,125,True,True,True,,
+5906-masked_random-80,5906,masked_random,80,125,True,True,True,,
+5906-greedy-16,5906,greedy,16,125,True,True,True,,
+5906-greedy-80,5906,greedy,80,5,True,True,True,,
+5907-masked_random-16,5907,masked_random,16,25,True,True,True,,
+5907-masked_random-80,5907,masked_random,80,50,True,True,True,,
+5907-greedy-16,5907,greedy,16,125,True,True,True,,
+5907-greedy-80,5907,greedy,80,1,False,False,False,fewer than two feasible actions,fewer than two feasible actions
