@@ -62,7 +62,8 @@ Repeat with `double.json` and a separate `double` output folder. The runner's
 `final masked dqn`, `masked random` and `greedy` comparison rows correspond to this
 screen. Ignore its selected-policy rows for this gate. Compute scenario means and
 subtract each reference from Double DQN for return and weighted freshness; apply
-the thresholds in `gate.json`. Timing is machine-dependent.
+the thresholds in the protocol; `gate.json` records their pass/fail outcomes.
+Timing is machine-dependent.
 
 The next improvement should address inspection/coordination learning directly.
 Changing the TD target rule alone has not produced a useful gap over safe random
