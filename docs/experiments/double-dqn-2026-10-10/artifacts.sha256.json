@@ -1,0 +1,18 @@
+{
+  "README.md": "f72532037159f7c49154421c4bd1c47d7746462150eda894fdde5b7b83fb322c",
+  "double.json": "2e77cc954f249b93acea087b88d17da99c5cf38d37df09446495206a6c3c47d6",
+  "gate.json": "beef2b171452404a8c8d6d11bbd4dda341c08ade90ac8c988a2457a9da383d84",
+  "identities.json": "322369524602901c296204e1b8a9f98fdeb608e9e7f852359e450d0886bebe1b",
+  "paired.csv": "129f7a569157f8a9e2dd0889d9c7e0b5b51463a5af020309739c3fba02849215",
+  "raw/double/seed-0/metadata.json": "9aa13a556407b3c1f12dd8b62475376f394f2bc967bc0e0214c78e778d888707",
+  "raw/double/seed-0/training.csv": "85056f91fc42385b76a3a5c9761a24d9849f936225e60b31d845e5d7522c97b3",
+  "raw/double/seed-0/training_summary.json": "f58ba31e5e487f5a67b87d73b6941710ea0f275afd89ac781e7cd76699592b9a",
+  "raw/double/seed-0/validation.csv": "7682e14934663a7cefa138a308465d82f67561405d66d825e495888c299c60d2",
+  "raw/standard/seed-0/metadata.json": "ecf68d8b61d7e95b76f807aed6e40207037a48158627749aeccaf472c635bf8d",
+  "raw/standard/seed-0/training.csv": "0e53b259f6e89f796ed83ba1edef8874ef64780bcd5f586cb67bf992fca0e1ed",
+  "raw/standard/seed-0/training_summary.json": "098af9c960aa04c66ef9ba0265310231757d1af193336f0c029e258d8e9b94bc",
+  "raw/standard/seed-0/validation.csv": "08d31c9e773626b368d0582888195be678a49575a83a2d090d8d064a5f7071ca",
+  "screening.csv": "8a8e0610e9960f3d0a5d72cf0eea3f9789a9175d17700554fe21f754a7b23797",
+  "standard.json": "dfc57e9169c26a66ae36e9057f14270656578695dc7a48e8468af2db97d1059f",
+  "summary.csv": "990a3622b4cd1ae9a1fca66e56ba5a951ba63f6145a8821f0cc5b17be98c4ca5"
+}

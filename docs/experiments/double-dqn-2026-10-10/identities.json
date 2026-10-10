@@ -1,0 +1,56 @@
+{
+  "source_revision": "4abd41c694541855fcb4d6b27b87dd0d81123d9c",
+  "source_checkout": "restored source snapshot; exact source blobs verified against published revision",
+  "binary_checkpoints_uploaded": false,
+  "checkpoints": [
+    {
+      "recipe": "standard",
+      "file": "policy.pt",
+      "sha256": "dd5e8555de9213d3fa13a4d09bc6407d54236896d9b8dd48c70c3c49d6566436",
+      "bytes": 515416
+    },
+    {
+      "recipe": "standard",
+      "file": "best_policy.pt",
+      "sha256": "847d7f2d2e24835b30bf813136976e71222c20b3c712efcc45cdfa1678270dbd",
+      "bytes": 515604
+    },
+    {
+      "recipe": "double",
+      "file": "policy.pt",
+      "sha256": "7c8296c2dbeb2dcb3751a5fac4e7daf09ebf118e3d276182578ab189423800a6",
+      "bytes": 515416
+    },
+    {
+      "recipe": "double",
+      "file": "best_policy.pt",
+      "sha256": "af8a591551cc512475e529bad0376d31033c31cbd0972f87600fab84da5dced0",
+      "bytes": 515604
+    }
+  ],
+  "source_sha256": {
+    "src/wild_drone/__init__.py": "f954cd7fc0b7aa28d6f4d2e8fb07d0b2ad332b4e8f45c5348ca1948f6bf6b596",
+    "src/wild_drone/__main__.py": "1c4e9dbddc8f1703a3ed2bd8b21b8f3760c22d386eeaae667edb08dfb11356ad",
+    "src/wild_drone/action_probe.py": "79485731a75a2977c16d02f7ed3e0b83424819b4427c421bbad65271edae4eaa",
+    "src/wild_drone/baselines.py": "adad63d5795b78645c12505fbaf24562ad2794165c3fd2ed7a01dde87c000bde",
+    "src/wild_drone/behavior.py": "58f96825b022e6578bb350a90f8190053a3de2dc42fd47e2050f31a4ad59169e",
+    "src/wild_drone/checkpoint_audit.py": "1245875888cee82749bac204ea560c6fa4818f02cea9980aae3f4b70db91af93",
+    "src/wild_drone/cli.py": "85dbcd5f93fff4f9248bd09384ed2647826587bcdc469b68c4a1351aebe94ed4",
+    "src/wild_drone/config.py": "d67eb82bf188b16c36d5a334aa205fc3a13e4dc45e12f717b5c3415d0c4bcb19",
+    "src/wild_drone/coverage_probe.py": "339d83538b7f4d435172a730977cb0cf6246c9335fe7e3b84f3dcebe7de79f84",
+    "src/wild_drone/diagnostics.py": "061469945c5a10267c3c21e5fd6326e4231a35cf4dd739b0a797a1d1f65a875e",
+    "src/wild_drone/environment.py": "433c0549acfaf4665ad93c0b7a2ebb7b898a9ebb94be3f910a3e878a152323cd",
+    "src/wild_drone/experiments.py": "3ffe489e194a0e024540eb112fcb06e17fdeabff7ff308b2ad9f2fb56c08a81f",
+    "src/wild_drone/imitation_probe.py": "7c7769aef573a4a257340ce973e247f7775834afccbc54a431aff4531caa3545",
+    "src/wild_drone/learning.py": "c4eb4344ebaaa59790682aa00905045acdaa934844b08fe6964420be2833bc93",
+    "src/wild_drone/masked_learning.py": "a48fd7452dbbe7a3f6b8cd7ca43592f954ef160c89f428fb1646ee4a72a41f24",
+    "src/wild_drone/notebook_runtime.py": "712144d5e4d27679b8d53f486381712f6e2fadf513441843464c5e9da2943267",
+    "src/wild_drone/recovery_probe.py": "841465f06a6196619a32cd8cececc8b3d78cb26027f8b79ca94006562614f1f5",
+    "src/wild_drone/rendering.py": "39e5c3d0e44346d7df6e628c4048cc4b9218c756ddaa787a1c3626da701eabd0",
+    "src/wild_drone/representation_probe.py": "60fd3927bc2c7e6535f4b1292dfe30c32d034a0440d45143e095148fe72ee77d",
+    "src/wild_drone/study_cache.py": "c5a95a49694a0b2c626d28ffd3675d0cbe0f089d77a245cabd1fb87ffb2fe6a7",
+    "src/wild_drone/training_io.py": "b2661faeb7531dd156c555a19c0a03d693498f78a02bae22b2c5b6152536953b",
+    "scripts/run_masked_study.py": "8022be74134adc7ba3af6909452cca6df0f86f2a1be427510e97b2c2649faa15",
+    "docs/double-dqn-pilot-protocol.md": "3f9ef3361182756fb4ea0261b0df0a3ae476075bb2c1fe9cb57875339397f591"
+  }
+}
