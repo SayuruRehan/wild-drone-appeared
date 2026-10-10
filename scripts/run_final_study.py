@@ -20,9 +20,10 @@ import numpy as np
 
 from wild_drone.baselines import make_policy
 from wild_drone.config import EnvConfig
-from wild_drone.experiments import plot_learning, run_episode, write_rows
+from wild_drone.experiments import plot_learning, run_episode, validate_seed_split, write_rows
 from wild_drone.learning import TrainConfig, load_policy, train
 from wild_drone.masked_learning import MaskedRandomPolicy, load_masked_policy, train_masked
+from wild_drone.study_cache import validate_cached_fit
 
 VALIDATION = list(range(5000, 5005))
 TEST = list(range(10000, 10020))
@@ -40,9 +41,10 @@ SENSITIVITY = {'battery_capacity': [60.0, 120.0], 'recharge_rate': [3.0, 8.0],
 
 
 def fit(job):
-    """Train one learner unless its summary already exists."""
+    """Train one learner or reuse a complete, matching fit."""
     masked, algorithm, config, settings, out = job
-    if not (out/'training_summary.json').exists():
+    validate_study_split(settings)
+    if not validate_cached_fit(masked, algorithm, config, settings, out):
         if masked:
             train_masked(algorithm, config, settings, out)
         else:
@@ -58,9 +60,20 @@ def settings_for(raw, seed, episodes, **overrides):
 
 
 def run_jobs(jobs, workers):
+    # Fail before starting any worker, including when an earlier job is entirely fresh.
+    for masked, algorithm, config, settings, out in jobs:
+        validate_study_split(settings)
+        validate_cached_fit(masked, algorithm, config, settings, out)
     with ProcessPoolExecutor(max_workers=workers) as pool:
         for out in pool.map(fit, jobs):
             print(f'finished {out}', flush=True)
+
+
+def validate_study_split(settings):
+    validate_seed_split(settings.scenario_seed_start, settings.episodes, settings.validation_seeds)
+    validate_seed_split(settings.scenario_seed_start, settings.episodes, TEST)
+    if set(settings.validation_seeds) & set(TEST):
+        raise ValueError('validation and final test scenario seeds overlap')
 
 
 def baseline_rows(config, seeds, planner=True):

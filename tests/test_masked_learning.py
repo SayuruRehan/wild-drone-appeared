@@ -8,7 +8,7 @@ from wild_drone.baselines import candidate_actions
 from wild_drone.config import EnvConfig
 from wild_drone.environment import MOVES, WildfireFleetEnv, decode_action
 from wild_drone.experiments import run_episode
-from wild_drone.learning import TrainConfig
+from wild_drone.learning import TrainConfig, load_policy
 from wild_drone.masked_learning import (
     MaskedRandomPolicy,
     action_mask,
@@ -116,3 +116,53 @@ def test_masked_training_refuses_to_overwrite(tmp_path):
     train_masked('a2c', TIGHT, training, tmp_path)
     with pytest.raises(ValueError, match='existing'):
         train_masked('a2c', TIGHT, training, tmp_path)
+
+
+def test_generic_loader_and_cli_preserve_masked_flight(tmp_path):
+    import csv
+
+    from wild_drone.cli import main
+
+    settings = TrainConfig(episodes=1, seed=0, progress_interval=0)
+    train_masked('dqn', TIGHT, settings, tmp_path/'fit')
+    checkpoint = tmp_path/'fit'/'policy.pt'
+    raw = load_policy(checkpoint)
+    masked = load_masked_policy(checkpoint)
+    env = WildfireFleetEnv(TIGHT)
+    obs, _ = env.reset(seed=10000)
+    done = False
+    while not done:
+        action = raw.act(env, obs)
+        assert action == masked.act(env, obs)
+        assert action_mask(env)[action]
+        obs, _, done, _, _ = env.step(action)
+    assert raw.train_config == settings
+    assert env.lost.sum() == 0
+    main(['evaluate', '--checkpoint', str(checkpoint), '--scenario-seeds', '10000',
+          '--out', str(tmp_path/'evaluation')])
+    rows = list(csv.DictReader((tmp_path/'evaluation'/'evaluation.csv').open()))
+    assert rows[0]['policy'] == 'masked dqn'
+    assert int(rows[0]['total_losses']) == 0
+
+
+def test_masked_double_dqn_uses_online_selection_and_target_values():
+    from wild_drone.masked_learning import masked_dqn_next_values
+
+    target = torch.tensor([[2., 7., 100.], [8., 3., 100.]])
+    online = torch.tensor([[9., 1., 200.], [1., 9., 200.]])
+    mask = np.array([[True, True, False], [True, True, False]])
+    torch.testing.assert_close(masked_dqn_next_values(target, mask), torch.tensor([7., 8.]))
+    torch.testing.assert_close(masked_dqn_next_values(target, mask, online), torch.tensor([2., 3.]))
+
+
+def test_masked_double_dqn_flag_changes_training_targets(tmp_path):
+    from dataclasses import replace
+
+    settings = TrainConfig(episodes=2, seed=0, batch_size=4, warmup_steps=4,
+                           target_update_steps=8, progress_interval=0)
+    cfg = EnvConfig(grid_size=8, horizon=20, battery_capacity=12, recharge_rate=4)
+    train_masked('dqn', cfg, settings, tmp_path/'standard')
+    train_masked('dqn', cfg, replace(settings, double_dqn=True), tmp_path/'double')
+    standard = torch.load(tmp_path/'standard'/'policy.pt', weights_only=True)['state_dict']
+    double = torch.load(tmp_path/'double'/'policy.pt', weights_only=True)['state_dict']
+    assert any(not torch.equal(standard[k], double[k]) for k in standard)

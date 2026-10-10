@@ -208,6 +208,10 @@ class NeuralPolicy:
 def load_policy(path, device='cpu'):
     # Only tensors and primitive metadata; weights_only avoids arbitrary pickle execution.
     data = torch.load(path, map_location='cpu', weights_only=True)
+    if data.get('action_mask') is not None:
+        from wild_drone.masked_learning import load_masked_policy
+
+        return load_masked_policy(path, device=device)
     config = EnvConfig(**data['env_config'])
     settings = data['train_config'].copy()
     if 'model_config' not in data:
