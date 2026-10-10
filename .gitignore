@@ -9,3 +9,27 @@ build/
 dist/
 runs/
 .ipynb_checkpoints/
+
+# OS and editor files
+.DS_Store
+**/.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Local environments and secrets
+venv/
+.env
+
+# Logs and scratch
+*.log
+nohup.out
+.review-tmp/
+
+# Course material and private notes (kept locally, not in the repo)
+assignment/
+PROJECT_REVIEW.md
+
+# Large model checkpoints (keep them in Drive or runs/)
+*.pt
