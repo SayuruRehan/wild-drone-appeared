@@ -1,0 +1,122 @@
+{
+  "episodes": 220,
+  "steps": 35200,
+  "data_effect_passed": true,
+  "greedy_capability_passed": true,
+  "per_seed": [
+    {
+      "seed": 0,
+      "means": {
+        "small": {
+          "weighted_freshness": 0.2306960093559196,
+          "overdue_fraction": 0.6351560166369125,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "expanded": {
+          "weighted_freshness": 0.29993010517940744,
+          "overdue_fraction": 0.5259787336494356,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "greedy": {
+          "weighted_freshness": 0.3160813272038786,
+          "overdue_fraction": 0.5048099920549729,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        }
+      },
+      "data_effect_checks": {
+        "freshness_improves_ge_001": true,
+        "overdue_not_higher": true,
+        "losses_not_higher": true,
+        "fleet_failures_not_higher": true
+      },
+      "data_effect_passed": true,
+      "greedy_capability_checks": {
+        "freshness_ge_90pct_greedy": true,
+        "overdue_le_greedy_plus_005": true,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true
+      },
+      "greedy_capability_passed": true
+    },
+    {
+      "seed": 1,
+      "means": {
+        "small": {
+          "weighted_freshness": 0.2122531427687969,
+          "overdue_fraction": 0.6593111599721594,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "expanded": {
+          "weighted_freshness": 0.28905362666187095,
+          "overdue_fraction": 0.5457103247186254,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "greedy": {
+          "weighted_freshness": 0.3160813272038786,
+          "overdue_fraction": 0.5048099920549729,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        }
+      },
+      "data_effect_checks": {
+        "freshness_improves_ge_001": true,
+        "overdue_not_higher": true,
+        "losses_not_higher": true,
+        "fleet_failures_not_higher": true
+      },
+      "data_effect_passed": true,
+      "greedy_capability_checks": {
+        "freshness_ge_90pct_greedy": true,
+        "overdue_le_greedy_plus_005": true,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true
+      },
+      "greedy_capability_passed": true
+    },
+    {
+      "seed": 2,
+      "means": {
+        "small": {
+          "weighted_freshness": 0.2104031762380573,
+          "overdue_fraction": 0.6642346331308729,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "expanded": {
+          "weighted_freshness": 0.29097161255900417,
+          "overdue_fraction": 0.5431772108122177,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "greedy": {
+          "weighted_freshness": 0.3160813272038786,
+          "overdue_fraction": 0.5048099920549729,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        }
+      },
+      "data_effect_checks": {
+        "freshness_improves_ge_001": true,
+        "overdue_not_higher": true,
+        "losses_not_higher": true,
+        "fleet_failures_not_higher": true
+      },
+      "data_effect_passed": true,
+      "greedy_capability_checks": {
+        "freshness_ge_90pct_greedy": true,
+        "overdue_le_greedy_plus_005": true,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true
+      },
+      "greedy_capability_passed": true
+    }
+  ],
+  "elapsed_seconds": 130.8272975949999,
+  "rl_updates": 0,
+  "scale_to_40x40": false
+}
