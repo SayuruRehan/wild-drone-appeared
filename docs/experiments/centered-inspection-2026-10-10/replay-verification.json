@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "source_hashes_verified": 27,
+  "dataset_files_verified": 4,
+  "checkpoint_files_verified": 18,
+  "transform_states_checked": 734,
+  "field_formula_max_tolerance": 1e-07,
+  "translation_cropping_padding_exact": true,
+  "fresh_natural_states_replayed": 128,
+  "original_step_inspection_rewards_checked": 16000,
+  "raw_score_vectors_exactly_reproduced": 13212,
+  "current_final_tensors_and_6000_losses_match_parent": true,
+  "matched_initial_tensors_size_and_sampling_verified": true,
+  "supervised_checkpoints_rejected_by_rl_loaders": true,
+  "target_normalisation_verified": true
+}

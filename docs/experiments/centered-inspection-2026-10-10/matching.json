@@ -1,0 +1,23 @@
+[
+  {
+    "seed": 0,
+    "initial_tensors_exactly_equal": true,
+    "sample_sequence_sha256": "a3c3f745c9b4650a7d498b046672dfa94918a8bb6444311425867e9663f4b814",
+    "parameters_per_arm": 127677,
+    "current_final_and_training_history_match_parent": true
+  },
+  {
+    "seed": 1,
+    "initial_tensors_exactly_equal": true,
+    "sample_sequence_sha256": "cdc384a66d2d26ca65b7d090c83e8304421f41897d4712aa4df77c300d518f6f",
+    "parameters_per_arm": 127677,
+    "current_final_and_training_history_match_parent": true
+  },
+  {
+    "seed": 2,
+    "initial_tensors_exactly_equal": true,
+    "sample_sequence_sha256": "b5fd59c85bf6ba5a28f9a81f3a610e575a9aba88bb24dbb9a9175b755e50c471",
+    "parameters_per_arm": 127677,
+    "current_final_and_training_history_match_parent": true
+  }
+]
