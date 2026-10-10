@@ -1,0 +1,47 @@
+{
+  "source_revision": "2ff35318b67ceaa8a7bd186b85650095771e083d",
+  "source_verification": "Published Git tree blob hashes checked against local source before launch; all 967 prior repository blobs preserved. PYTHONPATH bound to snapshot/src; 26 source SHA-256 hashes rechecked after execution.",
+  "tests": {
+    "passed": 191,
+    "cuda_only_skipped": 5,
+    "evidence": "Source-revision CI executes the complete pytest suite. Prior full local suite: 189 passed/5 skipped; two added focused tests also passed."
+  },
+  "lint": {
+    "command": "python -m ruff check src tests scripts docs/experiments/inspection-targets-2026-10-10/recompute.py",
+    "passed": true
+  },
+  "source_ci": {
+    "head": "2ff35318b67ceaa8a7bd186b85650095771e083d",
+    "successful_test_job_ids": [
+      114226550070,
+      114226523021
+    ]
+  },
+  "fitting_budget": {
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "updates_per_seed": 2000,
+    "complete_training_logs": true
+  },
+  "metrics": "metric-verification.json",
+  "replay": "replay-verification.json",
+  "metric_recomputation_uses_production_metric_functions": false,
+  "replay_reward_reference": "Actual clone.step(action) reward_components freshness_gain; no gain_scores shortcut.",
+  "binary_datasets_and_weights_in_git": false,
+  "compressed_raw_vectors_lossless": true,
+  "launch_deviations": [],
+  "checkpoint_selection": false,
+  "representation_change": false,
+  "rl_update_or_mission_improvement_claim": false,
+  "scale_up_launched": false,
+  "runtime": {
+    "python": "3.12.14",
+    "torch": "2.5.1+cpu",
+    "numpy": "2.3.5",
+    "device": "cpu",
+    "torch_threads": 1
+  }
+}
