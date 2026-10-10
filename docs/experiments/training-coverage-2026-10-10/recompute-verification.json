@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "natural_rows": 12865,
+  "per_fit_rows": 36,
+  "nested_original_records_exact": true,
+  "world_splits_disjoint": true,
+  "training_action_means_independently_checked": true,
+  "separate_effect_and_capability_criteria_verified": true,
+  "aggregate_mean_sd_and_paired_differences_verified": true,
+  "implementation": "Separate scalar argmax/ties/normalisation/means; no production metric or fitting functions."
+}

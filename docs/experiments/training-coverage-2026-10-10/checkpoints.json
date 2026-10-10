@@ -1,0 +1,128 @@
+{
+  "small/0": {
+    "arm": "centered",
+    "seed": 0,
+    "completed_updates": 2000,
+    "parameters": 127677,
+    "sample_sequence_sha256": "a3c3f745c9b4650a7d498b046672dfa94918a8bb6444311425867e9663f4b814",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "c2ad494c86c0b005c85e5fa055504128c0cd9be50c679b9f2a3eb96e41e18caa",
+        "bytes": 514724,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "d28b80da30efc3aa7efe6522f9cafa6cda5e30a71b107b6421a0f651b2df7419",
+        "bytes": 514700,
+        "completed_updates": 2000
+      }
+    },
+    "corpus": "small",
+    "training_dataset_sha256": "7b2d1c605fc20121790010e2b0149cfbf57e71e21c07bacdbe093bac7ceb4d4c"
+  },
+  "expanded/0": {
+    "arm": "centered",
+    "seed": 0,
+    "completed_updates": 2000,
+    "parameters": 127677,
+    "sample_sequence_sha256": "c16138c17a26598cee4b88aca124649e4fca512d7c59553251f3a885fad8a079",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "c2ad494c86c0b005c85e5fa055504128c0cd9be50c679b9f2a3eb96e41e18caa",
+        "bytes": 514724,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "666d26547c3ce10c9958293e52332ac760aeb44155f6594f0f0aed6d53ee9de9",
+        "bytes": 514700,
+        "completed_updates": 2000
+      }
+    },
+    "corpus": "expanded",
+    "training_dataset_sha256": "a266e68708db674ddba85e77834ea08b34e6dda87e5f076a4b2f90bff7789dbd"
+  },
+  "small/1": {
+    "arm": "centered",
+    "seed": 1,
+    "completed_updates": 2000,
+    "parameters": 127677,
+    "sample_sequence_sha256": "cdc384a66d2d26ca65b7d090c83e8304421f41897d4712aa4df77c300d518f6f",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "b9b6a5388818d64095123c67fe115ea06822e6c781f9488000cf63419611ddb7",
+        "bytes": 514724,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "95b2db67dd71a7c93ba75f2899cde1442a1e90d7b9108d21470096d3d05e6c31",
+        "bytes": 514700,
+        "completed_updates": 2000
+      }
+    },
+    "corpus": "small",
+    "training_dataset_sha256": "7b2d1c605fc20121790010e2b0149cfbf57e71e21c07bacdbe093bac7ceb4d4c"
+  },
+  "expanded/1": {
+    "arm": "centered",
+    "seed": 1,
+    "completed_updates": 2000,
+    "parameters": 127677,
+    "sample_sequence_sha256": "87ad5a11426604c948dea415b6078c3ddb4c570543de23264febefe9248fad64",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "b9b6a5388818d64095123c67fe115ea06822e6c781f9488000cf63419611ddb7",
+        "bytes": 514724,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "bd52762979cbf744ba3551abeda25ce35a7249908496fd1b21f6adc0871c55ea",
+        "bytes": 514700,
+        "completed_updates": 2000
+      }
+    },
+    "corpus": "expanded",
+    "training_dataset_sha256": "a266e68708db674ddba85e77834ea08b34e6dda87e5f076a4b2f90bff7789dbd"
+  },
+  "small/2": {
+    "arm": "centered",
+    "seed": 2,
+    "completed_updates": 2000,
+    "parameters": 127677,
+    "sample_sequence_sha256": "b5fd59c85bf6ba5a28f9a81f3a610e575a9aba88bb24dbb9a9175b755e50c471",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "172d33e0bb21183888e2605cbfccb4d51ba57eba390cce89bbd94d1c0c8c783a",
+        "bytes": 514724,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "a9072966026256fd09168a975fa94bc772eb58948bd8bffdb8ec0d7d964daca0",
+        "bytes": 514700,
+        "completed_updates": 2000
+      }
+    },
+    "corpus": "small",
+    "training_dataset_sha256": "7b2d1c605fc20121790010e2b0149cfbf57e71e21c07bacdbe093bac7ceb4d4c"
+  },
+  "expanded/2": {
+    "arm": "centered",
+    "seed": 2,
+    "completed_updates": 2000,
+    "parameters": 127677,
+    "sample_sequence_sha256": "1406fbd65cb9da7787cb1ee09544745867e536b316973cd89baf699dba5a9f1c",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "172d33e0bb21183888e2605cbfccb4d51ba57eba390cce89bbd94d1c0c8c783a",
+        "bytes": 514724,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "e78c6b64d5367765e94f529774fe2f48784e5dc8d102d44efaba46553eec31f7",
+        "bytes": 514700,
+        "completed_updates": 2000
+      }
+    },
+    "corpus": "expanded",
+    "training_dataset_sha256": "a266e68708db674ddba85e77834ea08b34e6dda87e5f076a4b2f90bff7789dbd"
+  }
+}
