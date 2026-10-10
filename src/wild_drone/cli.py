@@ -99,6 +99,8 @@ def main(argv=None):
             validate_seed_split(policy.train_config.scenario_seed_start,
                                 policy.train_config.episodes, args.scenario_seeds)
             name, seed = policy.algorithm, policy.train_config.seed
+            if getattr(policy, 'action_mask', None) is not None:
+                name = f'masked {name}'
         else:
             name, seed = args.policy, None
         rows = []

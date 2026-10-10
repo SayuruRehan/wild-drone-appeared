@@ -29,6 +29,7 @@ from wild_drone.environment import MOVES, WildfireFleetEnv
 from wild_drone.experiments import run_episode, validate_seed_split, write_metadata, write_rows
 from wild_drone.learning import (
     FleetNetwork,
+    TrainConfig,
     discounted_policy_loss,
     discounted_returns,
     monte_carlo_terms,
@@ -100,6 +101,14 @@ def masked_max(q_values, masks):
     return apply_mask(q_values, masks).max(dim=1).values
 
 
+def masked_dqn_next_values(target_q, masks, online_q=None):
+    """Standard target max, or feasible online selection / target evaluation for Double DQN."""
+    if online_q is None:
+        return masked_max(target_q, masks)
+    actions = apply_mask(online_q, masks).argmax(dim=1, keepdim=True)
+    return target_q.gather(1, actions).squeeze(1)
+
+
 class MaskedRandomPolicy:
     """Uniform over feasible joint actions: the reference a masked learner must beat."""
 
@@ -111,9 +120,10 @@ class MaskedRandomPolicy:
 
 
 class MaskedNeuralPolicy:
-    def __init__(self, model, algorithm, env_config, device='cpu'):
+    def __init__(self, model, algorithm, env_config, device='cpu', train_config=None):
         self.model = model.eval()
         self.algorithm, self.env_config = algorithm, env_config
+        self.train_config, self.action_mask = train_config, MASK_RULE
         self.device = resolve_device(device)
         self.model.to(self.device)
 
@@ -130,10 +140,14 @@ def load_masked_policy(path, device='cpu'):
     data = torch.load(path, map_location='cpu', weights_only=True)
     if data.get('action_mask') != MASK_RULE:
         raise ValueError('not a masked-policy checkpoint')
+    if data['algorithm'] == 'dqn' and data['train_config'].get('double_dqn', False):
+        if data.get('dqn_target_rule') != 'masked-double-dqn-v1':
+            raise ValueError('masked Double DQN checkpoint has an unverified target rule')
     config = EnvConfig(**data['env_config'])
     model = FleetNetwork(config.grid_size, **data['model_config'])
     model.load_state_dict(data['state_dict'])
-    return MaskedNeuralPolicy(model, data['algorithm'], config, device)
+    return MaskedNeuralPolicy(model, data['algorithm'], config, device,
+                              TrainConfig(**data['train_config']))
 
 
 def train_masked(algorithm, env_config, train_config, output_dir):
@@ -141,6 +155,8 @@ def train_masked(algorithm, env_config, train_config, output_dir):
     if algorithm not in ('dqn', 'reinforce', 'a2c'):
         raise ValueError(f'unknown learning method: {algorithm}')
     t = train_config
+    target_rule = ('masked-double-dqn-v1' if t.double_dqn else 'masked-standard-dqn') \
+        if algorithm == 'dqn' else None
     validate_seed_split(t.scenario_seed_start, t.episodes, t.validation_seeds)
     out = Path(output_dir)
     if (out/'policy.pt').exists():
@@ -186,6 +202,7 @@ def train_masked(algorithm, env_config, train_config, output_dir):
 
     def checkpoint(completed):
         return {'format_version': 2, 'action_mask': MASK_RULE, 'algorithm': algorithm,
+                'dqn_target_rule': target_rule,
                 'env_config': env_config.to_dict(), 'train_config': t.to_dict(),
                 'model_config': model_config, 'state_dict': copy.deepcopy(model.state_dict()),
                 'completed_episodes': completed, 'git_revision': metadata['git_revision']}
@@ -232,11 +249,14 @@ def train_masked(algorithm, env_config, train_config, output_dir):
                     actions = torch.tensor([b[1] for b in batch], device=device)
                     selected = q.gather(1, actions[:, None]).squeeze(1)
                     with torch.no_grad():
-                        next_q, _ = target(*tensors([b[3] for b in batch]))
+                        next_inputs = tensors([b[3] for b in batch])
+                        next_q, _ = target(*next_inputs)
+                        online_q = model(*next_inputs)[0] if t.double_dqn else None
                         targets = td_targets(
                             torch.tensor([b[2] for b in batch], device=device),
                             torch.tensor([b[4] for b in batch], device=device),
-                            masked_max(next_q, np.stack([b[5] for b in batch])), t.gamma)
+                            masked_dqn_next_values(next_q, np.stack([b[5] for b in batch]),
+                                                   online_q), t.gamma)
                     optimise(nn.functional.smooth_l1_loss(selected, targets))
                 if steps % t.target_update_steps == 0:
                     target.load_state_dict(model.state_dict())
@@ -290,6 +310,7 @@ def train_masked(algorithm, env_config, train_config, output_dir):
         write_rows(out/'validation.csv', validation_rows)
     seconds = time.perf_counter()-started
     summary = {'algorithm': algorithm, 'action_mask': MASK_RULE, 'steps': steps,
+               'dqn_target_rule': target_rule,
                'updates': updates, 'last_loss': last_loss, 'completed_episodes': t.episodes,
                'elapsed_seconds': seconds, 'best_validation_return': best_score,
                'best_episode': best_checkpoint['completed_episodes'] if best_checkpoint else None,

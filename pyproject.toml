@@ -11,7 +11,7 @@ dependencies = ["numpy>=1.26,<3", "gymnasium>=1.1,<2", "matplotlib>=3.8,<4", "pi
 
 [project.optional-dependencies]
 rl = ["torch>=2.5,<3"]
-dev = ["pytest>=8,<10", "ruff>=0.9,<1"]
+dev = ["pytest>=8,<10", "ruff>=0.9,<1", "pandas>=2,<4", "ipython>=8,<10"]
 
 [project.scripts]
 wild-drone = "wild_drone.cli:main"

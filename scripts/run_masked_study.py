@@ -13,14 +13,22 @@ import numpy as np
 
 from wild_drone.baselines import make_policy
 from wild_drone.config import EnvConfig
-from wild_drone.experiments import plot_learning, plot_results, run_episode, write_rows
+from wild_drone.experiments import (
+    plot_learning,
+    plot_results,
+    run_episode,
+    validate_seed_split,
+    write_rows,
+)
 from wild_drone.learning import TrainConfig
 from wild_drone.masked_learning import MaskedRandomPolicy, load_masked_policy, train_masked
+from wild_drone.study_cache import validate_cached_fit
 
 
 def fit(job):
     algorithm, config, settings, out = job
-    if not (out/'training_summary.json').exists():
+    validate_seed_split(settings.scenario_seed_start, settings.episodes, settings.validation_seeds)
+    if not validate_cached_fit(True, algorithm, config, settings, out):
         train_masked(algorithm, config, settings, out)
     return algorithm, settings.seed
 
@@ -47,6 +55,10 @@ def main(argv=None):
                 'validation_seeds': args.validation_seeds,
                 'validation_interval': args.validation_interval, 'progress_interval': 50}))
             jobs.append((algorithm, config, settings, args.out/algorithm/f'seed-{seed}'))
+    for algorithm, config, settings, out in jobs:
+        validate_seed_split(settings.scenario_seed_start, settings.episodes,
+                            settings.validation_seeds)
+        validate_cached_fit(True, algorithm, config, settings, out)
     with ProcessPoolExecutor(max_workers=args.jobs) as pool:
         for algorithm, seed in pool.map(fit, jobs):
             print(f'finished masked {algorithm} seed {seed}', flush=True)
