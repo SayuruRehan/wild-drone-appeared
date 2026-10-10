@@ -8,8 +8,9 @@ argmax and the TD target (DQN). The mask is a deterministic function of the comp
 the environment, reward and transitions are unchanged. This is a shield in the sense of
 Alshiekh et al. (2018), shared with the baselines, not a safety guarantee proven here.
 
-Network, observation transform and update formulas are imported from `learning`, so the
-only difference from the unmasked methods is action selection and the DQN target.
+Network, observation transform and update formulas are imported from `learning`.
+Optional coordination shaping changes only training targets; mission metrics and
+deployment action selection keep the original environment reward.
 """
 
 import copy
@@ -25,6 +26,7 @@ from torch.distributions import Categorical
 
 from wild_drone.baselines import COMMANDS, candidate_actions
 from wild_drone.config import EnvConfig
+from wild_drone.coordination import SIGNAL_RULE, coordination_potential
 from wild_drone.environment import MOVES, WildfireFleetEnv
 from wild_drone.experiments import run_episode, validate_seed_split, write_metadata, write_rows
 from wild_drone.learning import (
@@ -140,6 +142,9 @@ def load_masked_policy(path, device='cpu'):
     data = torch.load(path, map_location='cpu', weights_only=True)
     if data.get('action_mask') != MASK_RULE:
         raise ValueError('not a masked-policy checkpoint')
+    if data['train_config'].get('coordination_shaping_weight', 0):
+        if data.get('learning_signal') != SIGNAL_RULE:
+            raise ValueError('masked checkpoint has an unverified learning signal')
     if data['algorithm'] == 'dqn' and data['train_config'].get('double_dqn', False):
         if data.get('dqn_target_rule') != 'masked-double-dqn-v1':
             raise ValueError('masked Double DQN checkpoint has an unverified target rule')
@@ -155,6 +160,7 @@ def train_masked(algorithm, env_config, train_config, output_dir):
     if algorithm not in ('dqn', 'reinforce', 'a2c'):
         raise ValueError(f'unknown learning method: {algorithm}')
     t = train_config
+    signal_rule = SIGNAL_RULE if t.coordination_shaping_weight else 'original-reward'
     target_rule = ('masked-double-dqn-v1' if t.double_dqn else 'masked-standard-dqn') \
         if algorithm == 'dqn' else None
     validate_seed_split(t.scenario_seed_start, t.episodes, t.validation_seeds)
@@ -184,6 +190,7 @@ def train_masked(algorithm, env_config, train_config, output_dir):
     best_score, best_checkpoint = None, None
     metadata = write_metadata(out, env_config, command='train_masked', algorithm=algorithm,
                               train_config=t.to_dict(), action_mask=MASK_RULE,
+                              learning_signal=signal_rule,
                               device=str(device))
     started = time.perf_counter()
 
@@ -202,6 +209,7 @@ def train_masked(algorithm, env_config, train_config, output_dir):
 
     def checkpoint(completed):
         return {'format_version': 2, 'action_mask': MASK_RULE, 'algorithm': algorithm,
+                'learning_signal': signal_rule,
                 'dqn_target_rule': target_rule,
                 'env_config': env_config.to_dict(), 'train_config': t.to_dict(),
                 'model_config': model_config, 'state_dict': copy.deepcopy(model.state_dict()),
@@ -212,6 +220,9 @@ def train_masked(algorithm, env_config, train_config, output_dir):
         mask = action_mask(env)
         logs, values, entropies, rewards = [], [], [], []
         episode_return, fresh_sum, overdue_sum, done = 0.0, 0.0, 0.0, False
+        initial_potential = before = coordination_potential(env) \
+            if t.coordination_shaping_weight else 0.0
+        learning_return, shaping_return, discounted_shaping_return = 0.0, 0.0, 0.0
         while not done:
             if algorithm == 'dqn':
                 epsilon = t.epsilon_start + min(1, steps/t.epsilon_decay_steps)*(
@@ -233,15 +244,24 @@ def train_masked(algorithm, env_config, train_config, output_dir):
                     values.append(value.squeeze())
             next_observation, reward, terminal, truncated, info = env.step(action)
             done = terminal or truncated
+            after = coordination_potential(env, terminal=done) \
+                if t.coordination_shaping_weight else 0.0
+            shaping = t.coordination_shaping_weight*(t.gamma*after-before)
+            learning_reward = reward+shaping
+            learning_return += learning_reward
+            shaping_return += shaping
+            discounted_shaping_return += t.gamma**(env.elapsed-1)*shaping
+            before = after
             # Terminal next states are never bootstrapped, so their mask is irrelevant.
             next_mask = np.ones(125, dtype=bool) if done else action_mask(env)
             steps += 1
             episode_return += reward
             fresh_sum += info['weighted_freshness']
             overdue_sum += info['overdue_fraction']
-            rewards.append(reward)
+            rewards.append(learning_reward)
             if algorithm == 'dqn':
-                replay.append((observation, action, reward, next_observation, terminal, next_mask))
+                replay.append((observation, action, learning_reward, next_observation,
+                               terminal, next_mask))
                 if steps >= t.warmup_steps and len(replay) >= t.batch_size:
                     batch = [replay[int(i)] for i in rng.choice(len(replay), t.batch_size,
                                                                  replace=False)]
@@ -281,6 +301,9 @@ def train_masked(algorithm, env_config, train_config, output_dir):
             optimise(actor + t.value_weight*critic - t.entropy_weight*torch.stack(entropies).mean())
         completed = episode+1
         rows.append({'episode': completed, 'scenario_seed': t.scenario_seed_start+episode,
+                     'learning_return': learning_return, 'shaping_return': shaping_return,
+                     'discounted_shaping_return': discounted_shaping_return,
+                     'initial_potential': initial_potential,
                      'training_seed': t.seed, 'return': episode_return, 'steps': env.elapsed,
                      'loss': last_loss, 'updates': updates, 'total_losses': int(env.lost.sum()),
                      'weighted_freshness': fresh_sum/env_config.horizon,
@@ -310,6 +333,7 @@ def train_masked(algorithm, env_config, train_config, output_dir):
         write_rows(out/'validation.csv', validation_rows)
     seconds = time.perf_counter()-started
     summary = {'algorithm': algorithm, 'action_mask': MASK_RULE, 'steps': steps,
+               'learning_signal': signal_rule,
                'dqn_target_rule': target_rule,
                'updates': updates, 'last_loss': last_loss, 'completed_episodes': t.episodes,
                'elapsed_seconds': seconds, 'best_validation_return': best_score,

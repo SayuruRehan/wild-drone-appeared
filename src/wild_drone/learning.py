@@ -51,6 +51,7 @@ class TrainConfig:
     spatial_encoding: bool = True
     monte_carlo_baseline: bool = True
     double_dqn: bool = False
+    coordination_shaping_weight: float = 0.0
     checkpoint_interval: int = 25
     progress_interval: int = 10
     validation_interval: int = 25
@@ -73,6 +74,9 @@ class TrainConfig:
         for name in ('entropy_weight', 'value_weight'):
             if not 0 <= getattr(self, name) < float('inf'):
                 raise ValueError(f'{name} must be finite and nonnegative')
+        if (isinstance(self.coordination_shaping_weight, bool) or
+                not 0 <= self.coordination_shaping_weight < float('inf')):
+            raise ValueError('coordination_shaping_weight must be finite and nonnegative')
         if self.seed < 0 or self.scenario_seed_start < 0:
             raise ValueError('seeds must be nonnegative')
         if self.device not in ('cpu', 'cuda', 'auto'):
@@ -239,6 +243,8 @@ def train(algorithm, env_config, train_config, output_dir, *, resume_from=None):
     if algorithm not in ('dqn', 'reinforce', 'a2c'):
         raise ValueError(f'unknown learning method: {algorithm}')
     t = train_config
+    if t.coordination_shaping_weight:
+        raise ValueError('coordination shaping is supported only by masked training')
     validate_seed_split(t.scenario_seed_start, t.episodes, t.validation_seeds)
     device = resolve_device(t.device)
     state = None
