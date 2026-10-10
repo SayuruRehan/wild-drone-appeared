@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "episodes_verified": 220,
+  "steps_verified": 35200,
+  "per_fit_rows_verified": 11,
+  "aggregate_rows_verified": 84,
+  "paired_rows_verified": 60,
+  "failure_padding_and_reward_components_verified": true,
+  "separate_per_seed_decisions_verified": true,
+  "implementation": "Independent scalar sums/criteria and NumPy mean/sample SD; no runner metric helpers."
+}

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "episodes_replayed": 220,
+  "steps_replayed": 35200,
+  "source_files_verified": 27,
+  "frozen_checkpoints_verified_before_and_after": 6,
+  "network_score_vectors_exact": 19200,
+  "control_score_vectors_exact": 6400,
+  "all_score_masks_and_selected_argmax_verified": true,
+  "all_observation_hashes_and_reward_components_verified": true,
+  "native_baseline_actions_outside_action_mask": 0,
+  "trajectory_diagnostics": "Exploratory descriptions derived from replayed states; not additional tuning or promotion criteria.",
+  "decision_timing_exactness": "Timing excluded from replay equality."
+}
