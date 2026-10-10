@@ -1,0 +1,166 @@
+{
+  "status": "PASS",
+  "assertions": 19036,
+  "failures": [],
+  "checks": {
+    "metric_rows": {
+      "natural": 160,
+      "pairs": 415,
+      "summary": 20
+    },
+    "controls": "all fixed scores and all no-op vectors exact",
+    "source_hashes_verified": 25,
+    "checkpoint_files_verified": 4,
+    "replay": {
+      "snapshots": 32,
+      "states_including_noop": 147,
+      "exact_one_step_action_rewards": 14375,
+      "urgency_cases": 28,
+      "position_cases": 27
+    },
+    "nontrivial_pose_skip_verified": "5900-masked_random-80: no valid disjoint-best one-cell variant",
+    "exact_train_configs_and_completed_budgets": "Both exact frozen recipes and completed_episodes=100 verified separately; architectures critic=False/spatial_encoding=True",
+    "response_counts": {
+      "urgency-unshaped": {
+        "cases": 28,
+        "nonzero_centred_score_delta": 28,
+        "any_order_change": 22,
+        "common_argmax_change": 2,
+        "deployment_argmax_change": 2
+      },
+      "urgency-shaped": {
+        "cases": 28,
+        "nonzero_centred_score_delta": 28,
+        "any_order_change": 24,
+        "common_argmax_change": 0,
+        "deployment_argmax_change": 0
+      },
+      "urgency-untrained": {
+        "cases": 28,
+        "nonzero_centred_score_delta": 28,
+        "any_order_change": 22,
+        "common_argmax_change": 0,
+        "deployment_argmax_change": 0
+      },
+      "urgency-state_blind": {
+        "cases": 28,
+        "nonzero_centred_score_delta": 0,
+        "any_order_change": 0,
+        "common_argmax_change": 0,
+        "deployment_argmax_change": 0
+      },
+      "urgency-inspection": {
+        "cases": 28,
+        "nonzero_centred_score_delta": 28,
+        "any_order_change": 28,
+        "common_argmax_change": 28,
+        "deployment_argmax_change": 28
+      },
+      "position-unshaped": {
+        "cases": 27,
+        "nonzero_centred_score_delta": 27,
+        "any_order_change": 22,
+        "common_argmax_change": 2,
+        "deployment_argmax_change": 3
+      },
+      "position-shaped": {
+        "cases": 27,
+        "nonzero_centred_score_delta": 27,
+        "any_order_change": 23,
+        "common_argmax_change": 0,
+        "deployment_argmax_change": 0
+      },
+      "position-untrained": {
+        "cases": 27,
+        "nonzero_centred_score_delta": 27,
+        "any_order_change": 23,
+        "common_argmax_change": 0,
+        "deployment_argmax_change": 2
+      },
+      "position-state_blind": {
+        "cases": 27,
+        "nonzero_centred_score_delta": 0,
+        "any_order_change": 0,
+        "common_argmax_change": 0,
+        "deployment_argmax_change": 1
+      },
+      "position-inspection": {
+        "cases": 27,
+        "nonzero_centred_score_delta": 27,
+        "any_order_change": 27,
+        "common_argmax_change": 27,
+        "deployment_argmax_change": 27
+      }
+    }
+  },
+  "headlines": [
+    {
+      "kind": "natural",
+      "policy": "unshaped",
+      "cases": "32",
+      "informative_states": "28",
+      "common_top_change_rate": "",
+      "deployment_top_change_rate": "",
+      "mean_order_change_fraction": "",
+      "mean_normalised_gain_regret": "0.6031397267193154",
+      "random_expected_normalised_regret": "0.6040065055834358"
+    },
+    {
+      "kind": "natural",
+      "policy": "shaped",
+      "cases": "32",
+      "informative_states": "28",
+      "common_top_change_rate": "",
+      "deployment_top_change_rate": "",
+      "mean_order_change_fraction": "",
+      "mean_normalised_gain_regret": "0.5385282222321615",
+      "random_expected_normalised_regret": "0.6040065055834358"
+    },
+    {
+      "kind": "urgency",
+      "policy": "unshaped",
+      "cases": "28",
+      "informative_states": "56",
+      "common_top_change_rate": "0.07142857142857142",
+      "deployment_top_change_rate": "0.07142857142857142",
+      "mean_order_change_fraction": "0.0023677119077602886",
+      "mean_normalised_gain_regret": "0.5739728021364705",
+      "random_expected_normalised_regret": "0.5531552681850181"
+    },
+    {
+      "kind": "urgency",
+      "policy": "shaped",
+      "cases": "28",
+      "informative_states": "56",
+      "common_top_change_rate": "0.0",
+      "deployment_top_change_rate": "0.0",
+      "mean_order_change_fraction": "0.013305371179886394",
+      "mean_normalised_gain_regret": "0.5734477995479138",
+      "random_expected_normalised_regret": "0.5531552681850181"
+    },
+    {
+      "kind": "position",
+      "policy": "unshaped",
+      "cases": "27",
+      "informative_states": "54",
+      "common_top_change_rate": "0.07407407407407407",
+      "deployment_top_change_rate": "0.1111111111111111",
+      "mean_order_change_fraction": "0.002887604916395775",
+      "mean_normalised_gain_regret": "0.5873834752277928",
+      "random_expected_normalised_regret": "0.5848760055663295"
+    },
+    {
+      "kind": "position",
+      "policy": "shaped",
+      "cases": "27",
+      "informative_states": "54",
+      "common_top_change_rate": "0.0",
+      "deployment_top_change_rate": "0.0",
+      "mean_order_change_fraction": "0.0037794154096021794",
+      "mean_normalised_gain_regret": "0.4925175316353806",
+      "random_expected_normalised_regret": "0.5848760055663295"
+    }
+  ],
+  "metric_implementation": "independent scalar selection and explicit action-pair enumeration; no production ranking_metrics, pair_metrics or summarize calls",
+  "interpretation": "Inputs affect Q scores and some orders, but argmax decision sensitivity is weak for these frozen checkpoints and controlled states. Shaped position/natural immediate alignment is better descriptively; urgency regrets do not beat uniform random. These data do not establish a sole architecture, training-budget, exploration or representation cause, or long-term policy optimality."
+}
