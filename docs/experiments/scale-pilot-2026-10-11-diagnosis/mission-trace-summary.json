@@ -1,0 +1,148 @@
+{
+  "post_hoc": true,
+  "mission_means": [
+    {
+      "policy": "centered",
+      "episodes": 60,
+      "return": -17.84464949858119,
+      "weighted_freshness": 0.19200299575749546,
+      "overdue_fraction": 0.6976324200393678,
+      "energy_used": 779.1166666666667,
+      "safe_returns": 3.15,
+      "charge_completions": 3.15,
+      "collision_attempts": 0.0,
+      "total_losses": 0.0
+    },
+    {
+      "policy": "greedy",
+      "episodes": 20,
+      "return": -15.649918585228454,
+      "weighted_freshness": 0.2269945383539914,
+      "overdue_fraction": 0.6435565858992096,
+      "energy_used": 786.7,
+      "safe_returns": 3.45,
+      "charge_completions": 3.35,
+      "collision_attempts": 0.0,
+      "total_losses": 0.0
+    },
+    {
+      "policy": "sweep",
+      "episodes": 20,
+      "return": -26.005214273503327,
+      "weighted_freshness": 0.0652116227721976,
+      "overdue_fraction": 0.8994627190831791,
+      "energy_used": 465.25,
+      "safe_returns": 1.0,
+      "charge_completions": 1.0,
+      "collision_attempts": 0.0,
+      "total_losses": 0.0
+    },
+    {
+      "policy": "masked_random",
+      "episodes": 20,
+      "return": -25.408448370638748,
+      "weighted_freshness": 0.08649299847372185,
+      "overdue_fraction": 0.8850492146593135,
+      "energy_used": 670.2375,
+      "safe_returns": 10.0,
+      "charge_completions": 9.9,
+      "collision_attempts": 0.0,
+      "total_losses": 0.0
+    },
+    {
+      "policy": "action_mean",
+      "episodes": 20,
+      "return": -26.00258684303834,
+      "weighted_freshness": 0.06582455931998422,
+      "overdue_fraction": 0.8974953495208551,
+      "energy_used": 780.0,
+      "safe_returns": 3.0,
+      "charge_completions": 3.0,
+      "collision_attempts": 0.0,
+      "total_losses": 0.0
+    }
+  ],
+  "phase_means": [
+    {
+      "policy": "centered",
+      "first_step": 1,
+      "last_step": 100,
+      "states": 6000,
+      "weighted_freshness": 0.20013371635056532,
+      "overdue_fraction": 0.6924867017771023,
+      "reward_freshness_gain": 0.012157335693335884
+    },
+    {
+      "policy": "centered",
+      "first_step": 101,
+      "last_step": 200,
+      "states": 6000,
+      "weighted_freshness": 0.16518835936582893,
+      "overdue_fraction": 0.7240041513607294,
+      "reward_freshness_gain": 0.007991043658030283
+    },
+    {
+      "policy": "centered",
+      "first_step": 201,
+      "last_step": 300,
+      "states": 6000,
+      "weighted_freshness": 0.2106869115560922,
+      "overdue_fraction": 0.6764064069802718,
+      "reward_freshness_gain": 0.0116687475079656
+    },
+    {
+      "policy": "greedy",
+      "first_step": 1,
+      "last_step": 100,
+      "states": 2000,
+      "weighted_freshness": 0.22503619178532488,
+      "overdue_fraction": 0.6540426559256075,
+      "reward_freshness_gain": 0.013815312300761868
+    },
+    {
+      "policy": "greedy",
+      "first_step": 101,
+      "last_step": 200,
+      "states": 2000,
+      "weighted_freshness": 0.20395158891995904,
+      "overdue_fraction": 0.6622841676523151,
+      "reward_freshness_gain": 0.00987752571464617
+    },
+    {
+      "policy": "greedy",
+      "first_step": 201,
+      "last_step": 300,
+      "states": 2000,
+      "weighted_freshness": 0.25199583435669026,
+      "overdue_fraction": 0.6143429341197063,
+      "reward_freshness_gain": 0.013858326902070313
+    },
+    {
+      "policy": "masked_random",
+      "first_step": 1,
+      "last_step": 100,
+      "states": 2000,
+      "weighted_freshness": 0.08094827107361854,
+      "overdue_fraction": 0.8995941253374197,
+      "reward_freshness_gain": 0.004245000393662611
+    },
+    {
+      "policy": "masked_random",
+      "first_step": 101,
+      "last_step": 200,
+      "states": 2000,
+      "weighted_freshness": 0.09411390599042727,
+      "overdue_fraction": 0.8680892878974606,
+      "reward_freshness_gain": 0.00404963041186631
+    },
+    {
+      "policy": "masked_random",
+      "first_step": 201,
+      "last_step": 300,
+      "states": 2000,
+      "weighted_freshness": 0.08441681835711982,
+      "overdue_fraction": 0.8874642307430604,
+      "reward_freshness_gain": 0.003973446760877653
+    }
+  ]
+}

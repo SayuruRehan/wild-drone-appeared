@@ -1,0 +1,133 @@
+{
+  "ranking_passed": true,
+  "mission_passed": false,
+  "per_seed": [
+    {
+      "seed": 0,
+      "ranking_checks": {
+        "training_regret_le_005": true,
+        "fresh_regret_le_020": true,
+        "fresh_best_match_ge_025": true
+      },
+      "ranking_passed": true,
+      "mission_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true,
+        "freshness_ge_random_plus_001": true,
+        "return_ge_random_plus_05": true
+      },
+      "mission_passed": false,
+      "mission_means": {
+        "centered": {
+          "weighted_freshness": 0.19282130573780892,
+          "overdue_fraction": 0.697181652595972,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -17.806280617444184
+        },
+        "greedy": {
+          "weighted_freshness": 0.2269945383539914,
+          "overdue_fraction": 0.6435565858992096,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -15.649918585228454
+        },
+        "masked_random": {
+          "weighted_freshness": 0.08649299847372185,
+          "overdue_fraction": 0.8850492146593135,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -25.408448370638748
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "ranking_checks": {
+        "training_regret_le_005": true,
+        "fresh_regret_le_020": true,
+        "fresh_best_match_ge_025": true
+      },
+      "ranking_passed": true,
+      "mission_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true,
+        "freshness_ge_random_plus_001": true,
+        "return_ge_random_plus_05": true
+      },
+      "mission_passed": false,
+      "mission_means": {
+        "centered": {
+          "weighted_freshness": 0.1937685966178174,
+          "overdue_fraction": 0.693848251669314,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -17.707636473015974
+        },
+        "greedy": {
+          "weighted_freshness": 0.2269945383539914,
+          "overdue_fraction": 0.6435565858992096,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -15.649918585228454
+        },
+        "masked_random": {
+          "weighted_freshness": 0.08649299847372185,
+          "overdue_fraction": 0.8850492146593135,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -25.408448370638748
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "ranking_checks": {
+        "training_regret_le_005": true,
+        "fresh_regret_le_020": true,
+        "fresh_best_match_ge_025": true
+      },
+      "ranking_passed": true,
+      "mission_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true,
+        "freshness_ge_random_plus_001": true,
+        "return_ge_random_plus_05": true
+      },
+      "mission_passed": false,
+      "mission_means": {
+        "centered": {
+          "weighted_freshness": 0.18941908491686002,
+          "overdue_fraction": 0.7018673558528177,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -18.02003140528341
+        },
+        "greedy": {
+          "weighted_freshness": 0.2269945383539914,
+          "overdue_fraction": 0.6435565858992096,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -15.649918585228454
+        },
+        "masked_random": {
+          "weighted_freshness": 0.08649299847372185,
+          "overdue_fraction": 0.8850492146593135,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -25.408448370638748
+        }
+      }
+    }
+  ],
+  "mission_episodes": 140,
+  "mission_steps": 42000,
+  "elapsed_seconds": 696.14103414,
+  "rl_updates": 0
+}

@@ -1,0 +1,54 @@
+name: Frozen 40x40 pilot and independent audit
+# This expensive frozen pilot is deliberately manual-only.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pilot:
+    if: github.ref == 'refs/heads/sr'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+      - run: python -m pip install -e '.[dev]'
+      - name: Check frozen protocol and source snapshot
+        run: |
+          python -m ruff check src tests scripts
+          python -m pytest -q
+          python -m wild_drone demo --grid 8 --horizon 12 --out runs/pilot-smoke-demo
+          git status --porcelain
+      - name: Run the predeclared training, ranking and full missions
+        run: |
+          python scripts/run_scale_pilot.py --out runs/scale-pilot-2026-10-11 --source-revision "${GITHUB_SHA}" 2>&1 | tee pilot-execution.log
+      - name: Independently audit and archive lossless evidence
+        run: |
+          python scripts/audit_scale_pilot.py --run runs/scale-pilot-2026-10-11 --out docs/experiments/scale-pilot-2026-10-11 2>&1 | tee pilot-audit.log
+      - name: Upload complete raw experiment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frozen-40x40-pilot-${{ github.sha }}
+          path: |
+            runs/scale-pilot-2026-10-11/
+            pilot-execution.log
+            pilot-audit.log
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Publish audited results without changing pilot code
+        run: |
+          test -f docs/experiments/scale-pilot-2026-10-11/audit.json
+          python -c "import json; assert json.load(open('docs/experiments/scale-pilot-2026-10-11/audit.json'))['passed']"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/experiments/scale-pilot-2026-10-11
+          git -c core.whitespace=cr-at-eol diff --cached --check
+          git commit -m "Archive independently audited 40x40 pilot evidence [skip ci]"
+          git push origin HEAD:sr

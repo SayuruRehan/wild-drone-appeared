@@ -1,0 +1,143 @@
+{
+  "kind": "post-hoc development diagnostic, not a new capability gate",
+  "new_fits": 0,
+  "new_worlds": 0,
+  "snapshot_steps": [
+    30,
+    60,
+    120,
+    240
+  ],
+  "states": 240,
+  "per_seed_and_phase": [
+    {
+      "seed": 0,
+      "step": null,
+      "states": 80,
+      "informative_states": 80,
+      "normalised_gain_regret": 0.07621656783106168,
+      "one_step_optimal": 0.3125
+    },
+    {
+      "seed": 0,
+      "step": 30,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.055043647435893975,
+      "one_step_optimal": 0.4
+    },
+    {
+      "seed": 0,
+      "step": 60,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.05064014827734853,
+      "one_step_optimal": 0.35
+    },
+    {
+      "seed": 0,
+      "step": 120,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.0929487686069153,
+      "one_step_optimal": 0.1
+    },
+    {
+      "seed": 0,
+      "step": 240,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.10623370700408892,
+      "one_step_optimal": 0.4
+    },
+    {
+      "seed": 1,
+      "step": null,
+      "states": 80,
+      "informative_states": 80,
+      "normalised_gain_regret": 0.07735588289699251,
+      "one_step_optimal": 0.3375
+    },
+    {
+      "seed": 1,
+      "step": 30,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.031197849927211307,
+      "one_step_optimal": 0.7
+    },
+    {
+      "seed": 1,
+      "step": 60,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.04845470517909559,
+      "one_step_optimal": 0.4
+    },
+    {
+      "seed": 1,
+      "step": 120,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.09585506843180092,
+      "one_step_optimal": 0.05
+    },
+    {
+      "seed": 1,
+      "step": 240,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.1339159080498622,
+      "one_step_optimal": 0.2
+    },
+    {
+      "seed": 2,
+      "step": null,
+      "states": 80,
+      "informative_states": 80,
+      "normalised_gain_regret": 0.08519861111453704,
+      "one_step_optimal": 0.35
+    },
+    {
+      "seed": 2,
+      "step": 30,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.06350168276868956,
+      "one_step_optimal": 0.45
+    },
+    {
+      "seed": 2,
+      "step": 60,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.09154001468948715,
+      "one_step_optimal": 0.4
+    },
+    {
+      "seed": 2,
+      "step": 120,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.10038997726972716,
+      "one_step_optimal": 0.2
+    },
+    {
+      "seed": 2,
+      "step": 240,
+      "states": 20,
+      "informative_states": 20,
+      "normalised_gain_regret": 0.0853627697302443,
+      "one_step_optimal": 0.35
+    }
+  ],
+  "source_revision": "7c9562aa6064f46d96cc9a163de3deb2ecaa3e19",
+  "artifact_run_id": 38111928600,
+  "input_sha256": {
+    "launch.json": "c317752cd85210289498cfd07ea378d8f354d34bf85c28c220faec10689db2aa",
+    "missions/steps.csv.gz": "9b8571c22e08c0d9e83fb9aad1f176663974b60a0ecd609e954c78084a7549fb",
+    "missions/centered-seed-0-scores.npz": "2209b699adf2bed9b6259624a463d037064c22a0b6db531e6c4aa8f65b6da64e",
+    "missions/centered-seed-1-scores.npz": "f230d2ce8ad53e470fdce856f17e0908e709b80b2fcd45fa41a60ef038719903",
+    "missions/centered-seed-2-scores.npz": "30301639a0ffe3803fc0168977e85cec5eb7dfb58e9463f325cdd6a78abd07a8"
+  }
+}

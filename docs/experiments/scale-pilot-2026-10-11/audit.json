@@ -1,0 +1,15 @@
+{
+  "all_action_rewards_checked": 214125,
+  "checkpoint_source_hashes_verified": true,
+  "full_score_vector_reconstruction": true,
+  "mission_episodes": 140,
+  "mission_max_absolute_score_drift": 0.0,
+  "mission_steps": 42000,
+  "passed": true,
+  "ranking_max_absolute_score_drift": 5.960464477539062e-07,
+  "ranking_rows": 8943,
+  "reconstructed_feasible_argmax_exact": true,
+  "score_reconstruction_atol": 1e-06,
+  "score_reconstruction_rtol": 0,
+  "simulator_replay": true
+}
