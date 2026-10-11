@@ -20,6 +20,24 @@ from wild_drone.learning import tensor_observations
 from wild_drone.masked_learning import MaskedRandomPolicy, action_mask
 
 ROOT = Path(__file__).resolve().parents[1]
+SCORE_ATOL = 1e-6
+
+
+def audit_score_vectors(predicted, saved, masks):
+    """Permit CPU float32 roundoff, but require identical feasible first argmax."""
+    predicted, saved, masks = map(np.asarray, (predicted, saved, masks))
+    assert predicted.shape == saved.shape == masks.shape, 'score vector shape changed'
+    assert predicted.ndim in (1, 2) and predicted.size, 'complete score vectors required'
+    assert masks.dtype == bool and masks.any(axis=-1).all(), 'nonempty boolean masks required'
+    assert np.isfinite(predicted).all() and np.isfinite(saved).all(), 'nonfinite scores'
+    # Deterministic Torch operations need not be bitwise identical on different
+    # CPU architectures. Keep archived floats untouched and reject action drift.
+    np.testing.assert_allclose(predicted, saved, rtol=0, atol=SCORE_ATOL)
+    np.testing.assert_array_equal(
+        np.where(masks, predicted, -np.inf).argmax(axis=-1),
+        np.where(masks, saved, -np.inf).argmax(axis=-1),
+        err_msg='reconstructed feasible argmax changed')
+    return float(np.max(np.abs(predicted.astype(np.float64) - saved.astype(np.float64))))
 
 
 def sha(path):
@@ -62,6 +80,7 @@ def numeric_ranking(scores, gains, mask):
 def audit_rankings(run, config, index, data):
     rows = read_csv(run / 'rankings/natural.csv')
     expected = {}
+    max_score_drift = 0.0
     for seed in range(3):
         for phase in ('initial', 'final'):
             path = run / f'rankings/seed-{seed}-{phase}.npz'
@@ -76,7 +95,8 @@ def audit_rankings(run, config, index, data):
                               dataset['vectors'][i:i + 64])[0].numpy()
                         for i in range(0, len(dataset['maps']), 64)
                     ])
-                np.testing.assert_array_equal(predicted, block)
+                max_score_drift = max(max_score_drift, audit_score_vectors(
+                    predicted, block, dataset['masks'].numpy()))
                 expected.update({(split, str(seed), phase, 'network', i): s
                                  for i, s in enumerate(block)})
     action_mean = json.loads((run / 'action-mean.json').read_text())['scores']
@@ -113,7 +133,7 @@ def audit_rankings(run, config, index, data):
                 close(row[field], raw[field], field)
     if seen != set(expected):
         raise AssertionError('incomplete lossless ranking record coverage')
-    return len(seen)
+    return len(seen), max_score_drift
 
 
 def audit_data(run, launch):
@@ -180,6 +200,7 @@ def audit_fits(run, launch):
 
 
 def audit_missions(run, config):
+    max_score_drift = 0.0
     episodes = read_csv(run / 'missions/episodes.csv')
     with gzip.open(run / 'missions/steps.csv.gz', 'rt', newline='') as stream:
         traces = list(csv.DictReader(stream))
@@ -214,7 +235,8 @@ def audit_missions(run, config):
                 if key[0] == 'centered':
                     with torch.no_grad():
                         predicted = models[key[1]](*tensor_observations(observation))[0][0]
-                    np.testing.assert_array_equal(predicted.numpy(), scores[offset])
+                    max_score_drift = max(max_score_drift, audit_score_vectors(
+                        predicted.numpy(), scores[offset], mask))
                 else:
                     np.testing.assert_array_equal(action_mean.astype(np.float32),
                                                   scores[offset])
@@ -249,7 +271,7 @@ def audit_missions(run, config):
     assert not grouped
     assert all(offset == len(scores) == len(masks)
                for scores, masks, offset in stores.values())
-    return episodes, len(traces)
+    return episodes, len(traces), max_score_drift
 
 
 def audit_natural_simulator_actions(config, index, data):
@@ -344,9 +366,9 @@ def main():
         assert sha(ROOT / path) == expected, 'frozen source identity changed: ' + path
     audit_fits(run, launch)
     index, data = audit_data(run, launch)
-    rank_count = audit_rankings(run, config, index, data)
+    rank_count, ranking_drift = audit_rankings(run, config, index, data)
     print('ranking records audited:', rank_count, flush=True)
-    episodes, steps = audit_missions(run, config)
+    episodes, steps, mission_drift = audit_missions(run, config)
     print('mission episodes/steps replayed:', len(episodes), steps, flush=True)
     counterfactuals = audit_natural_simulator_actions(config, index, data)
     print('independent actual action rewards:', counterfactuals, flush=True)
@@ -361,10 +383,15 @@ def main():
     audit = {'passed': True, 'ranking_rows': rank_count, 'mission_episodes': len(episodes),
              'mission_steps': steps, 'all_action_rewards_checked': counterfactuals,
              'checkpoint_source_hashes_verified': True, 'simulator_replay': True,
-             'full_score_vector_reconstruction': True}
+             'full_score_vector_reconstruction': True,
+             'score_reconstruction_atol': SCORE_ATOL, 'score_reconstruction_rtol': 0,
+             'ranking_max_absolute_score_drift': ranking_drift,
+             'mission_max_absolute_score_drift': mission_drift,
+             'reconstructed_feasible_argmax_exact': True}
     publish(run, args.out, audit)
     print(json.dumps(audit, indent=2), flush=True)
 
 
 if __name__ == '__main__':
     main()
+

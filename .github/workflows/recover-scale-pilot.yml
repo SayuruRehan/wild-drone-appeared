@@ -1,4 +1,5 @@
 name: Recover 40x40 evidence
+# Reconstruct float32 scores with bounded roundoff and exact feasible actions.
 on:
   push:
     branches: [sr]
@@ -45,3 +46,4 @@ jobs:
           git -c core.whitespace=cr-at-eol diff --cached --check
           git commit -m "Archive audited 40x40 pilot negative mission result [skip ci]"
           git push origin HEAD:sr
+
