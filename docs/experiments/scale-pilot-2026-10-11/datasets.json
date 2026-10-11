@@ -1,0 +1,14 @@
+{
+  "training": {
+    "sha256": "64528e21f0e6b4583a78eaad5b2dfe5f9f9aab15a39b09dd37592961fc7383ac",
+    "bytes": 94146416,
+    "states": 1587,
+    "informative": 1567
+  },
+  "fresh": {
+    "sha256": "0a611110b82b0a6cfa1edd0395776ad8dc0685ea467da5e9b3f665644f2584a3",
+    "bytes": 7476946,
+    "states": 126,
+    "informative": 126
+  }
+}

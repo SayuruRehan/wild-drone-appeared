@@ -1,0 +1,96 @@
+{
+  "training": [
+    {
+      "scenario_seed": 17,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 37,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 56,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 104,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 105,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 127,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 130,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 132,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 153,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 154,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 174,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 195,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 196,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    }
+  ],
+  "fresh": [
+    {
+      "scenario_seed": 6804,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    },
+    {
+      "scenario_seed": 6805,
+      "collector": "greedy",
+      "step": 240,
+      "reason": "collector terminated before snapshot"
+    }
+  ]
+}
