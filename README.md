@@ -35,6 +35,16 @@ This supports a separate decision-ranking experiment; it does not change the
 failed fitted-policy result or demonstrate an RL advantage. No new fits or RL
 updates were performed, and reserved evaluation worlds remain unopened.
 
+The [frozen loss-only comparison](docs/experiments/scale-loss-2026-10-11/README.md)
+reused the same training packets, initial tensors and sample sequence for three
+tied-best ranking-loss fits. All three failed the objective-effect, fresh-ranking
+and mission gates. Mean freshness fell to 0.13559 from the matched regression
+control's 0.19200; overdue fraction rose to 0.78751 from 0.69763. Training best-match
+rates reached 99.81–100%, while fresh best-match rates were only 4.76–8.73%.
+Independent replay verified all 18,000 new mission decisions and 5,517 ranking
+rows. This negative result stops this loss direction without extra fits. It used
+zero RL updates and no confirmation or final-test worlds.
+
 ## Run a visual mission
 
 Python 3.11+ is required; Python 3.12 is used in CI. From the repository root:
