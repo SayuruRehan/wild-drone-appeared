@@ -1,0 +1,181 @@
+{
+  "comparison_complete": true,
+  "new_rl_fits": 9,
+  "rl_missions": 180,
+  "baseline_missions": 80,
+  "mission_steps": 75911,
+  "per_fit": [
+    {
+      "algorithm": "dqn",
+      "seed": 0,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": true,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    },
+    {
+      "algorithm": "dqn",
+      "seed": 1,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": true,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    },
+    {
+      "algorithm": "dqn",
+      "seed": 2,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": false,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    },
+    {
+      "algorithm": "reinforce",
+      "seed": 0,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": false,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    },
+    {
+      "algorithm": "reinforce",
+      "seed": 1,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": false,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    },
+    {
+      "algorithm": "reinforce",
+      "seed": 2,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": false,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    },
+    {
+      "algorithm": "a2c",
+      "seed": 0,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": false,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    },
+    {
+      "algorithm": "a2c",
+      "seed": 1,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": true,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    },
+    {
+      "algorithm": "a2c",
+      "seed": 2,
+      "masked_random_checks": {
+        "freshness_ge_masked_random_plus_001": false,
+        "return_ge_masked_random_plus_05": true,
+        "losses_le_masked_random": true,
+        "failures_le_masked_random": true
+      },
+      "greedy_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "failures_le_greedy": true
+      },
+      "learning_gate_passed": false,
+      "greedy_gate_passed": false
+    }
+  ],
+  "every_seed_learning_gate": {
+    "dqn": false,
+    "reinforce": false,
+    "a2c": false
+  },
+  "every_seed_greedy_gate": {
+    "dqn": false,
+    "reinforce": false,
+    "a2c": false
+  }
+}
