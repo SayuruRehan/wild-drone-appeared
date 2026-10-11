@@ -1,0 +1,65 @@
+{
+  "0": {
+    "seed": 0,
+    "method": "supervised-tied-best-set-probability",
+    "completed_updates": 2000,
+    "parameters": 434877,
+    "initial_tensors_match_parent": true,
+    "sample_sequence_sha256": "9a1cdd862eb1b9d3ee533c6fa633699b614f8086be586f702b15afa87d9baafa",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "c2cb0dbbc6545a35ce8b0ec9b7bf96528dc2ca325193a1349c6f399d82fd680e",
+        "bytes": 1743524,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "f42d6ff8d83d2ff4867c2870b8f65b3f084cba556e469439c8c4e9ad059646a8",
+        "bytes": 1743500,
+        "completed_updates": 2000
+      }
+    },
+    "training_dataset_sha256": "64528e21f0e6b4583a78eaad5b2dfe5f9f9aab15a39b09dd37592961fc7383ac"
+  },
+  "1": {
+    "seed": 1,
+    "method": "supervised-tied-best-set-probability",
+    "completed_updates": 2000,
+    "parameters": 434877,
+    "initial_tensors_match_parent": true,
+    "sample_sequence_sha256": "4cef5d23306fa05f509a92c2f6d4cf862de8ba61a3ac0c7be7337fa29426342f",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "a2ee10ba3a218667dadf97663396ef0f5cf07cd15897dcb326d5d12914c56a1d",
+        "bytes": 1743524,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "5c7569be9c41108b0501be1f987aa3325fe3321384a19b1436d51de69a49f0d4",
+        "bytes": 1743500,
+        "completed_updates": 2000
+      }
+    },
+    "training_dataset_sha256": "64528e21f0e6b4583a78eaad5b2dfe5f9f9aab15a39b09dd37592961fc7383ac"
+  },
+  "2": {
+    "seed": 2,
+    "method": "supervised-tied-best-set-probability",
+    "completed_updates": 2000,
+    "parameters": 434877,
+    "initial_tensors_match_parent": true,
+    "sample_sequence_sha256": "06ebdb890f537e1ebe0feaa9aa4b82b06e9f7de464f583682d7cba310f49addf",
+    "checkpoints": {
+      "initial.pt": {
+        "sha256": "73d28464804b9ef04bf867467424ee978461eeb1602f2d9a654698f3edf538e2",
+        "bytes": 1743524,
+        "completed_updates": 0
+      },
+      "final.pt": {
+        "sha256": "fb81f8a2cfd40c6c08b7fb609238dca97638a2b3c13ed18122b3fecce95e0a38",
+        "bytes": 1743500,
+        "completed_updates": 2000
+      }
+    },
+    "training_dataset_sha256": "64528e21f0e6b4583a78eaad5b2dfe5f9f9aab15a39b09dd37592961fc7383ac"
+  }
+}
