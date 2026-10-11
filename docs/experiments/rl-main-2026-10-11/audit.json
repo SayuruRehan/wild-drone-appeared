@@ -1,0 +1,89 @@
+{
+  "passed": true,
+  "source_revision": "855e5510ff46b16082ab7d551e7c228acab6f572",
+  "fits": [
+    {
+      "algorithm": "dqn",
+      "seed": 0,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 89873,
+      "training_seconds": 1133.689772056
+    },
+    {
+      "algorithm": "dqn",
+      "seed": 1,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 89873,
+      "training_seconds": 1460.622757564
+    },
+    {
+      "algorithm": "dqn",
+      "seed": 2,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 89873,
+      "training_seconds": 1449.956012981
+    },
+    {
+      "algorithm": "reinforce",
+      "seed": 0,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 300,
+      "training_seconds": 115.279735519
+    },
+    {
+      "algorithm": "reinforce",
+      "seed": 1,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 300,
+      "training_seconds": 216.143745426
+    },
+    {
+      "algorithm": "reinforce",
+      "seed": 2,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 300,
+      "training_seconds": 219.503329652
+    },
+    {
+      "algorithm": "a2c",
+      "seed": 0,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 3000,
+      "training_seconds": 215.882821629
+    },
+    {
+      "algorithm": "a2c",
+      "seed": 1,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 3000,
+      "training_seconds": 220.40896477299998
+    },
+    {
+      "algorithm": "a2c",
+      "seed": 2,
+      "episodes": 300,
+      "steps": 90000,
+      "updates": 3000,
+      "training_seconds": 221.333005447
+    }
+  ],
+  "mission_episodes": 260,
+  "mission_steps": 75911,
+  "paired_rows": 720,
+  "every_action_mask_hash_reward_exact": true,
+  "negative_archives_unchanged": true,
+  "initial_tensors_verified": true,
+  "max_score_drift": 0.0,
+  "score_atol": 1e-05,
+  "score_rtol": 1e-06,
+  "audit_script_sha256": "7ea95dc4e59ec890b0cb034507ce3dd2a7ccc719ef50886e28afd19ba8b10eef",
+  "workflow_run_id": "38134714083"
+}
