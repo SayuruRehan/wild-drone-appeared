@@ -1,0 +1,76 @@
+name: Frozen 40x40 loss comparison
+on:
+  push:
+    branches: [sr]
+    paths: ['.github/workflows/scale-loss.yml']
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+concurrency:
+  group: frozen-scale-loss
+  cancel-in-progress: false
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+      - run: python -m pip install -e '.[dev]'
+      - run: python -m ruff check src tests scripts
+      - run: python -m pytest -q
+      - run: python -m wild_drone demo --grid 8 --horizon 12 --out runs/ci-demo
+      - uses: actions/download-artifact@v4
+        with:
+          name: frozen-40x40-pilot-7c9562aa6064f46d96cc9a163de3deb2ecaa3e19
+          run-id: 38111928600
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: .
+      - name: Run frozen loss-only comparison
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          test "$GITHUB_REF" = refs/heads/sr
+          test "$GITHUB_RUN_ATTEMPT" = 1
+          git fetch origin sr
+          test "$(git rev-parse origin/sr)" = "$GITHUB_SHA"
+          test ! -e docs/experiments/scale-loss-2026-10-11
+          artifact_name="frozen-40x40-loss-$GITHUB_SHA"
+          matches=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/artifacts" \
+            --jq ".artifacts[] | select(.name == \"$artifact_name\") | .id")
+          test -z "$matches"
+          python scripts/run_scale_loss.py --parent-root runs/scale-pilot-2026-10-11 \
+            --out runs/scale-loss-2026-10-11 --source-revision "$GITHUB_SHA" \
+            | tee runs/scale-loss-execution.log
+      - name: Independently audit and assemble evidence
+        shell: bash
+        run: |
+          python scripts/audit_scale_loss.py --run runs/scale-loss-2026-10-11 \
+            --parent-root runs/scale-pilot-2026-10-11 \
+            --out docs/experiments/scale-loss-2026-10-11 | tee runs/scale-loss-audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frozen-40x40-loss-${{ github.sha }}
+          path: |
+            runs/scale-loss-2026-10-11
+            runs/scale-loss-execution.log
+            runs/scale-loss-audit.log
+            docs/experiments/scale-loss-2026-10-11
+          retention-days: 90
+      - name: Commit independently verified evidence
+        shell: bash
+        run: |
+          git fetch origin sr
+          test "$(git rev-parse origin/sr)" = "$GITHUB_SHA"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/experiments/scale-loss-2026-10-11
+          git -c core.whitespace=cr-at-eol diff --cached --check
+          git commit -m "Archive audited 40x40 loss comparison"
+          git push origin HEAD:sr
