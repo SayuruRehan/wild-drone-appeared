@@ -2,7 +2,7 @@
 
 20 by 20 development results and 40 by 40 main study    11 October 2026
 
-**The masked learners kept all three drones alive in the recorded evaluations, but they did not demonstrate strong learned surveillance. The frozen 40×40 experiment is complete. The full assignment still needs its final notebook, recorded presentation and report. A 60×60 run is optional under the supplied brief.**
+**The masked learners kept all three drones alive in the recorded evaluations, but they did not demonstrate strong learned surveillance. The frozen 40×40 experiment is complete. The consolidated technical notebook is complete; contributor attribution, independent assessed preparation, the recorded presentation and report remain. A 60×60 run is optional under the supplied brief.**
 
 This is a private explanation and planning aid. The supplied assignment brief prohibits generative AI in submitted work; the group must independently prepare and understand its assessed submission. [1]
 
@@ -78,17 +78,17 @@ The supplied COMP6008 brief requires three implemented RL methods, multiple runs
 | Three RL methods | DQN, REINFORCE and A2C implemented and run |
 | Multiple runs and tuning evidence | Historical tuning preserved; nine frozen main fits completed |
 | Unseen tests and baseline comparison | Completed at 40×40 with Greedy, sweep, random and masked random |
-| Single submission notebook | Needs final assembly and verification, including the 40×40 evidence |
-| Pseudocode linked to implementation | Must verify and complete the required step-by-step mapping |
+| Single consolidated technical notebook | Complete with saved outputs, the 40×40 evidence and verified review execution; contributor attribution and independent assessed preparation remain |
+| Pseudocode linked to implementation | Source-resolved mappings and complete implementations included and verified in the main notebook |
 | Recorded presentation | Not established as completed; maximum 20 minutes |
 | IEEE report and contributions | Not established as completed; final writing and attribution remain |
 | Coordinator topic approval | Retain or confirm the actual approval record |
 
 ### The main remaining work is the assessed deliverables
 
-The existing Colab notebook mainly presents the older 20×20 validation workflow. The final submission needs the actual frozen 40×40 results, learning curves, uncertainty units and failure interpretation. The brief warns that results used in the presentation or report must also appear in the notebook. Check this before submission. [1, p. 5]
+The consolidated [main notebook](../Wildfire_Drone_Fleet.ipynb) now contains the frozen 40×40 results, historical evidence, learning curves, uncertainty units, failure interpretation and complete implementation listings. Its 25 review cells executed without errors in a fresh in-process IPython kernel. The separate Colab helper retains the older training workflow. The brief warns that results used in the presentation or report must also appear in the notebook. Check this before submission. [1, p. 5]
 
-For each learner, explain the algorithm and connect every pseudocode step to its implementation. Explain the MDP and feasibility mask, distinguish safety from learned mission quality, and retain reproduction instructions and dependencies. Describe convergence and sample efficiency within the fixed budget without claiming that 300 episodes prove convergence.
+The technical notebook explains each learner and connects pseudocode to the actual source. It documents the MDP and feasibility mask, distinguishes safety from learned mission quality, and retains reproduction instructions and dependencies. The group still needs to independently understand and prepare its assessed submission. Describe convergence and sample efficiency within the fixed budget without claiming that 300 episodes prove convergence.
 
 The report must contain a project description and critical review, proposals for improvements and extensions, and individual contributions. It is limited to eight A4 pages in IEEE two-column format; references, code listings and mathematical derivations go in separate appendices. [1, pp. 7–11]
 
@@ -98,7 +98,7 @@ The supplied brief lists 23 October 2026 for code and presentation, and 30 Octob
 
 ## Recommended next step and use of Colab
 
-**Proceed to assembling the final notebook and planning the presentation and report. Preserve the completed main study as the fixed-budget result. Further loss tuning or a larger grid is not required to turn these negative findings into a scientifically useful assignment analysis.**
+**Proceed to contributor attribution, independent assessed preparation, and planning the presentation and report. Preserve the completed main study as the fixed-budget result. Further loss tuning or a larger grid is not required to turn these negative findings into a scientifically useful assignment analysis.**
 
 ### When another experiment would answer a useful question
 

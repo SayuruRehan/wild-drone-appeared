@@ -15,6 +15,23 @@ Grid sizes and every fire/energy parameter are illustrative, uncalibrated simula
 
 ![40x40 simulator: true fire state, inspection freshness and drone batteries](docs/assets/simulator-preview.png)
 
+## Main technical notebook
+
+[Wildfire_Drone_Fleet.ipynb](Wildfire_Drone_Fleet.ipynb) is the consolidated review notebook.
+It contains the MDP and reward mathematics, source-linked DQN/REINFORCE/A2C pseudocode,
+historical 20×20 tuning and diagnostics, the frozen nine-fit 40×40 study, saved learning
+curves, final comparisons, uncertainty units, safety analysis and replay evidence.
+
+All 25 code cells were executed in order in a fresh in-process IPython kernel. **Run All
+reviews committed evidence and launches no training.** It recomputes all final means and
+sample SDs from 260 mission rows and verifies 107 source/data inputs. The complete executable
+implementation is also preserved in expandable output listings. Local/Colab setup is in
+Section 1; full checkpoint replay instructions are in Section 11.
+
+Historical results retain their original revisions and limitations. The notebook is a
+technical record; contributor attribution, independent assessed preparation, presentation
+and report remain. No new fits or 60×60 runs were added during consolidation.
+
 ## Frozen 40×40 RL main comparison (11 October 2026)
 
 The [audited main study](docs/experiments/rl-main-2026-10-11/README.md) completed
