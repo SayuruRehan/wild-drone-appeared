@@ -1,0 +1,202 @@
+{
+  "new_fits": 3,
+  "new_worlds": 0,
+  "rl_updates": 0,
+  "new_mission_episodes": 60,
+  "new_mission_steps": 18000,
+  "effect_passed": false,
+  "ranking_passed": false,
+  "mission_passed": false,
+  "per_seed": [
+    {
+      "seed": 0,
+      "ranking_checks": {
+        "training_regret_le_005": true,
+        "fresh_regret_le_020": false,
+        "fresh_best_match_ge_025": false
+      },
+      "ranking_passed": false,
+      "mission_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true,
+        "freshness_ge_random_plus_001": true,
+        "return_ge_random_plus_05": true
+      },
+      "mission_passed": false,
+      "mission_means": {
+        "greedy": {
+          "weighted_freshness": 0.2269945383539914,
+          "overdue_fraction": 0.6435565858992096,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -15.649918585228454
+        },
+        "masked_random": {
+          "weighted_freshness": 0.08649299847372185,
+          "overdue_fraction": 0.8850492146593135,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -25.408448370638748
+        },
+        "ranking": {
+          "weighted_freshness": 0.13274338932222693,
+          "overdue_fraction": 0.7928599144410631,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -21.727626846492065
+        }
+      },
+      "effect_checks": {
+        "fresh_regret_not_higher": false,
+        "freshness_improves_ge_001": false,
+        "overdue_fraction_not_higher": false,
+        "total_losses_not_higher": true,
+        "fleet_failure_not_higher": true
+      },
+      "effect_passed": false,
+      "objective_means": {
+        "ranking": {
+          "weighted_freshness": 0.13274338932222693,
+          "overdue_fraction": 0.7928599144410631,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "centered": {
+          "weighted_freshness": 0.19282130573780892,
+          "overdue_fraction": 0.697181652595972,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "ranking_checks": {
+        "training_regret_le_005": true,
+        "fresh_regret_le_020": false,
+        "fresh_best_match_ge_025": false
+      },
+      "ranking_passed": false,
+      "mission_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true,
+        "freshness_ge_random_plus_001": true,
+        "return_ge_random_plus_05": true
+      },
+      "mission_passed": false,
+      "mission_means": {
+        "greedy": {
+          "weighted_freshness": 0.2269945383539914,
+          "overdue_fraction": 0.6435565858992096,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -15.649918585228454
+        },
+        "masked_random": {
+          "weighted_freshness": 0.08649299847372185,
+          "overdue_fraction": 0.8850492146593135,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -25.408448370638748
+        },
+        "ranking": {
+          "weighted_freshness": 0.13442670966243625,
+          "overdue_fraction": 0.7905150981839101,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -21.61277165692791
+        }
+      },
+      "effect_checks": {
+        "fresh_regret_not_higher": false,
+        "freshness_improves_ge_001": false,
+        "overdue_fraction_not_higher": false,
+        "total_losses_not_higher": true,
+        "fleet_failure_not_higher": true
+      },
+      "effect_passed": false,
+      "objective_means": {
+        "ranking": {
+          "weighted_freshness": 0.13442670966243625,
+          "overdue_fraction": 0.7905150981839101,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "centered": {
+          "weighted_freshness": 0.1937685966178174,
+          "overdue_fraction": 0.693848251669314,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "ranking_checks": {
+        "training_regret_le_005": true,
+        "fresh_regret_le_020": false,
+        "fresh_best_match_ge_025": false
+      },
+      "ranking_passed": false,
+      "mission_checks": {
+        "freshness_ge_90pct_greedy": false,
+        "overdue_le_greedy_plus_005": false,
+        "losses_le_greedy_plus_01": true,
+        "fleet_failures_le_greedy": true,
+        "freshness_ge_random_plus_001": true,
+        "return_ge_random_plus_05": true
+      },
+      "mission_passed": false,
+      "mission_means": {
+        "greedy": {
+          "weighted_freshness": 0.2269945383539914,
+          "overdue_fraction": 0.6435565858992096,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -15.649918585228454
+        },
+        "masked_random": {
+          "weighted_freshness": 0.08649299847372185,
+          "overdue_fraction": 0.8850492146593135,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -25.408448370638748
+        },
+        "ranking": {
+          "weighted_freshness": 0.13959672521284996,
+          "overdue_fraction": 0.7791635052386238,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0,
+          "return": -21.194863471127892
+        }
+      },
+      "effect_checks": {
+        "fresh_regret_not_higher": false,
+        "freshness_improves_ge_001": false,
+        "overdue_fraction_not_higher": false,
+        "total_losses_not_higher": true,
+        "fleet_failure_not_higher": true
+      },
+      "effect_passed": false,
+      "objective_means": {
+        "ranking": {
+          "weighted_freshness": 0.13959672521284996,
+          "overdue_fraction": 0.7791635052386238,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        },
+        "centered": {
+          "weighted_freshness": 0.18941908491686002,
+          "overdue_fraction": 0.7018673558528177,
+          "total_losses": 0.0,
+          "fleet_failure": 0.0
+        }
+      }
+    }
+  ],
+  "elapsed_seconds": 164.57009655599995
+}

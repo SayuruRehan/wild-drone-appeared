@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "ranking_rows": 5517,
+  "new_mission_episodes": 60,
+  "new_mission_steps": 18000,
+  "paired_rows": 240,
+  "score_atol": 1e-05,
+  "score_rtol": 1e-06,
+  "ranking_max_score_drift": 0.0,
+  "mission_max_score_drift": 0.0,
+  "every_feasible_argmax_exact": true,
+  "parent_inputs_unchanged": true,
+  "initial_tensors_and_sampling_match_control": true,
+  "audit_script_sha256": "bb2ea7c3faa22f348a108e915cfe2033350240c732bb9fb857162239333c9d88",
+  "workflow_run_id": "38120294738",
+  "source_revision": "b6825bbdaa176277f76efb3dc84ffe334cabe289"
+}
