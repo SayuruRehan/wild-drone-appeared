@@ -15,6 +15,18 @@ Grid sizes and every fire/energy parameter are illustrative, uncalibrated simula
 
 ![40x40 simulator: true fire state, inspection freshness and drone batteries](docs/assets/simulator-preview.png)
 
+## Latest 40×40 pilot (11 October 2026)
+
+The frozen supervised inspection pilot completed three fits and 140 missions.
+All three seeds passed the ranking gate but failed the full-mission gate:
+mean inspection freshness was 0.1920, versus Greedy's 0.2270 and masked random's
+0.0865. This is a negative mission result with zero RL updates.
+
+See the [audited pilot evidence](docs/experiments/scale-pilot-2026-10-11/README.md)
+and [saved-mission diagnosis](docs/experiments/scale-pilot-2026-10-11-diagnosis/README.md).
+The latter checks 240 states on the learned trajectories without fitting again.
+Confirmation and final-test worlds remain unopened for this pilot.
+
 ## Run a visual mission
 
 Python 3.11+ is required; Python 3.12 is used in CI. From the repository root:
@@ -316,3 +328,4 @@ and [references](docs/references.md) for technical foundations. Before assignmen
 or paper claims, complete longer learning pilots, independent validation/tuning, repeated
 held-out evaluation, reward/constraint ablations and simulator sensitivity checks. RL's
 advantage and publication novelty remain questions to investigate.
+
