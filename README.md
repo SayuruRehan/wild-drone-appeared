@@ -48,6 +48,10 @@ and performance gates. Original negative archives remain unchanged. The frozen
 [settings](configs/rl-main-frozen.json) and [protocol](docs/scale-rl-protocol.md)
 remain the prospective record; negative gates do not trigger extra fits.
 
+The [20×20 and 40×40 comparison](docs/20x20-40x40-comparison.md) explains
+fleet survival, surveillance quality, and the remaining assignment deliverables.
+It is a private planning aid, not submission text.
+
 ## Preserved 40×40 supervised experiments (11 October 2026)
 
 The frozen supervised inspection pilot completed three fits and 140 missions.
