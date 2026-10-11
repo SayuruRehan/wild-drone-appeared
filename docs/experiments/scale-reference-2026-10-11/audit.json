@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "episodes": 20,
+  "steps": 6000,
+  "audit_workers": 4,
+  "cloned_action_rewards_checked": 750000,
+  "full_reference_vectors_exact": true,
+  "feasible_first_argmax_exact": true,
+  "max_actual_reward_summation_drift": 1.734723475976807e-17,
+  "paired_rows": 100,
+  "audit_script_sha256": "de29777a4281e722fdaae764caac7f62369a654b3f368e4dae47dd3a9b83edd5",
+  "input_sha256": {
+    "comparison.csv": "43e1e0bed07c9b7363054d2dffeaad9b3e083a0ad7957c32ac3849069245e9c1",
+    "completion.json": "9c6dbe7256bc5348d7753d0df2c8ae74c7f75d43704afafe082a339828970f33",
+    "episodes.csv": "c58204e1452296c144f58cfde937aa6e47910995aeaacec42b35b61e5b2db734",
+    "launch.json": "1c02899a5a4c2155a650c1fed2140148f2a3e52590e643c0dc89f3aa1885896c",
+    "paired.csv": "baa34410ba2603d99a78792dbb752117919eb778a78594309c3387e7e31a57c5",
+    "scores.npz": "34f414ef87920546e5ff30fc300e4ac0cd8e3ec1e54b3bdfb33f061c7b75d667",
+    "steps.csv.gz": "20e41c7008bcc19bdccf18313bbced11fcad6857d970a7f49351ef8902426d1c"
+  }
+}
