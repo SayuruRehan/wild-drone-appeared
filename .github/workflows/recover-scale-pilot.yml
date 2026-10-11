@@ -27,6 +27,15 @@ jobs:
       - name: Reaudit original saved run
         run: |
           test -f runs/scale-pilot-2026-10-11/completion.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('runs/scale-pilot-2026-10-11/completion.json').read_text())
+          assert result['mission_episodes'] == 140
+          assert result['mission_steps'] == 42000
+          assert result['ranking_passed'] is True
+          assert result['mission_passed'] is False
+          PY
           python scripts/audit_scale_pilot.py --run runs/scale-pilot-2026-10-11 --out docs/experiments/scale-pilot-2026-10-11
       - name: Commit verified archive
         run: |
