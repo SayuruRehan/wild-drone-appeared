@@ -27,6 +27,14 @@ and [saved-mission diagnosis](docs/experiments/scale-pilot-2026-10-11-diagnosis/
 The latter checks 240 states on the learned trajectories without fitting again.
 Confirmation and final-test worlds remain unopened for this pilot.
 
+The [controlled exact-inspection reference](docs/experiments/scale-reference-2026-10-11/README.md)
+then completed 20 missions under the scorer's same mask and first-index tie rule.
+Its freshness was 0.22635 (99.72% of Greedy), versus the scorer's 0.19200.
+Independent replay verified all 6,000 decisions and 750,000 cloned action rewards.
+This supports a separate decision-ranking experiment; it does not change the
+failed fitted-policy result or demonstrate an RL advantage. No new fits or RL
+updates were performed, and reserved evaluation worlds remain unopened.
+
 ## Run a visual mission
 
 Python 3.11+ is required; Python 3.12 is used in CI. From the repository root:
