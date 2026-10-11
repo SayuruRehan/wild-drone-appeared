@@ -72,9 +72,9 @@ def audit_rankings(run, config, index, data):
                 dataset = data[split]
                 with torch.no_grad():
                     predicted = np.concatenate([
-                        model(dataset['maps'][i:i + 32],
-                              dataset['vectors'][i:i + 32])[0].numpy()
-                        for i in range(0, len(dataset['maps']), 32)
+                        model(dataset['maps'][i:i + 64],
+                              dataset['vectors'][i:i + 64])[0].numpy()
+                        for i in range(0, len(dataset['maps']), 64)
                     ])
                 np.testing.assert_array_equal(predicted, block)
                 expected.update({(split, str(seed), phase, 'network', i): s
@@ -334,6 +334,8 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     args = parser.parse_args()
     run = args.run
+    torch.set_num_threads(1)
+    torch.use_deterministic_algorithms(True)
     launch = json.loads((run / 'launch.json').read_text())
     config = EnvConfig(**launch['env_config'])
     assert (config.grid_size, config.horizon) == (40, 300)
