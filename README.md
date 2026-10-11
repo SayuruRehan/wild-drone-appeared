@@ -15,7 +15,40 @@ Grid sizes and every fire/energy parameter are illustrative, uncalibrated simula
 
 ![40x40 simulator: true fire state, inspection freshness and drone batteries](docs/assets/simulator-preview.png)
 
-## Latest 40×40 pilot (11 October 2026)
+## Frozen 40×40 RL main comparison (11 October 2026)
+
+The [audited main study](docs/experiments/rl-main-2026-10-11/README.md) completed
+exactly nine independent fits: DQN, REINFORCE and A2C with three seeds each,
+300 episodes and 90,000 interactions per fit. All nine final checkpoints were
+evaluated on 20 new worlds (22000–22019), alongside four baselines: 260 missions.
+No validation selection, supervised warm starts, reward shaping or further tuning.
+
+| Policy | Mean freshness ↑ | Mean return ↑ | Mean drone losses ↓ |
+|---|---:|---:|---:|
+| DQN | 0.08438 | -24.78568 | 0 |
+| REINFORCE | 0.06901 | -25.81054 | 0 |
+| A2C | 0.08435 | -24.82772 | 0 |
+| Greedy | 0.22077 | -16.10008 | 0 |
+| Sweep | 0.06486 | -26.07103 | 0 |
+| Random | 0.05956 | -42.87108 | 3 |
+| Masked random | 0.08379 | -25.46148 | 0 |
+
+RL means first average the 20 worlds within each fitted seed. Freshness sample SD
+across the three seed means is 0.00254 (DQN), 0.00730 (REINFORCE) and 0.01163 (A2C).
+Baseline means use 20 worlds; their SD is preserved separately in `summary.csv`.
+None of the algorithms passed its all-seed learned-contribution or Greedy gates.
+This fixed-budget study does not demonstrate a reliable learned advantage beyond
+the feasibility mask, or establish convergence. Masked random lost no drones,
+while unmasked random lost all three in every mission, showing the rule's safety
+contribution in this sample. Safe flight alone must not be credited to learning.
+
+Independent replay verified all 75,911 mission actions, state hashes, masks and
+rewards, with zero neural score drift, and recomputed all 720 paired comparisons
+and performance gates. Original negative archives remain unchanged. The frozen
+[settings](configs/rl-main-frozen.json) and [protocol](docs/scale-rl-protocol.md)
+remain the prospective record; negative gates do not trigger extra fits.
+
+## Preserved 40×40 supervised experiments (11 October 2026)
 
 The frozen supervised inspection pilot completed three fits and 140 missions.
 All three seeds passed the ranking gate but failed the full-mission gate:
