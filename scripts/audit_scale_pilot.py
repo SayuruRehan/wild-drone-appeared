@@ -123,7 +123,8 @@ def audit_data(run, launch):
     data = {}
     for split in ('training', 'fresh'):
         path = run / f'{split}.pt'
-        if sha(path) != datasets[split]['sha256'] or path.stat().st_size != datasets[split]['bytes']:
+        if (sha(path) != datasets[split]['sha256'] or
+                path.stat().st_size != datasets[split]['bytes']):
             raise AssertionError('dataset bytes changed')
         data[split] = torch.load(path, map_location='cpu', weights_only=True)
         packet = data[split]
