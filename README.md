@@ -101,6 +101,13 @@ zero RL updates and no confirmation or final-test worlds.
 
 ## Run a visual mission
 
+### Interactive mission control
+
+The custom [mission-control web UI](docs/mission-control.md) provides animated, verified
+replays, drone telemetry, synchronized controller comparisons, the research story and
+interactive results. Its local FastAPI lab can run new bounded simulator missions.
+See the linked guide for installation, optional frozen checkpoints and reproduction.
+
 Python 3.11+ is required; Python 3.12 is used in CI. From the repository root:
 
 ```bash
@@ -400,4 +407,3 @@ and [references](docs/references.md) for technical foundations. Before assignmen
 or paper claims, complete longer learning pilots, independent validation/tuning, repeated
 held-out evaluation, reward/constraint ablations and simulator sensitivity checks. RL's
 advantage and publication novelty remain questions to investigate.
-
