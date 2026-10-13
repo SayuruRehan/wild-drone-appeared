@@ -56,6 +56,15 @@ checkpoints are byte-identical to the published ones in `results/lr_sweep/SHA256
 Retraining gives different weights on a different machine (see the last point under the
 learning-rate results), so a retrained checkpoint will not match those hashes.
 
+To reproduce the committed sweep results exactly without retraining, download the nine
+published checkpoints from the `lr-sweep-checkpoints-2026-10-11` release and check them:
+
+```bash
+gh release download lr-sweep-checkpoints-2026-10-11 -R SayuruRehan/wild-drone-appeared
+tar -xzf lr-sweep-checkpoints-40x40.tar.gz -C results/lr_sweep
+(cd results/lr_sweep && shasum -a 256 -c SHA256SUMS)
+```
+
 `02_sensitivity.py --plot-only` and `03_lr_sweep.py --plot-only` rebuild the summary and
 figure from the saved episode CSVs. Runtimes are from a 10-core Apple-silicon Mac.
 
