@@ -1,0 +1,100 @@
+{
+  "worlds": [
+    22000,
+    22001
+  ],
+  "note": "serial, one process, this machine",
+  "greedy": {
+    "seconds_per_mission": 0.3877696045092307,
+    "decision_ms": 1.0824263313164313,
+    "episodes": [
+      {
+        "policy": "greedy",
+        "training_seed": null,
+        "scenario_seed": 22000,
+        "grid_size": 40,
+        "horizon": 300,
+        "steps": 300,
+        "return": -17.565457300197497,
+        "weighted_freshness": 0.19760786608997222,
+        "overdue_fraction": 0.6916929576878391,
+        "energy_used": 780.0,
+        "total_losses": 0,
+        "safe_returns": 3,
+        "charge_completions": 3,
+        "collision_attempts": 0,
+        "decision_ms": 1.1892400367651135,
+        "fleet_failure": 0,
+        "intact_fleet": 1,
+        "wall_seconds": 0.4278763340553269
+      },
+      {
+        "policy": "greedy",
+        "training_seed": null,
+        "scenario_seed": 22001,
+        "grid_size": 40,
+        "horizon": 300,
+        "steps": 300,
+        "return": -14.191037899563536,
+        "weighted_freshness": 0.25724462298535977,
+        "overdue_fraction": 0.6074212427583962,
+        "energy_used": 780.0,
+        "total_losses": 0,
+        "safe_returns": 3,
+        "charge_completions": 3,
+        "collision_attempts": 0,
+        "decision_ms": 0.9756126258677492,
+        "fleet_failure": 0,
+        "intact_fleet": 1,
+        "wall_seconds": 0.3476628749631345
+      }
+    ]
+  },
+  "planner": {
+    "seconds_per_mission": 19.876107624499127,
+    "decision_ms": 66.05307700151268,
+    "episodes": [
+      {
+        "policy": "planner",
+        "training_seed": null,
+        "scenario_seed": 22000,
+        "grid_size": 40,
+        "horizon": 300,
+        "steps": 300,
+        "return": -18.466250844788956,
+        "weighted_freshness": 0.18452983024009312,
+        "overdue_fraction": 0.7133278740214446,
+        "energy_used": 751.75,
+        "total_losses": 0,
+        "safe_returns": 3,
+        "charge_completions": 3,
+        "collision_attempts": 0,
+        "decision_ms": 66.90453432306337,
+        "fleet_failure": 0,
+        "intact_fleet": 1,
+        "wall_seconds": 20.13040333299432
+      },
+      {
+        "policy": "planner",
+        "training_seed": null,
+        "scenario_seed": 22001,
+        "grid_size": 40,
+        "horizon": 300,
+        "steps": 300,
+        "return": -14.868145485927592,
+        "weighted_freshness": 0.2576720524425091,
+        "overdue_fraction": 0.6248507912306794,
+        "energy_used": 761.0,
+        "total_losses": 0,
+        "safe_returns": 3,
+        "charge_completions": 3,
+        "collision_attempts": 0,
+        "decision_ms": 65.20161967996198,
+        "fleet_failure": 0,
+        "intact_fleet": 1,
+        "wall_seconds": 19.621811916003935
+      }
+    ]
+  },
+  "estimate_20_worlds_serial_minutes": 6.625369208166376
+}
