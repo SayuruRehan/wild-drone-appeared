@@ -22,8 +22,14 @@ difference between learning rates is larger than seed noise.
 The frozen-rate fit repeats the archived seed-0 fit; ``reproduces_frozen_training`` in the
 summary records whether its training curve matches the archive on this machine.
 
+A fit whose ``policy.pt`` already exists is not retrained, but only after the file is checked
+to be the finished fit this script would train (same algorithm, learning rate, seed,
+environment and 300 completed episodes).  Each checkpoint's SHA-256 is then compared with
+``results/lr_sweep/SHA256SUMS``, the hashes of the checkpoints behind the committed results.
+
 Outputs (in ``results/``):
     lr_sweep/<algorithm>/lr-<rate>/   policy.pt, training.csv, training_summary.json, ...
+    lr_sweep/SHA256SUMS               hashes of the published checkpoints (read, not written)
     lr_sweep_episodes.csv             validation missions
     lr_sweep_summary.csv              one row per (algorithm, learning rate) + references
     lr_sweep.png                      validation freshness and training curves
@@ -53,6 +59,7 @@ from common import (  # noqa: E402
     frozen_setup,
     read_csv,
     run_jobs,
+    sha256,
     summarise,
     write_csv,
 )
@@ -61,6 +68,7 @@ FACTORS = (1/3, 1.0, 3.0)                      # multiples of the frozen learnin
 VALIDATION_WORLDS = tuple(range(23000, 23020))
 TRAINING_SEED = 0
 OUT = RESULTS/'lr_sweep'
+MANIFEST = OUT/'SHA256SUMS'                    # `shasum -a 256` format, paths relative to OUT
 COLOURS = {'low': '#2a78d6', 'frozen': '#eb6834', 'high': '#1baf7a'}
 LEVELS = ('low', 'frozen', 'high')
 
@@ -87,6 +95,22 @@ def check_validation_worlds_are_fresh(final_worlds):
                         raise ValueError(f'validation world {value} already used in {path}')
 
 
+def check_reusable(directory, algorithm, config, train_config):
+    """Refuse an existing ``policy.pt`` unless it is the finished fit this job would train."""
+    import torch
+    saved = torch.load(directory/'policy.pt', map_location='cpu', weights_only=True)
+    expected = {'algorithm': algorithm, 'env_config': config.to_dict(),
+                'train_config': train_config.to_dict(),
+                'completed_episodes': train_config.episodes}
+    wrong = [key for key, value in expected.items() if saved.get(key) != value]
+    log = directory/'training.csv'
+    if not log.is_file() or len(read_csv(log)) != train_config.episodes:
+        wrong.append('training.csv')
+    if wrong:
+        raise ValueError(f'{directory/"policy.pt"} is not the expected fit (mismatch in '
+                         f'{", ".join(wrong)}); delete {directory} to retrain it')
+
+
 def train(job):
     """Train one (algorithm, learning rate) fit with the repo's own masked trainer."""
     algorithm, rate = job
@@ -96,15 +120,29 @@ def train(job):
     from wild_drone.masked_learning import train_masked
     config, settings, _ = frozen_setup()
     directory = fit_dir(algorithm, rate)
-    if (directory/'policy.pt').exists():        # finished earlier: do not retrain
-        return algorithm, rate, None
-    torch.set_num_threads(1)
-    torch.use_deterministic_algorithms(True)
     # Only learning_rate differs from the frozen recipe; progress printing is silenced.
     train_config = replace(TrainConfig(**settings[algorithm], seed=TRAINING_SEED),
                            learning_rate=rate, progress_interval=0)
+    if (directory/'policy.pt').exists():        # finished earlier: reuse only if it matches
+        check_reusable(directory, algorithm, config, train_config)
+        return algorithm, rate, None
+    torch.set_num_threads(1)
+    torch.use_deterministic_algorithms(True)
     summary = train_masked(algorithm, config, train_config, directory)
     return algorithm, rate, summary['elapsed_seconds']
+
+
+def report_published(fits):
+    """Say which checkpoints are byte-identical to the published ones in the manifest."""
+    published = {name: digest for digest, name in
+                 (line.split() for line in MANIFEST.read_text().splitlines())}
+    different = [str(fit_dir(a, r).relative_to(OUT)) for a, r in fits
+                 if sha256(fit_dir(a, r)/'policy.pt')
+                 != published.get(f'{fit_dir(a, r).relative_to(OUT)}/policy.pt')]
+    print(f'{len(fits)-len(different)}/{len(fits)} checkpoints match {MANIFEST.name}')
+    if different:
+        print('  retrained here, so results will differ from the committed ones: '
+              + ', '.join(different))
 
 
 def reproduces_frozen(algorithm, rate):
@@ -180,6 +218,7 @@ def main():
                 print(f'trained {algorithm} lr={rate:g}: '
                       + (f'{elapsed:.0f}s' if elapsed else 'already present'), flush=True)
         print(f'all fits ready after {time.perf_counter()-started:.0f}s wall')
+        report_published(fits)
 
         # Validation missions: every final checkpoint, plus two references.
         jobs = [({'learning_rate': rate}, {}, algorithm, TRAINING_SEED, world,
