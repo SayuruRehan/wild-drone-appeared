@@ -17,7 +17,7 @@ archive is not modified.
 | `01_planner_eval.py` | Runs `RollingHorizonPolicy` on the 20 frozen final worlds (22000-22019) and tabulates it next to the frozen baselines and learners. First re-runs the four frozen baselines to prove the harness reproduces the archive. |
 | `02_sensitivity.py` | Changes one setting at a time (battery capacity, recharge rate, spread probability) and re-flies greedy, planner, masked random, sweep and the nine frozen learner checkpoints. No retraining. |
 | `03_lr_sweep.py` | Trains each algorithm from scratch at three learning rates (one seed, 300 episodes) and evaluates the final weights on validation worlds 23000-23019. |
-| `results/` | All outputs (CSV, PNG, the trained sweep checkpoints). |
+| `results/` | All outputs (CSV, PNG, the trained sweep checkpoints). The checkpoints (`policy.pt`) are not committed; `results/lr_sweep/SHA256SUMS` lists their hashes. |
 | `checkpoints/` | The nine frozen learner checkpoints downloaded from the `scale-rl` workflow run. |
 
 ## How to run
@@ -48,6 +48,13 @@ Then:
 .venv/bin/python 02_sensitivity.py --workers 8   # ~16 min
 .venv/bin/python 03_lr_sweep.py --workers 9      # ~20 min
 ```
+
+`03_lr_sweep.py` does not retrain a fit whose `policy.pt` already exists, but it first checks
+that the file is the finished fit it would train (same algorithm, learning rate, seed,
+environment and 300 completed episodes) and stops if it is not. It then reports how many
+checkpoints are byte-identical to the published ones in `results/lr_sweep/SHA256SUMS`.
+Retraining gives different weights on a different machine (see the last point under the
+learning-rate results), so a retrained checkpoint will not match those hashes.
 
 `02_sensitivity.py --plot-only` and `03_lr_sweep.py --plot-only` rebuild the summary and
 figure from the saved episode CSVs. Runtimes are from a 10-core Apple-silicon Mac.
@@ -119,8 +126,11 @@ Mean return:
 | spread 0.02 | -17.60 | -16.73 | -25.63 | -26.02 | -24.77 | -25.83 | -24.84 |
 | spread 0.08 | -18.24 | -16.76 | -25.55 | -26.02 | -24.67 | -26.00 | -24.83 |
 
-- **The ranking never changes.** Greedy and the planner stay at 0.20-0.23 freshness in
-  every condition; all learners, masked random and sweep stay at 0.06-0.10.
+- **Greedy and the planner remain the strongest group across all tested conditions.** They
+  stay at 0.20-0.23 freshness in every condition; all learners, masked random and sweep
+  stay at 0.06-0.10. Rankings inside each group do change: greedy leads the planner on
+  freshness only at the default, and DQN, A2C and masked random swap places from one
+  condition to the next.
 - **Greedy loses the whole fleet in 4 of the 140 missions, and only away from the default**:
   battery 120 (world 22003), spread 0.02 (world 22008), spread 0.08 (worlds 22000 and
   22019). In each case the three drones arrive low on battery two cells from base, every
@@ -161,11 +171,16 @@ One training seed (0), 300 episodes, final weights, 20 validation worlds 23000-2
 | greedy | - | 0.2258 | 0.6445 | -15.65 |
 | masked_random | - | 0.0906 | 0.8779 | -25.14 |
 
-- No learning rate moves any algorithm out of the masked-random band (0.07-0.10) or near
-  greedy (0.226). The untuned frozen learning rates are not why the learners fell short.
-- DQN is best at its frozen rate and is the only fit above masked random on freshness
-  (0.098 against 0.091); the gap is smaller than the SD across worlds (about 0.015).
-  REINFORCE improves steadily with a larger rate. A2C is flat across a 10-fold range.
+- **None of the tested rates closed the gap to greedy in these seed-0 runs.** The best fit
+  reaches 0.098 freshness against greedy's 0.226.
+- Some fits do edge past masked random. DQN at its frozen rate is ahead on both freshness
+  (0.0981 against 0.0906) and return (-24.00 against -25.14), and six of the nine fits
+  have a better return than masked random. The freshness gap is smaller than the SD
+  across worlds (about 0.015).
+- One training seed cannot establish that any of these differences is reliable, and it
+  cannot rule out the learning rate as a contributing cause of the shortfall. What the
+  sweep shows is that a 3-fold change either way was not enough on its own.
+- REINFORCE improves steadily with a larger rate. A2C is flat across a 10-fold range.
 - With one seed per setting, differences of 0.01 between rates are within the seed spread
   seen in the frozen study (SD across seed means 0.003-0.012). Treat the ordering of rates
   as suggestive only.
