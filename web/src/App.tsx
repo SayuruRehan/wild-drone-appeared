@@ -1434,7 +1434,7 @@ function Results({ evidence }: { evidence: Evidence }) {
           </div>
         </div>
         <div className="provenance-links">
-          <a href="/data/evidence.json" download>
+          <a href={`${import.meta.env.BASE_URL}data/evidence.json`} download>
             <Download size={14} />
             Download evidence index
           </a>
@@ -1899,7 +1899,7 @@ export default function App() {
     [error, setError] = useState(""),
     [capabilities, setCapabilities] = useState<Capabilities | null>(null);
   useEffect(() => {
-    fetch("/data/evidence.json")
+    fetch(`${import.meta.env.BASE_URL}data/evidence.json`)
       .then((r) => {
         if (!r.ok) throw new Error("Evidence could not be loaded.");
         return r.json();

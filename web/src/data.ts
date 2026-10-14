@@ -4,7 +4,7 @@ import type { Mission, Replay } from "./types";
 const cache = new Map<string, Replay>();
 export async function loadReplay(mission: Mission): Promise<Replay> {
   if (cache.has(mission.id)) return cache.get(mission.id)!;
-  const response = await fetch(`/data/${mission.file}`);
+  const response = await fetch(`${import.meta.env.BASE_URL}data/${mission.file}`);
   if (!response.ok)
     throw new Error("This replay could not be loaded. Please try again.");
   const raw = new Uint8Array(await response.arrayBuffer());
