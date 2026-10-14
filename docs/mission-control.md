@@ -4,9 +4,16 @@ The custom React/TypeScript interface has two modes: a static evidence showcase 
 local FastAPI simulation lab. Both use actual simulator states. No JavaScript wildfire
 or flight model approximates the Python implementation.
 
+For a full explanation of the screens, transition rules, animation pipeline and results,
+read the [team guide](mission-control-team-guide.md). The
+[WhatsApp summary](mission-control-whatsapp.txt) is ready to copy and share.
+
 ## Run locally
 
 From the repository root, use Python 3.11+ and Node 22.12+:
+
+Activate your virtual environment first (macOS/Linux: `source .venv/bin/activate`).
+Create one with `python3 -m venv .venv` if it does not exist.
 
 ```bash
 python -m pip install -e '.[ui,rl]'
