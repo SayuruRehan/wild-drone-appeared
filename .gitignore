@@ -33,3 +33,9 @@ PROJECT_REVIEW.md
 
 # Large model checkpoints (keep them in Drive or runs/)
 *.pt
+
+# Web build and dependency artifacts
+node_modules/
+web/dist/
+web/*.tsbuildinfo
+web/.sites-runtime/

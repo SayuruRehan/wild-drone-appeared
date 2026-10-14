@@ -1,0 +1,19 @@
+*Wild Drone Appeared — UI TL;DR*
+
+Our project coordinates 3 battery-limited drones and 1 shared charger to keep important wildfire locations recently inspected. The full fire map is visible; the drones inspect rather than extinguish it.
+
+*The UI shows* movement/trails, fire and fuel, inspection freshness, batteries, charging and decisions. We can pause, scrub through steps and compare controllers. The research/results pages explain how we got here and what the experiments found.
+
+*Animation:* Python saves the actual state after each simulator step; Canvas draws it and smooths drone movement. A complete 300-step mission has 301 snapshots. Playback speed changes viewing speed, not physics or results.
+
+*Two modes:*
+• Showcase: 39 verified archived replays; aggregate charts use all 260 main-study missions.
+• Local lab: new Python simulations with adjustable conditions. Live RL needs verified checkpoints. No new training is launched.
+
+*Main finding:* The mask helped safety, but reliable learned inspection improvement was not demonstrated. Greedy freshness was 22.08%, versus DQN 8.44% and masked random 8.38%. Freshness measures recency, not land coverage.
+
+https://wild-drone-mission-control.sulaweee.chatgpt.site/
+Currently owner-private; sharing the link does not grant team access. We can run locally from the repo's sula branch.
+
+Full explanation: docs/mission-control-team-guide.md
+Setup: docs/mission-control.md
