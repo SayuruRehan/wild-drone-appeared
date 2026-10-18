@@ -1,0 +1,40 @@
+name: Build and archive COMP6008 report research PDF
+on:
+  pull_request:
+    paths:
+      - 'report/**'
+      - '.github/workflows/build-report.yml'
+  push:
+    branches: [master]
+    paths:
+      - 'report/**'
+      - '.github/workflows/build-report.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  latex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile IEEE LaTeX report
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: report
+          latexmk_use_xelatex: true
+          args: -pdfxe -interaction=nonstopmode -halt-on-error
+      - name: Upload compiled PDF for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: wild-drone-report-research-pdf
+          path: report/main.pdf
+          if-no-files-found: error
+      - name: Commit generated PDF to master
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'docs(report): update compiled research PDF'
+          file_pattern: report/main.pdf
