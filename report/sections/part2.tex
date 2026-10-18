@@ -1,0 +1,72 @@
+\section{Potential improvements and future expansions}
+
+Guideline distinction: an improvement should address a measured weakness in the present system, while future work should expand the scientific task beyond that weakness. Parameter-only changes do not count as improvements. At least three of each are needed for a three-person group, with at least six qualifying scholarly sources and around 40\% of total report space for Part II. The items below are hypotheses and research routes, not implemented achievements \cite{source16}.
+
+\subsection{Improvements tied directly to current results}
+
+\subsubsection{Improvement 1 --- Structured multi-drone credit assignment}
+
+Evidence of limitation: the existing central network predicts one number for each of 125 simultaneous move combinations. At 40$\times$40, its fitted policies rarely improve weighted freshness beyond masked random despite conserving all drones. A plausible issue is that a shared scalar return does not readily reveal which drone should inspect, return or yield the charger; this diagnosis is not proven solely by the aggregate scores.
+
+Proposed experiment: replace the monolithic joint policy head with a structured cooperative decision model that estimates per-drone utilities conditioned on shared state and recombines them through an explicit coordination operator (e.g., a QMIX-style mixing network). Alternatively evaluate a central critic with counterfactual per-agent advantage to separate one drone's contribution from teammates' actions (COMA). The current task remains centralised execution; these methods would be adapted accordingly rather than falsely described as already implemented \cite{source6}, \cite{source7}.
+
+Why science supports it: Rashid et al. show factorised value functions can recover coordinated joint action selection under monotonic mixing, while Foerster et al. develop counterfactual baselines to improve cooperative multi-agent credit assignment. Those findings motivate a hypothesis, not an expected magnitude of improvement for this simulator. Compare equal environment steps, seeds and mask rules; report charger queues, duplicate coverage, regret to Greedy and held-out freshness. Test an ablation that preserves the old encoder and varies only action/critic structure. An admissible negative outcome would be unchanged freshness, indicating the main bottleneck lies elsewhere \cite{source6}, \cite{source7}.
+
+\subsubsection{Improvement 2 --- Potential-based timeliness signal}
+
+Evidence of limitation: the objective rewards current inspection gain and penalises overdue sites, yet all RL methods fail to organise persistent patrols. A carefully designed learning signal could give early credit for positioning toward a high-priority overdue cluster without changing the task's intended optimal policy. However, earlier ad hoc shaping probes in the repository produced negative findings; their outcomes must be retained rather than rewritten as progress \cite{source14}.
+
+Proposed method: define a bounded state potential $\Phi$(s) based on priority-weighted inspection urgency, feasible expected travel distance to serviceable regions, and charger waiting condition. Add shaping F(s,a,s\textquotesingle{})=$\gamma$$\Phi$(s\textquotesingle{})-$\Phi$(s) only in training; hold physical outcomes and the original test reward fixed. Ng et al. establish policy invariance under this potential-difference construction subject to relevant MDP assumptions \cite{source8}. Explicitly handle finite-horizon termination with a consistent terminal potential so an agent cannot earn artificial extra credit by ending early.
+
+Test design: freeze the new potential before opening test worlds, compare no-shaping versus potential shaping under matched initialization, interactions and feasible-action rules, and audit original reward separately from shaped learning return. Plot time-to-first-return, average weighted age, overdue fraction and learning curves. A positive result requires improvement in held-out original-objective freshness across seeds, not merely increased shaped training reward. The method is a new reward-structure intervention, not learning-rate tuning \cite{source8}.
+
+\subsubsection{Improvement 3 --- Robust learning on learner-visited states}
+
+Evidence of limitation: historical supervised inspection probes scored highly on their training rankings but failed after rollout, consistent with a mismatch between demonstrated states and self-generated patrol trajectories. A later loss-only ranking change reduced full-mission freshness from 0.19200 to 0.13559, showing that increasing a training matching score does not necessarily improve end-to-end behaviour \cite{source14}, \cite{source17}.
+
+Proposed method: study an explicit dataset-and-policy iteration process that retains dangerous return/charger states, uses controlled learner-state collection, and applies conservative offline value estimation to avoid unsupported action values. Conservative Q-Learning (CQL) motivates penalising overly optimistic values for unsupported actions, while prioritised experience replay motivates sampling rare consequential transitions more often \cite{source18}, \cite{source5}. This is not a claim that a supervised classifier or a CQL implementation already solves the project; CQL's offline assumptions must be checked before adapting it to online mission data.
+
+Evaluation: preregister a matched dataset size, control with uniform replay, and separate (i) held-out decision agreement from (ii) autonomous full-horizon outcomes. Publish the proportion of training packets covering return-to-base, collision-avoidance, charging-queue and high-overdue events, along with weighted freshness, losses and drift under fresh scenario seeds. Repeat across three or more fits. Evidence of progress is robust closed-loop monitoring, not near-perfect labels on static sampled states \cite{source5}, \cite{source18}.
+
+\subsection{Future directions extending the problem scope}
+
+\subsubsection{Extension 1 --- Partial observability and belief-based sensing}
+
+Different research question: the current controller sees complete fire maps even before any visit. A realistic extension would hide true ignition, introduce uncertain camera detections and smoke-induced observations, and require the fleet to maintain a belief map of fire and uncertainty. This changes the problem from the present fully observed MDP to a partially observable decision process, testing both where to inspect and what has actually been learned from sensing. Hauskrecht surveys the approximation challenges of POMDP value functions; Julian and Kochenderfer investigate imperfect sensing in distributed wildfire surveillance \cite{source9}, \cite{source10}.
+
+Proposed experimental design: add a sensor likelihood p(o\textbar s), detection/false-alarm rates, delayed information updates and a held-out belief-calibration metric; retain the physical task's existing motion rules for the first study. Compare age-based patrol, information-gain planning and learned belief policies under identical sensing budgets. Report true-state coverage, belief error, time-to-detection and inspection freshness. The claim would concern information gathering, not a post hoc fix to the existing 40$\times$40 RL deficit.
+
+\subsubsection{Extension 2 --- Decentralised fleets with lossy communication}
+
+Different research question: today one central controller has instantaneous access to all drones and the single charger. In a wider multi-UAV mission, each aircraft may have its own local sensors, limited radio contact and intermittent communication. Introduce a Dec-POMDP or cooperative Markov-game formulation with per-drone observations and delayed messages. Compare local-only, periodic shared summaries and learned communication protocols; quantify bytes transmitted, stale information and safety under outages \cite{source6}, \cite{source19}.
+
+Scientific basis: coordinated value factorisation (QMIX) and differentiable/reinforcement-based communication (DIAL/RIAL) show principled ways to research shared-team decisions under imperfect information \cite{source6}, \cite{source19}. The proposed benchmark must include fair baselines, communication delay distributions and collision/battery compliance---not merely more agents on a larger map. This extension concerns the autonomy/coordination architecture rather than repairing current one-step ranking errors.
+
+\subsubsection{Extension 3 --- Calibrated, heterogeneous wildfire operations}
+
+Different research question: assess whether a policy class can generalise to physically meaningful mission conditions. Introduce geographically referenced terrain, calibrated spread and wind fields, distinct sensor footprints, heterogeneous batteries and additional chargers. Consider uncertainty and multi-objective priorities such as timely tracking of an advancing front versus visiting fixed infrastructure. Viseras et al. evaluate deep Q-learning for cooperative fire-front monitoring, while Julian and Kochenderfer address wildfire surveillance with autonomous aircraft, providing application-specific research precedents \cite{source9}, \cite{source10}.
+
+Study design: reserve entire weather regimes or map regions as held-out domains, and report risk-constrained timeliness, energy, completion, robustness to sensor failures and simulated real-time decision latency. Compare physically calibrated baselines alongside RL rather than scaling the present synthetic grid and calling it field-ready. Domain randomisation or a digital twin may be investigated, but no operational readiness should be claimed without external measurements and safety review. The existing project remains an educational simulator, not a validated wildfire-response system \cite{source9}, \cite{source10}.
+
+\subsection{Prioritisation and scientific decision rules}
+
+\begin{table*}[!t]
+\centering
+\caption{Improvement and extension planning summary.}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lp{0.34\textwidth}p{0.31\textwidth}}
+\toprule
+\textbf{Proposal} & \textbf{Current evidence / change} & \textbf{Success check} \\
+\midrule
+I1 & Near-masked-random; factorised / counterfactual fleet credit & Repeated unseen freshness, coordination events \\
+I2 & Poor patrol timeliness; policy-invariant potential reward & Higher original reward/freshness, no new violations \\
+I3 & Weak closed-loop generalisation; conservative data iteration & Autonomous 300-step mission gains, not just label fit \\
+E1 & Hidden-fire sensing; POMDP with belief map & Belief calibration and true detection latency \\
+E2 & No comm constraints; local cooperative policies & Performance vs message delay/bandwidth \\
+E3 & Synthetic physics; heterogeneous calibrated missions & Robustness on held-out weather/maps \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Experimental discipline for any follow-up: archive the source revision, model variant, random seeds, world allocation, simulation budget, baseline implementation, and primary metric before fitting. Tune only on declared training/validation scenarios; evaluate once on a fresh final set; preserve negative trials and report both failures and costs. For this already completed assignment, none of these proposed experiments needs to be misrepresented as finished.
