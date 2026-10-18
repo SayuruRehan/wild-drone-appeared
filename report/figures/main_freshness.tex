@@ -1,0 +1,4 @@
+\begin{tikzpicture}
+\begin{axis}[ybar,width=\columnwidth,height=4.5cm,bar width=7pt,ymin=0,ymax=.25,ylabel={Weighted freshness},symbolic x coords={DQN,REINF,A2C,Greedy,Sweep,Random,M-Rand},xtick=data,x tick label style={rotate=48,anchor=east,font=\scriptsize},ylabel style={font=\scriptsize},yticklabel style={font=\scriptsize},grid=major,major grid style={gray!20},enlarge x limits=.08]
+\addplot[fill=black!50,draw=black] coordinates {(DQN,.08438) (REINF,.06901) (A2C,.08435) (Greedy,.22077) (Sweep,.06486) (Random,.05956) (M-Rand,.08379)};
+\end{axis}\end{tikzpicture}
