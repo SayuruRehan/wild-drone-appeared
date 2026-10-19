@@ -123,8 +123,9 @@ In Google Colab, clone the repository into `/content/wild-drone-appeared`, run
 
 **Flags.** With the defaults below, *Run All* takes a few minutes on a CPU and trains only
 tiny demonstration models. Set `RUN_TRAINING = True` to retrain one frozen 40×40 fit
-(about an hour on one CPU core) or `RUN_SWEEP = True` to rerun the 40×40 learning-rate sweep
-(nine fits).""")
+(about an hour on one CPU core), `RUN_SWEEP = True` to rerun the 40×40 learning-rate sweep
+(nine fits), or `RUN_MASK_COMPARISON = True` to retrain the 20×20 masked and unmasked agents
+(eighteen fits).""")
 code("""import copy, json, random, sys, tempfile, time
 from collections import deque
 from dataclasses import asdict, dataclass, replace
@@ -142,6 +143,7 @@ from torch.distributions import Categorical
 
 RUN_TRAINING = False   # retrain one frozen 40×40 fit (slow)
 RUN_SWEEP = False      # rerun the 40×40 learning-rate sweep (very slow)
+RUN_MASK_COMPARISON = False  # retrain masked and unmasked agents at 20×20 (slow)
 
 candidates = [Path.cwd(), Path.cwd().parent, Path('/content/wild-drone-appeared')]
 REPO = next((p for p in candidates if (p/'configs/rl-main-frozen.json').exists()), None)
@@ -267,12 +269,18 @@ md(original(16).replace('### 4.3 Synchronous A2C', '### 6.3 Synchronous A2C'))
 md("""### 6.4 Shared training loop
 
 One function trains all three agents; the algorithm only changes action selection and the
-update rule. It is the training loop that produced the archived results, without the file
-saving, resume and audit code of the repository version (`src/wild_drone/masked_learning.py`).
-Section 7 checks that both give identical weights. The main study used standard DQN and no
-reward shaping, so those optional branches are omitted.""")
-code('''def train_masked(algorithm, env_config, t, verbose=True):
-    """Train one masked learner from scratch; returns (model, per-episode rows)."""
+update rule. `masked=True` restricts every choice to the feasible set (our modification);
+`masked=False` is the original unrestricted agent over all 125 actions. These are the training
+loops that produced the archived results, without the file saving, resume and audit code of
+the repository versions (`src/wild_drone/masked_learning.py` and `learning.py`). Section 7
+checks that both give identical weights. The main study used standard DQN and no reward
+shaping, so those optional branches are omitted.""")
+code('''def train_agent(algorithm, env_config, t, masked=True, verbose=True):
+    """Train one learner from scratch; returns (model, per-episode rows).
+
+    masked=True: actions restricted to the feasible set (our modification).
+    masked=False: the original agent, choosing among all 125 joint actions.
+    """
     assert algorithm in ('dqn', 'reinforce', 'a2c')
     assert not t.double_dqn and t.coordination_shaping_weight == 0, 'not used by the main study'
     random.seed(t.seed)
@@ -281,6 +289,7 @@ code('''def train_masked(algorithm, env_config, t, verbose=True):
     torch.set_num_threads(1)
     torch.use_deterministic_algorithms(True)
     rng = np.random.default_rng(t.seed)
+    feasible = action_mask if masked else (lambda env: np.ones(125, dtype=bool))
     env = WildfireFleetEnv(env_config)
     # D1 / R1 / A1: network (REINFORCE and A2C add a value head), Adam, DQN target + replay
     model_config = {'critic': algorithm == 'a2c' or (
@@ -312,16 +321,17 @@ code('''def train_masked(algorithm, env_config, t, verbose=True):
     for episode in range(t.episodes):
         # D2 / R2 / A2: reset the next training world and compute its feasible actions
         observation, _ = env.reset(seed=t.scenario_seed_start+episode)
-        mask = action_mask(env)
+        mask = feasible(env)
         logs, values, entropies, rewards = [], [], [], []
         episode_return, fresh_sum, overdue_sum, done = 0.0, 0.0, 0.0, False
         while not done:
             if algorithm == 'dqn':
-                # D3: epsilon-greedy over feasible actions only
+                # D3: epsilon-greedy over feasible actions (all 125 when unmasked)
                 epsilon = t.epsilon_start + min(1, steps/t.epsilon_decay_steps)*(
                     t.epsilon_end-t.epsilon_start)
                 if rng.random() < epsilon:
-                    action = int(rng.choice(np.flatnonzero(mask)))
+                    action = (int(rng.choice(np.flatnonzero(mask))) if masked
+                              else int(rng.integers(125)))
                 else:
                     with torch.no_grad():
                         q, _ = model(*tensors(observation))
@@ -339,7 +349,7 @@ code('''def train_masked(algorithm, env_config, t, verbose=True):
             next_observation, reward, terminal, truncated, info = env.step(action)
             done = terminal or truncated
             # Terminal next states are never bootstrapped, so their mask is irrelevant.
-            next_mask = np.ones(125, dtype=bool) if done else action_mask(env)
+            next_mask = np.ones(125, dtype=bool) if done else feasible(env)
             steps += 1
             episode_return += reward
             fresh_sum += info['weighted_freshness']
@@ -401,17 +411,18 @@ Learned policies act greedily: the highest-scoring feasible action (Q value for 
 for the actors). `run_episode` flies one complete mission and reports the metrics used in
 every table. If the whole fleet is lost early, the rest of the mission counts as zero
 freshness and fully overdue, so failing early is never rewarded.""")
-code('''class MaskedNeuralPolicy:
-    """Deterministic evaluation: argmax over feasible actions."""
+code('''class NeuralPolicy:
+    """Deterministic evaluation: argmax over feasible actions (all actions if unmasked)."""
 
-    def __init__(self, model):
-        self.model = model.eval()
+    def __init__(self, model, masked=True):
+        self.model, self.masked = model.eval(), masked
 
     def act(self, env, observation):
         with torch.no_grad():
             logits, _ = self.model(*tensor_observations(
                 observation, spatial_encoding=self.model.spatial_encoding))
-        return int(apply_mask(logits, action_mask(env)).argmax(dim=1).item())
+        mask = action_mask(env) if self.masked else np.ones(125, dtype=bool)
+        return int(apply_mask(logits, mask).argmax(dim=1).item())
 
 
 def run_episode(config, policy, scenario_seed, *, name, training_seed=None):
@@ -443,8 +454,8 @@ def run_episode(config, policy, scenario_seed, *, name, training_seed=None):
 cells.append(heading(7, 'Implementation check and demonstration run', """The archived results
 were produced by the repository package `src/wild_drone`. When that package is present, this
 check runs the notebook's environment, mask and Greedy controller side by side with the
-package on the same worlds, and trains each algorithm for two short episodes with both
-implementations: trajectories and final weights must be identical. Without the package the
+package on the same worlds, and trains each algorithm, masked and unmasked, for two short
+episodes with both implementations: trajectories and final weights must be identical. Without the package the
 check is skipped and the notebook still runs."""))
 code('''small_env = EnvConfig(grid_size=10, horizon=30, battery_capacity=14, recharge_rate=4)
 small_train = dict(episodes=2, seed=3, batch_size=8, warmup_steps=8, target_update_steps=8,
@@ -476,17 +487,26 @@ if (REPO/'src/wild_drone/masked_learning.py').exists():
     print('Environment, mask and Greedy: identical on 3 worlds.')
 
     for algorithm in ALGORITHMS:
-        model, rows = train_masked(algorithm, small_env, TrainConfig(**small_train), verbose=False)
+        model, rows = train_agent(algorithm, small_env, TrainConfig(**small_train), verbose=False)
         with tempfile.TemporaryDirectory() as folder:
             pkg_masked.train_masked(algorithm, pkg_config.EnvConfig(**small_env.to_dict()),
                                     pkg_learning.TrainConfig(**small_train), folder)
             saved = torch.load(Path(folder)/'policy.pt', weights_only=True)['state_dict']
         assert all(torch.equal(model.state_dict()[k], saved[k]) for k in saved)
-        print(f'{algorithm}: notebook and package training give identical weights.')
+        print(f'{algorithm} masked: notebook and package training give identical weights.')
+
+        model, rows = train_agent(algorithm, small_env, TrainConfig(**small_train), masked=False,
+                                  verbose=False)
+        with tempfile.TemporaryDirectory() as folder:
+            pkg_learning.train(algorithm, pkg_config.EnvConfig(**small_env.to_dict()),
+                               pkg_learning.TrainConfig(**small_train), folder)
+            saved = torch.load(Path(folder)/'policy.pt', weights_only=True)['state_dict']
+        assert all(torch.equal(model.state_dict()[k], saved[k]) for k in saved)
+        print(f'{algorithm} unmasked: notebook and original package trainer give identical weights.')
 else:
     print('Repository package not found: equivalence check skipped.')''')
 code('''# Demonstration: a short DQN run on a small grid (not an experiment).
-demo_model, demo_rows = train_masked('dqn', EnvConfig(grid_size=10, horizon=40),
+demo_model, demo_rows = train_agent('dqn', EnvConfig(grid_size=10, horizon=40),
                                      TrainConfig(episodes=10, warmup_steps=64,
                                                  progress_interval=5))
 print(pd.DataFrame(demo_rows)[['episode', 'return', 'total_losses', 'updates']].tail(3))''')
@@ -524,6 +544,38 @@ display(historical_summary[['policy', 'return_mean', 'return_sd', 'weighted_fres
                             'charge_completions_mean']])""")
 code(original(47))
 code(original(48))
+md("""### Experiment code: masked versus unmasked agents
+
+The function below is the experiment behind the table above: each algorithm is trained with
+and without the mask under the same settings (development environment, per-agent settings
+from `configs/frozen-settings.json`, 300 episodes, seeds 0–2) and evaluated on test worlds
+10000–10019. The full rerun is opt-in; the short demonstration underneath trains DQN for ten
+episodes both ways and shows the effect on fleet survival immediately.""")
+code('''dev_env = EnvConfig(**development['environment'])
+historical_settings = json.loads((REPO/'configs/frozen-settings.json').read_text())
+
+
+def mask_comparison(algorithm, seeds=(0, 1, 2), episodes=300, worlds=range(10000, 10020)):
+    rows = []
+    for masked in (True, False):
+        for seed in seeds:
+            t = TrainConfig(**(development['training'] | historical_settings[algorithm] |
+                               {'episodes': episodes, 'seed': seed, 'progress_interval': 0}))
+            model, _ = train_agent(algorithm, dev_env, t, masked=masked, verbose=False)
+            name = ('masked ' if masked else 'unmasked ') + algorithm
+            rows += [run_episode(dev_env, NeuralPolicy(model, masked), w, name=name,
+                                 training_seed=seed) for w in worlds]
+    return pd.DataFrame(rows)
+
+
+if RUN_MASK_COMPARISON:
+    rerun = pd.concat([mask_comparison(a) for a in ALGORITHMS])
+    display(rerun.groupby('policy')[['return', 'weighted_freshness', 'total_losses']].mean())
+
+demo = mask_comparison('dqn', seeds=(0,), episodes=10, worlds=range(10000, 10005))
+display(demo.groupby('policy')[['return', 'weighted_freshness', 'total_losses',
+                                'charge_completions']].mean()
+        .rename_axis('10-episode DQN demonstration (5 test worlds)'))''')
 
 # ---------------------------------------------------------------------------------- 9
 cells.append(heading(9, 'Hyperparameter tuning', """We tuned in two stages. At 20×20 a
@@ -541,10 +593,10 @@ code('''def learning_rate_sweep(algorithm, factors=(1/3, 1, 3), worlds=range(230
     rows = []
     for factor in factors:
         rate = float(f'{base.learning_rate*factor:.0e}')
-        model, _ = train_masked(algorithm, main_env,
+        model, _ = train_agent(algorithm, main_env,
                                 replace(base, learning_rate=rate, progress_interval=0),
                                 verbose=False)
-        policy = MaskedNeuralPolicy(model)
+        policy = NeuralPolicy(model)
         rows += [dict(learning_rate=rate, **run_episode(main_env, policy, w, name=algorithm,
                                                         training_seed=seed)) for w in worlds]
     return pd.DataFrame(rows)
@@ -589,10 +641,16 @@ md(edited(52, ('## 7. Frozen 40×40 main study — design and training evidence\
            'The corrected implementation, all settings and the budget were fixed before any '
            'main-study fit started.')))
 code(original(53))
-code("""if RUN_TRAINING:  # retrain the frozen DQN seed-0 fit and compare with its archived curve
-    model, rows = train_masked('dqn', main_env, TrainConfig(**frozen['training']['dqn'], seed=0))
+code("""# Retrain the frozen DQN seed-0 fit and compare it with the archived training curve.
+# Exact equality holds only on the archive's hardware and software (a GitHub Linux runner).
+# On another CPU the first episode matches (to ~1e-15, float rounding); once updates start, tiny
+# floating-point differences grow, so later returns differ slightly. This is expected.
+if RUN_TRAINING:
+    model, rows = train_agent('dqn', main_env, TrainConfig(**frozen['training']['dqn'], seed=0))
     archived = pd.read_csv(MAIN/'fits/dqn/seed-0/training.csv')
-    print('Max return difference:', np.abs(pd.DataFrame(rows)['return']-archived['return']).max())""")
+    difference = (pd.DataFrame(rows)['return']-archived['return']).abs()
+    print('Episode 1 return difference:', difference.iloc[0])
+    print('Largest return difference over all episodes:', difference.max())""")
 md('### Training curves')
 code(original(54))
 md(original(55))
@@ -657,6 +715,49 @@ deadlock shown in Section 5; the masked learners avoid it through the emergency 
 
 # ---------------------------------------------------------------------------------- 12
 cells.append(heading(12, 'Critical review'))
+md("""### Why the learners stay near masked random: a weak reward signal
+
+All three agents learn from differences in reward between actions. The cell below measures
+how large those differences are. Under random feasible play, every tenth step it tries every
+feasible joint action from the same state and records its immediate reward (the reward is
+computed before the fire evolves, so it is exact for each action). It compares that spread
+with how much a whole mission's return varies from world to world under the same behaviour.""")
+code('''def reward_signal(config, worlds, every=10, seed=0):
+    rng = np.random.default_rng(seed)
+    spread, gap, action_sd, returns = [], [], [], []
+    for world in worlds:
+        env = WildfireFleetEnv(config)
+        env.reset(seed=world)
+        done, total = False, 0.0
+        while not done:
+            feasible = np.flatnonzero(action_mask(env))
+            if env.elapsed % every == 0 and len(feasible) > 1:
+                rewards = np.sort([copy.deepcopy(env).step(int(a))[1] for a in feasible])
+                spread.append(rewards[-1]-rewards[0])   # best minus worst action
+                gap.append(rewards[-1]-rewards[-2])     # best minus second-best action
+                action_sd.append(rewards.std())
+            _, reward, done, _, _ = env.step(int(rng.choice(feasible)))
+            total += reward
+        returns.append(total)
+    return {'best − worst action': np.mean(spread), 'best − second action': np.mean(gap),
+            'SD across actions': np.mean(action_sd), 'SD of mission return': np.std(returns),
+            'return SD ÷ action SD': np.std(returns)/np.mean(action_sd)}
+
+
+signal = pd.DataFrame({'20×20 development': reward_signal(dev_env, range(20)),
+                       '40×40 main': reward_signal(main_env, range(10))}).T
+with pd.option_context('display.precision', 5):
+    display(signal)''')
+md("""The best feasible action beats the second-best by about 0.002 (20×20) or less (40×40), and
+the typical spread across actions is a few thousandths. Mission returns vary across worlds
+about 130 times (20×20) to 430 times (40×40) more than that spread. REINFORCE updates once per episode from a single noisy return; A2C
+bootstraps from a critic that must itself resolve these small differences; DQN must estimate
+Q values whose gaps between actions are far smaller than its approximation error. With 300
+episodes, none of the three separated good inspection moves from noise, which matches the
+learners' freshness staying at the masked-random level. The joint 125-action output adds to
+the difficulty: one drone's good move is credited together with the other two drones'
+choices. This is a measured explanation consistent with all results, not a proof that it is
+the only cause.""")
 md(original(63).replace('## 9. 20×20 versus 40×40 — clear historical comparison',
                         '### 20×20 versus 40×40'))
 code(original(64))
