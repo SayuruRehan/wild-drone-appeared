@@ -86,7 +86,7 @@ The supplied COMP6008 brief requires three implemented RL methods, multiple runs
 
 ### The main remaining work is the assessed deliverables
 
-The consolidated [main notebook](../Wildfire_Drone_Fleet.ipynb) now contains the frozen 40×40 results, historical evidence, learning curves, uncertainty units, failure interpretation and complete implementation listings. Its 25 review cells executed without errors in a fresh in-process IPython kernel. The separate Colab helper retains the older training workflow. The brief warns that results used in the presentation or report must also appear in the notebook. Check this before submission. [1, p. 5]
+The consolidated [main notebook](../Wildfire_Drone_Fleet_clean.ipynb) now contains the frozen 40×40 results, historical evidence, learning curves, uncertainty units, failure interpretation and complete implementation listings. Its 42 code cells completed without errors in an independent clean-kernel GitHub Actions rerun. The separate Colab helper retains the older training workflow. The brief warns that results used in the presentation or report must also appear in the notebook. Check this before submission. [1, p. 5]
 
 The technical notebook explains each learner and connects pseudocode to the actual source. It documents the MDP and feasibility mask, distinguishes safety from learned mission quality, and retains reproduction instructions and dependencies. The group still needs to independently understand and prepare its assessed submission. Describe convergence and sample efficiency within the fixed budget without claiming that 300 episodes prove convergence.
 
