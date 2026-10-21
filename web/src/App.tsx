@@ -1398,7 +1398,7 @@ function Results({ evidence }: { evidence: Evidence }) {
           </div>
           <a
             className="text-button"
-            href={sourceLink("experiments/lithma/README.md")}
+            href={sourceLink("docs/experiments/rl-followups-2026-10-11/README.md")}
             target="_blank"
             rel="noreferrer"
           >

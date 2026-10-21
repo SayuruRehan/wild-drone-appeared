@@ -629,7 +629,7 @@ the WhatsApp text can be shared with the team without implying that the Site is 
 | Learning/mission line charts | [Charts.tsx](../web/src/Charts.tsx) |
 | Machine-readable UI evidence | [evidence.json](../web/public/data/evidence.json) |
 | Full frozen comparison and independent audit | [main-study archive](experiments/rl-main-2026-10-11/README.md) |
-| Follow-up experiments and limitations | [reference experiments](../experiments/lithma/README.md) |
+| Follow-up experiments and limitations | [reference experiments](experiments/rl-followups-2026-10-11/README.md) |
 
 The UI presents the simulator and evidence in an explorable form. It does not change the
 underlying mission objective, physical rules, learning algorithms or historical outcomes.
