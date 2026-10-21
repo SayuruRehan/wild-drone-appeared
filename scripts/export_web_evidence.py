@@ -180,7 +180,7 @@ def export(out):
             training.append({'policy': a, 'seed': s, 'rows': [
                 {k: r[k] for k in ('episode', 'return', 'weighted_freshness', 'total_losses')}
                 for r in rows]})
-    follow = ROOT/'experiments/lithma/results'
+    follow = ROOT/'docs/experiments/rl-followups-2026-10-11/results'
     data = {'format_version': 1, 'study': 'Frozen 40×40 main study · 11 October 2026',
             'source_revision': packet['source_revision'], 'config': config.to_dict(),
             'worlds': WORLDS, 'missions': catalogue, 'summary': recompute(episodes),

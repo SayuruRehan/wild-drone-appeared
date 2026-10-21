@@ -6,7 +6,7 @@ to battery / charging / fire spread, and a check on the untuned learning rates.
 
 This folder is reference code. It is listed in `.git/info/exclude`, so git ignores it. It
 reads the repository (`src/`, `configs/rl-main-frozen.json`,
-`docs/experiments/rl-main-2026-10-11`) and writes only inside `experiments/lithma/`. The frozen
+`docs/experiments/rl-main-2026-10-11`) and writes only inside `docs/experiments/rl-followups-2026-10-11/`. The frozen
 archive is not modified.
 
 ## Files
@@ -22,7 +22,7 @@ archive is not modified.
 
 ## How to run
 
-Python 3.12 with the repository's pinned versions. From `experiments/lithma/`:
+Python 3.12 with the repository's pinned versions. From `docs/experiments/rl-followups-2026-10-11/`:
 
 ```bash
 python3.12 -m venv .venv

@@ -40,8 +40,8 @@ The data and settings used by the notebook are in:
 - [`configs/`](configs/) — development and frozen experiment settings.
 - [`docs/experiments/final-2026-10-05/`](docs/experiments/final-2026-10-05/) — historical 20×20 comparison and tuning.
 - [`docs/experiments/rl-main-2026-10-11/`](docs/experiments/rl-main-2026-10-11/) — frozen 40×40 training and evaluation records.
-- [`experiments/lithma/`](experiments/lithma/) — planner, learning-rate sweep and sensitivity scripts, results and instructions for obtaining optional trained checkpoints.
+- [`docs/experiments/rl-followups-2026-10-11/`](docs/experiments/rl-followups-2026-10-11/) — planner, learning-rate sweep and sensitivity scripts, results and instructions for obtaining optional trained checkpoints.
 
-The environment and learning package is in [`src/wild_drone/`](src/wild_drone/), with supporting [`scripts/`](scripts/) and [`tests/`](tests/). **The main-study trained checkpoints are not included in the repository checkout**; see [the follow-up experiment instructions](experiments/lithma/README.md) for retrieving them when reproducing the full checkpoint-based sensitivity runs.
+The environment and learning package is in [`src/wild_drone/`](src/wild_drone/), with supporting [`scripts/`](scripts/) and [`tests/`](tests/). **The main-study trained checkpoints are not included in the repository checkout**; see [the follow-up experiment instructions](docs/experiments/rl-followups-2026-10-11/README.md) for retrieving them when reproducing the full checkpoint-based sensitivity runs.
 
 The simulation uses illustrative fire, wind and energy settings rather than calibrated real-world wildfire physics.
