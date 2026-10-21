@@ -87,6 +87,9 @@ def check_validation_worlds_are_fresh(final_worlds):
     assert not set(VALIDATION_WORLDS) & set(final_worlds)
     assert not set(VALIDATION_WORLDS) & set(range(300))
     for path in (ROOT/'docs'/'experiments').rglob('*.csv'):
+        # The sweep's own saved validation outputs are not earlier independent evidence.
+        if path.is_relative_to(RESULTS):
+            continue
         with path.open(newline='') as stream:
             for row in csv.DictReader(stream):
                 for key in ('scenario_seed', 'world', 'world_seed'):
