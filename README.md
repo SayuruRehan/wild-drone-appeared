@@ -1,409 +1,47 @@
-# Wild Drone Appeared
+# Wildfire Drone Fleet — COMP6008
 
-**Coordinated wildfire inspection with a battery-constrained drone fleet.**
+A reinforcement-learning project for **persistent wildfire inspection using three battery-constrained drones**. One controller selects joint actions on a simulated fire grid while the drones share a single charging station. The environment is formulated as a fully observable, finite-horizon Markov decision process (MDP).
 
-One central controller manages three drones in a **fully observable MDP**. The complete fire,
-fuel, terrain, wind, inspection-age, drone and charging state is available. Visits deliver
-fresh close-range inspections of known hazards; the task is sustained inspection and
-recharge coordination, rather than discovering an unknown fire map.
+## Main notebook
 
-This implements the approved Group 7 project, with resumable CPU/CUDA training and a Colab
-experiment workflow. Simulator mechanics, baseline comparisons and all three RL pipelines
-are implemented. Validation pilots remain weaker than the greedy controller; **successful
-learning and an RL advantage have not been demonstrated**.
-Grid sizes and every fire/energy parameter are illustrative, uncalibrated simulation settings.
+**[Wildfire_Drone_Fleet_clean.ipynb](Wildfire_Drone_Fleet_clean.ipynb)** is the project notebook. It contains:
 
-![40x40 simulator: true fire state, inspection freshness and drone batteries](docs/assets/simulator-preview.png)
+- The problem formulation, environment dynamics, state/action spaces and reward design.
+- Implementations of **DQN, REINFORCE with a value baseline, and synchronous A2C**, including pseudocode-to-code mappings.
+- Conventional baselines and the battery/collision feasibility mask.
+- Experiment code, hyperparameter tuning, learning curves, held-out evaluation, planner and sensitivity studies, and a critical review.
 
-## Main technical notebook
+The notebook includes saved outputs. By default, it loads archived experiments and runs small verification examples; full training and lengthy experiment reruns are **disabled** unless their flags in Section 1 are enabled.
 
-[Wildfire_Drone_Fleet.ipynb](Wildfire_Drone_Fleet.ipynb) is the consolidated review notebook.
-It contains the MDP and reward mathematics, source-linked DQN/REINFORCE/A2C pseudocode,
-historical 20×20 tuning and diagnostics, the frozen nine-fit 40×40 study, saved learning
-curves, final comparisons, uncertainty units, safety analysis and replay evidence.
+## Setup and execution
 
-All 25 code cells were executed in order in a fresh in-process IPython kernel. **Run All
-reviews committed evidence and launches no training.** It recomputes all final means and
-sample SDs from 260 mission rows and verifies 107 source/data inputs. The complete executable
-implementation is also preserved in expandable output listings. Local/Colab setup is in
-Section 1; full checkpoint replay instructions are in Section 11.
-
-Historical results retain their original revisions and limitations. The notebook is a
-technical record; contributor attribution, independent assessed preparation, presentation
-and report remain. No new fits or 60×60 runs were added during consolidation.
-
-## Frozen 40×40 RL main comparison (11 October 2026)
-
-The [audited main study](docs/experiments/rl-main-2026-10-11/README.md) completed
-exactly nine independent fits: DQN, REINFORCE and A2C with three seeds each,
-300 episodes and 90,000 interactions per fit. All nine final checkpoints were
-evaluated on 20 new worlds (22000–22019), alongside four baselines: 260 missions.
-No validation selection, supervised warm starts, reward shaping or further tuning.
-
-| Policy | Mean freshness ↑ | Mean return ↑ | Mean drone losses ↓ |
-|---|---:|---:|---:|
-| DQN | 0.08438 | -24.78568 | 0 |
-| REINFORCE | 0.06901 | -25.81054 | 0 |
-| A2C | 0.08435 | -24.82772 | 0 |
-| Greedy | 0.22077 | -16.10008 | 0 |
-| Sweep | 0.06486 | -26.07103 | 0 |
-| Random | 0.05956 | -42.87108 | 3 |
-| Masked random | 0.08379 | -25.46148 | 0 |
-
-RL means first average the 20 worlds within each fitted seed. Freshness sample SD
-across the three seed means is 0.00254 (DQN), 0.00730 (REINFORCE) and 0.01163 (A2C).
-Baseline means use 20 worlds; their SD is preserved separately in `summary.csv`.
-None of the algorithms passed its all-seed learned-contribution or Greedy gates.
-This fixed-budget study does not demonstrate a reliable learned advantage beyond
-the feasibility mask, or establish convergence. Masked random lost no drones,
-while unmasked random lost all three in every mission, showing the rule's safety
-contribution in this sample. Safe flight alone must not be credited to learning.
-
-Independent replay verified all 75,911 mission actions, state hashes, masks and
-rewards, with zero neural score drift, and recomputed all 720 paired comparisons
-and performance gates. Original negative archives remain unchanged. The frozen
-[settings](configs/rl-main-frozen.json) and [protocol](docs/scale-rl-protocol.md)
-remain the prospective record; negative gates do not trigger extra fits.
-
-The [20×20 and 40×40 comparison](docs/20x20-40x40-comparison.md) explains
-fleet survival, surveillance quality, and the remaining assignment deliverables.
-It is a private planning aid, not submission text.
-
-## Preserved 40×40 supervised experiments (11 October 2026)
-
-The frozen supervised inspection pilot completed three fits and 140 missions.
-All three seeds passed the ranking gate but failed the full-mission gate:
-mean inspection freshness was 0.1920, versus Greedy's 0.2270 and masked random's
-0.0865. This is a negative mission result with zero RL updates.
-
-See the [audited pilot evidence](docs/experiments/scale-pilot-2026-10-11/README.md)
-and [saved-mission diagnosis](docs/experiments/scale-pilot-2026-10-11-diagnosis/README.md).
-The latter checks 240 states on the learned trajectories without fitting again.
-Confirmation and final-test worlds remain unopened for this pilot.
-
-The [controlled exact-inspection reference](docs/experiments/scale-reference-2026-10-11/README.md)
-then completed 20 missions under the scorer's same mask and first-index tie rule.
-Its freshness was 0.22635 (99.72% of Greedy), versus the scorer's 0.19200.
-Independent replay verified all 6,000 decisions and 750,000 cloned action rewards.
-This supports a separate decision-ranking experiment; it does not change the
-failed fitted-policy result or demonstrate an RL advantage. No new fits or RL
-updates were performed, and reserved evaluation worlds remain unopened.
-
-The [frozen loss-only comparison](docs/experiments/scale-loss-2026-10-11/README.md)
-reused the same training packets, initial tensors and sample sequence for three
-tied-best ranking-loss fits. All three failed the objective-effect, fresh-ranking
-and mission gates. Mean freshness fell to 0.13559 from the matched regression
-control's 0.19200; overdue fraction rose to 0.78751 from 0.69763. Training best-match
-rates reached 99.81–100%, while fresh best-match rates were only 4.76–8.73%.
-Independent replay verified all 18,000 new mission decisions and 5,517 ranking
-rows. This negative result stops this loss direction without extra fits. It used
-zero RL updates and no confirmation or final-test worlds.
-
-## Run a visual mission
-
-### Interactive mission control
-
-The custom [mission-control web UI](docs/mission-control.md) provides animated, verified
-replays, drone telemetry, synchronized controller comparisons, the research story and
-interactive results. Its local FastAPI lab can run new bounded simulator missions.
-See the linked guide for installation, optional frozen checkpoints and reproduction.
-
-Python 3.11+ is required; Python 3.12 is used in CI. From the repository root:
+Use **Python 3.11 or 3.12**. From the repository root:
 
 ```bash
-python -m venv .venv
-# macOS / Linux
-source .venv/bin/activate
-# Windows PowerShell: .venv\Scripts\Activate.ps1
-python -m pip install -e '.[dev]'
-python -m wild_drone demo --config configs/main.json --policy greedy --out runs/demo
+python -m pip install -r requirements.txt
+python -m jupyter notebook Wildfire_Drone_Fleet_clean.ipynb
 ```
 
-Open `runs/demo/demo.gif`. It displays fire/fuel/priority zones, inspection freshness, wind,
-drone positions and battery levels. `evaluation.csv` and `metadata.json` accompany the demo.
-Policies `sweep`, `random` and `planner` are also available. The planner is substantially
-slower; use a shorter horizon for a quick check.
+In Jupyter, select the Python environment containing these dependencies, then choose **Restart Kernel and Run All Cells**. Keep the repository folder structure intact: the notebook reads its configuration and archived results through relative paths.
 
-## Train and compare the three methods
-
-Install PyTorch first (the following CPU command is sufficient for the starting experiments),
-then install the RL extra. A compatible GPU build can be selected from the
-[official PyTorch installer](https://pytorch.org/get-started/locally/). Use `--device cpu`,
-`--device cuda` or `--device auto`. The NumPy simulator runs on CPU; benchmark the training
-runtime before assuming GPU acceleration helps this small network.
+To verify the standalone implementation and tests:
 
 ```bash
-python -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
-python -m pip install -e '.[rl,dev]'
-python -m wild_drone train --config configs/development.json --algorithm dqn --seed 0 --out runs/dqn
-python -m wild_drone evaluate --checkpoint runs/dqn/policy.pt --scenario-seeds 10000 10001 10002 --out runs/dqn-eval
-```
-
-Use `--algorithm reinforce` or `--algorithm a2c` to train the other methods. Each controls the
-entire three-drone fleet. Checkpoints include the complete environment/training configuration.
-Checkpoint evaluation requires the same config; cross-domain battery/fire interventions and
-transfer across grid sizes are future experiment work, not silently supported evaluation.
-
-| Method | Family | Implemented update |
-|---|---|---|
-| DQN | Deep value-based | Replay, target network, joint-action TD values |
-| REINFORCE | Monte Carlo policy gradient | Complete episode returns, learned Monte Carlo baseline |
-| A2C | Actor–critic | n-step bootstrap, shared actor/value encoder |
-
-The A2C implementation is a synchronous, single-environment n-step advantage actor–critic.
-It does not use asynchronous workers. All three are model-free; actor–critic also belongs
-to the broad policy-gradient family. Full-grid convolutional input and 125 joint actions are
-shared across methods. Version 2 adds three live-drone location channels and one base channel
-to the five environmental maps, all derived from the existing complete state. REINFORCE uses
-an optional value baseline trained on full Monte Carlo returns, without TD bootstrap. Disable
-these choices with `--no-spatial-encoding` and `--no-monte-carlo-baseline` for ablations.
-There is no learned-policy action mask or safety shield.
-Use `--double-dqn` to select next actions with the online network and evaluate them
-with the target network. Standard DQN remains the default. Both variants use the same
-replay, network and reward; this flag does not apply to the actor methods. Resume rejects
-switching the target rule. `--learning-rate` overrides the configured rate.
-REINFORCE weights reward-to-go by absolute-time discount and uses a fixed mission-horizon
-normaliser; A2C also uses absolute-time weights with its rollout-length normaliser. The
-configurable entropy term is a local policy regulariser, separate from mission reward.
-
-An end-to-end **smoke check** (tiny task and deliberately insufficient training):
-
-```bash
-python -m wild_drone compare --grid 8 --horizon 12 --episodes 2 --training-seeds 0 1 --scenario-seeds 10000 10001 --warmup-steps 4 --batch-size 4 --planner-horizon 2 --planner-candidates 3 --planner-samples 1 --out runs/smoke
-python -m wild_drone plot --csv runs/smoke/comparison.csv --out runs/smoke/comparison.png
-```
-
-For development experiments:
-
-```bash
-python -m wild_drone compare --config configs/development.json --training-seeds 0 1 2 --scenario-seeds 10000 10001 10002 --out runs/development
-```
-
-Start with 20x20. The main config is 40x40; a 60x60 evaluation should follow only after a
-learning/runtime pilot. The main config's 200 episodes is a starting budget, not a justified
-convergence threshold. Tune budgets and hyperparameters using separate validation seeds
-(e.g. 5000–5999), freeze the choices, then use final test seeds (e.g. 10000+). The CLI rejects
-evaluation seeds that overlap training scenarios; it cannot detect manual reuse of test results
-for tuning. No long experiment is launched automatically by installing or running tests.
-
-## Resumable validation and Colab
-
-Open [the Colab experiment notebook](notebooks/colab_experiments.ipynb) in Colab (File → Open
-notebook → GitHub, or download and upload it). Select a GPU runtime (T4 is sufficient) and run sections 1–6,
-then section 8. The notebook handles the private repo with transient hidden credential entry,
-benchmarks CPU/CUDA, saves to Drive and runs 1,000 episodes per method for three training seeds.
-The optional 40x40 run is disabled until the 20x20 results have been assessed. Send the downloaded
-`wild-drone-results.zip` for analysis; checkpoints remain in Drive by default.
-The completed T4 study and failure diagnosis are in [the 1,000-episode report](docs/colab1000-results.md).
-See [the dated experiment folder](docs/experiments/colab-2026-10-03/README.md) for the
-original ZIP, extracted-results and executed-notebook upload paths. Future runs show live
-progress and stop their training child when the cell is interrupted.
-
-A bounded local repeated-seed validation study:
-
-```bash
-python scripts/run_validation_pilot.py --config configs/development.json --episodes 200 --training-seeds 0 1 2 --device cpu --out runs/validation20
-```
-
-Rerun the same command to resume. To extend it, increase `--episodes` (the **total** budget).
-The script evaluates final and best-validation policies on seeds 5000–5004, with learning
-curves and per-scenario CSVs. Its best score is selection-biased validation evidence, not a
-held-out final result. See [the pilot report](docs/learning-pilot.md) for observed failures.
-
-For one method:
-
-```bash
-python -m wild_drone train --config configs/development.json --algorithm a2c --episodes 200 --validation-seeds 5000 5001 5002 5003 5004 --checkpoint-interval 20 --validation-interval 20 --device auto --out runs/a2c
-python -m wild_drone train --config configs/development.json --algorithm a2c --episodes 400 --validation-seeds 5000 5001 5002 5003 5004 --checkpoint-interval 20 --validation-interval 20 --device auto --resume runs/a2c/training_state.pt --out runs/a2c
-python -m wild_drone plot-learning --csv runs/a2c/training.csv --out runs/a2c/learning.png
-```
-
-`training_state.pt` restores model/target, Adam, DQN replay, RNGs and metrics at a complete
-episode boundary. Files are replaced atomically; the authoritative state is committed before
-regenerable exports, so an interrupted first save can restart or resume safely. Work since the last checkpoint
-may be lost. Changing learning or environment settings requires a new output folder; resume
-allows total episodes, device, checkpoint frequency and progress frequency to change.
-Do not run two writers into the same folder. CPU resumption is tested against uninterrupted
-training; equality across devices or PyTorch versions is not promised.
-
-`policy.pt` is the final policy; `best_policy.pt` is selected by maximum mean validation return.
-Keep both. Original version-1 policies remain loadable, but their files do not contain enough
-state to resume training. Source/runtime histories are recorded on resume. Only after freezing
-the validation protocol, use `compare --checkpoint-selection best --validation-seeds ...`
-on separate final scenarios; `compare` rejects training/validation/test overlaps.
-
-Training completion verifies each exported episode, metadata field and model tensor against
-`training_state.pt`, then writes `checkpoint_manifest.json` with hashes of the audited bytes.
-The Colab download cell repeats this check immediately before archiving. To audit existing runs:
-
-```bash
-python scripts/audit_checkpoints.py runs/validation20/dqn/seed-0
-```
-
-An audit failure stops evaluation/archiving; it does not silently repair a file. Explicit
-same-budget resume regenerates portable exports from authority. For a completed Drive run,
-the following recovery cell uses the saved conditions and performs no new training episodes:
-
-```python
-from dataclasses import replace
-from pathlib import Path
-import torch
-from wild_drone.config import EnvConfig
-from wild_drone.learning import TrainConfig, train
-
-run = Path('/content/drive/MyDrive/wild-drone-appeared/validation20-v2/reinforce/seed-1')
-state = torch.load(run/'training_state.pt', map_location='cpu', weights_only=True)
-settings = replace(TrainConfig(**state['train_config']),
-                   episodes=state['completed_episodes'], device='cpu')
-train(state['algorithm'], EnvConfig(**state['env_config']), settings, run,
-      resume_from=run/'training_state.pt')
-```
-
-Keep the original archive as a historical record. A standalone portable policy without its
-training state can still be loaded, but cannot certify that it is the latest training export.
-Hashes certify a snapshot; rerun the audit after copying or synchronizing files.
-
-A matched validation-only DQN/Double DQN screen at the lower rate:
-
-```bash
-python scripts/run_validation_pilot.py --episodes 200 --training-seeds 0 1 2 --algorithms dqn --learning-rate 0.00003 --no-double-dqn --out runs/dqn-stability-v3/standard
-python scripts/run_validation_pilot.py --episodes 200 --training-seeds 0 1 2 --algorithms dqn --learning-rate 0.00003 --double-dqn --out runs/dqn-stability-v3/double
-python scripts/diagnose_dqn.py runs/dqn-stability-v3/standard/dqn/seed-* runs/dqn-stability-v3/double/dqn/seed-* --out runs/dqn-stability-v3/diagnostics.csv
-```
-
-The [fixed pilot plan](docs/dqn-stability-plan.md) describes the comparison and its limits.
-The [completed six-fit report](docs/experiments/dqn-stability-2026-10-03/README.md) records
-poor mission performance despite no observed Q-bound violations in the short replay.
-Use separate output folders for variants; all study runners audit completed exports through
-`train` before evaluating them. Final test scenarios remain outside this tuning workflow.
-
-The [return-behavior and exploration report](docs/experiments/exploration-2026-10-03/README.md)
-traces repeated boundary commands and failed battery returns. A matched slower-exploration
-screen covered more joint actions but did not improve final coordination. The default
-10,000-step decay remains unchanged. Override it with `--epsilon-decay-steps` for an explicitly
-declared experiment; resume rejects changing it. The observational diagnostic runner is:
-
-```bash
-python scripts/diagnose_behavior.py runs/validation20/dqn/seed-* --out runs/behavior
-```
-
-It checks authority first, reports commands/return-energy margins and final replay coverage,
-and includes random, sweep, greedy and all-stay diagnostic controls on the same scenarios.
-It also writes one example trace, including the terminal transition, without changing policy
-actions or live environment randomness. Tracing adds timing overhead; its decision times
-must not be used as uninstrumented policy throughput measurements.
-
-A separate [supervised capability probe](docs/experiments/imitation-2026-10-03/README.md)
-shows that the unchanged network fits greedy training demonstrations, including return and
-charging decisions, but generalizes poorly and loses the fleet during autonomous validation.
-Its checkpoints are explicitly supervised logits; they are not plain RL policies or Q values.
-The [fixed probe plan](docs/imitation-probe-plan.md) and raw results preserve that distinction.
-Run the bounded CPU diagnostic into a fresh folder:
-
-```bash
-python scripts/run_imitation_probe.py --out runs/imitation-v5
-```
-
-The [matched coverage comparison](docs/experiments/coverage-2026-10-04/README.md) tests
-additional teacher trajectories and Greedy labels on learner-generated states at the same
-5,000-update budget. Broader teacher data improves held-out decision agreement, while
-fleet-return coordination remains unresolved. Both additions are supervised experiments,
-with [fixed collection and validation rules](docs/coverage-probe-protocol.md):
-
-```bash
-python scripts/run_coverage_probe.py --out runs/coverage-v6
-```
-
-The [fixed-corpus budget study](docs/experiments/fitting-budget-2026-10-04/README.md)
-extends fitting to 20,000 updates. Training agreement improves, but all 15 final validation
-flights still lose the fleet; the learned controller also fails on familiar training worlds.
-More fitting alone has not produced reliable return and recharge behavior. The
-[declared comparison](docs/fitting-budget-protocol.md) keeps the network and physics fixed:
-
-```bash
-python scripts/run_fitting_budget_probe.py --out runs/fitting-budget-v7
-```
-
-The [matched input-representation diagnostic](docs/experiments/representation-2026-10-04/README.md)
-tests explicit base-relative coordinates and return-energy margin against an equal-sized
-zero-padded control. Both final arms lose the fleet in all 15 missions, so this input change
-is not promoted into RL defaults. Its [fixed comparison](docs/representation-protocol.md)
-preserves deployment action authority and separately reports selected policies:
-
-```bash
-python scripts/run_representation_probe.py --out runs/representation-v8
-```
-
-The [recovery collection study](docs/experiments/recovery-2026-10-04/README.md) adds
-teacher execution during collection to retain useful return and charging trajectories.
-The autonomous learner still fails: final fleet losses are 14/15 with learner-only
-collection and 15/15 with assistance. A separate single-world competence check reproduces
-Greedy's complete training trajectory in all three fits, including return and recharge,
-but fails on all 15 validation missions. Basic trajectory memorization works; reliable
-behavior across worlds remains unresolved. The [protocol](docs/recovery-protocol.md)
-keeps deployment free of teacher intervention:
-
-```bash
-python scripts/run_recovery_probe.py --out runs/recovery-v9
-```
-
-The [joint-versus-conditional action-head diagnostic](docs/experiments/action-2026-10-04/README.md)
-first verifies complete single-world return and recharge in all six fits. On the fixed
-100-world corpus, conditional commands improve validation action agreement from 14.8%
-to 17.8%, but both final arms still lose all 15 validation fleets. This change does not
-establish autonomous competence and is not promoted into RL defaults. The
-[predeclared comparison](docs/action-protocol.md) preserves exact joint-MAP decoding:
-
-```bash
-python scripts/run_action_probe.py --out runs/action-v11
-```
-
-## Baselines and fair evaluation
-
-| Baseline | Behaviour |
-|---|---|
-| Random | Uniform joint commands; a sanity check without a battery-return rule |
-| Sweep | Partitioned serpentine patrol with recharge and return heuristics |
-| Greedy | Jointly maximises immediate priority/inspection-age gain |
-| Planner | Bounded rolling-horizon stochastic shooting with replanning |
-
-Greedy/sweep/planner use explicit battery-aware proposal rules. These are part of their
-controllers, not a universal safety guarantee or a shield supplied to RL. The planner knows
-the simulator kernel but uses independent hypothetical futures, never the live RNG stream.
-Its default budget is horizon 4, eight candidates, two samples; tune it fairly and report
-decision time. It is an approximate planner, not an optimal baseline.
-
-CSV reports mission return, priority-weighted freshness, overdue fraction, energy, losses,
-safe returns, completed charges, blocked collision attempts and decision time. If every drone
-is lost, the remaining mission counts as unserved and its overdue cost is charged. Quality
-metrics use the whole mission horizon, including that remainder. An episode does **not**
-finish merely because the current fire burns out: priority-area inspection continues.
-
-Compare on identical held-out scenario seeds. Each scenario regenerates whole fuel, priority,
-ignition and wind conditions. Repeat training with multiple seeds; retain per-seed rows.
-Plots aggregate each fitted model over scenarios before showing variation across training
-seeds. Baseline variation is across scenarios. Error bars are sample SD, not confidence
-intervals or significance tests. Baseline and RL rewards can differ substantially in short
-runs; pilot results must not be treated as scientific findings.
-
-## Project structure and checks
-
-```text
-src/wild_drone/     environment, controllers, learning, CLI, rendering and experiments
-configs/           versioned development and main settings
-tests/             physical accounting, MDP contract, planner and learning checks
-notebooks/         project walkthrough, demo, training and comparison commands
-docs/              design, implementation plan and references
-runs/              ignored local GIFs, CSVs, metadata and checkpoints
-```
-
-```bash
+python -m pip install -e .
 python -m pytest -q
-python -m ruff check src tests scripts
 ```
 
-See [design](docs/design.md) for transition order, observation schema and reward semantics,
-and [references](docs/references.md) for technical foundations. Before assignment conclusions
-or paper claims, complete longer learning pilots, independent validation/tuning, repeated
-held-out evaluation, reward/constraint ablations and simulator sensitivity checks. RL's
-advantage and publication novelty remain questions to investigate.
+## Experiments and results
+
+The final 40×40 study trained **three seeds per RL algorithm** (nine fits, 300 episodes each) and evaluated their final policies on **20 unseen simulation worlds**. The feasibility mask prevented drone loss in all 180 learned evaluation missions, but learned inspection freshness remained near masked random (approximately **0.084** for DQN and A2C), below Greedy (**0.221**). The negative result and its limitations are examined in the notebook.
+
+The data and settings used by the notebook are in:
+
+- [`configs/`](configs/) — development and frozen experiment settings.
+- [`docs/experiments/final-2026-10-05/`](docs/experiments/final-2026-10-05/) — historical 20×20 comparison and tuning.
+- [`docs/experiments/rl-main-2026-10-11/`](docs/experiments/rl-main-2026-10-11/) — frozen 40×40 training and evaluation records.
+- [`experiments/lithma/`](experiments/lithma/) — planner, learning-rate sweep and sensitivity scripts, results and instructions for obtaining optional trained checkpoints.
+
+The environment and learning package is in [`src/wild_drone/`](src/wild_drone/), with supporting [`scripts/`](scripts/) and [`tests/`](tests/). **The main-study trained checkpoints are not included in the repository checkout**; see [the follow-up experiment instructions](experiments/lithma/README.md) for retrieving them when reproducing the full checkpoint-based sensitivity runs.
+
+The simulation uses illustrative fire, wind and energy settings rather than calibrated real-world wildfire physics.
