@@ -3,7 +3,7 @@
 Prepared 14 October 2026. Describes the mission-control implementation introduced in
 commit `b0fbccb` on `sula`, with the frozen study and its separate follow-up experiments.
 Read this alongside the [launch/API guide](mission-control.md),
-[technical notebook](../Wildfire_Drone_Fleet.ipynb) and
+[technical notebook](../Wildfire_Drone_Fleet_clean.ipynb) and
 [WhatsApp summary](mission-control-whatsapp.txt).
 
 ## Contents

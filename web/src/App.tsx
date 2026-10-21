@@ -1439,7 +1439,7 @@ function Results({ evidence }: { evidence: Evidence }) {
             Download evidence index
           </a>
           <a
-            href={sourceLink("Wildfire_Drone_Fleet.ipynb")}
+            href={sourceLink("Wildfire_Drone_Fleet_clean.ipynb")}
             target="_blank"
             rel="noreferrer"
           >
@@ -1977,7 +1977,7 @@ export default function App() {
             One honest comparison.
           </p>
           <a
-            href={sourceLink("Wildfire_Drone_Fleet.ipynb")}
+            href={sourceLink("Wildfire_Drone_Fleet_clean.ipynb")}
             target="_blank"
             rel="noreferrer"
           >
