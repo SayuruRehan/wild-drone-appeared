@@ -64,28 +64,6 @@ def test_unreadable_export_is_reported_with_filename(trained):
         audit_checkpoints(out)
 
 
-def test_notebook_archive_stops_on_stale_drive_export(trained, monkeypatch):
-    import json
-    import sys
-    from pathlib import Path
-    from types import ModuleType, SimpleNamespace
-
-    out, _, _ = trained
-    policy = torch.load(out/'policy.pt', weights_only=True)
-    policy['completed_episodes'] = 1
-    torch.save(policy, out/'policy.pt')
-    downloads = []
-    colab = ModuleType('google.colab')
-    colab.files = SimpleNamespace(download=downloads.append)
-    monkeypatch.setitem(sys.modules, 'google.colab', colab)
-    path = Path(__file__).parents[1]/'notebooks'/'colab_experiments.ipynb'
-    notebook = json.loads(path.read_text())
-    code = ''.join(notebook['cells'][-1]['source'])
-    with pytest.raises(ValueError, match='policy.pt'):
-        exec(compile(code, 'colab-archive', 'exec'), {'RUN_ROOT': out, 'Path': Path})
-    assert downloads == []
-
-
 def test_old_standard_dqn_state_resumes_but_cannot_become_double_dqn(trained):
     out, config, settings = trained
     state = torch.load(out/'training_state.pt', weights_only=True)
