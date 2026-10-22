@@ -1,47 +1,84 @@
-# Wildfire Drone Fleet — COMP6008
+# Wildfire Drone Fleet — COMP6008 Reinforcement Learning
 
-A reinforcement-learning project for **persistent wildfire inspection using three battery-constrained drones**. One controller selects joint actions on a simulated fire grid while the drones share a single charging station. The environment is formulated as a fully observable, finite-horizon Markov decision process (MDP).
+A central controller commands three battery-limited drones that repeatedly inspect a
+simulated wildfire and share one charger. The task is modelled as a fully observable MDP and
+solved with three RL agents — **DQN**, **REINFORCE with a learned baseline** and
+**synchronous A2C** — which are compared with conventional controllers.
 
-## Main notebook
+The project notebook is **`Wildfire_Drone_Fleet_clean.ipynb`**. It contains the MDP,
+environment, agents, pseudocode, experiments, tuning, results and critical review.
 
-**[Wildfire_Drone_Fleet_clean.ipynb](Wildfire_Drone_Fleet_clean.ipynb)** is the project notebook. It contains:
+## How to run the notebook
 
-- The problem formulation, environment dynamics, state/action spaces and reward design.
-- Implementations of **DQN, REINFORCE with a value baseline, and synchronous A2C**, including pseudocode-to-code mappings.
-- Conventional baselines and the battery/collision feasibility mask.
-- Experiment code, hyperparameter tuning, learning curves, held-out evaluation, planner and sensitivity studies, and a critical review.
+You need **Python 3.11 or 3.12** (check with `python3 --version`). A GPU is not needed.
 
-The notebook includes saved outputs. By default, it loads archived experiments and runs small verification examples; full training and lengthy experiment reruns are **disabled** unless their flags in Section 1 are enabled.
+1. Unzip `COMP6008_Wildfire_Drone_Fleet.zip` and open a terminal in the unzipped folder:
 
-## Setup and execution
+   ```bash
+   cd COMP6008_Wildfire_Drone_Fleet
+   ```
 
-Use **Python 3.11 or 3.12**. From the repository root:
+2. Create and activate a virtual environment:
 
-```bash
-python -m pip install -r requirements.txt
-python -m jupyter notebook Wildfire_Drone_Fleet_clean.ipynb
-```
+   ```bash
+   # macOS / Linux
+   python3.12 -m venv .venv
+   source .venv/bin/activate
 
-In Jupyter, select the Python environment containing these dependencies, then choose **Restart Kernel and Run All Cells**. Keep the repository folder structure intact: the notebook reads its configuration and archived results through relative paths.
+   # Windows
+   py -3.12 -m venv .venv
+   .venv\Scripts\activate
+   ```
 
-To verify the standalone implementation and tests:
+3. Install the dependencies:
+
+   ```bash
+   python -m pip install -r requirements.txt
+   ```
+
+4. Open the notebook and run it:
+
+   ```bash
+   python -m jupyter notebook Wildfire_Drone_Fleet_clean.ipynb
+   ```
+
+   In Jupyter choose **Kernel → Restart Kernel and Run All Cells**. It takes about 2 minutes on a laptop
+   CPU and should finish without errors.
+
+By default the notebook reloads the archived results of our experiments and only trains small
+demonstration models. Full retraining is optional and slow; it is switched on with the
+`RUN_...` flags at the top of Section 1.
+
+## Optional: run the tests
+
+With the virtual environment still active:
 
 ```bash
 python -m pip install -e .
 python -m pytest -q
 ```
 
-## Experiments and results
+Expected result: `129 passed, 5 skipped`.
 
-The final 40×40 study trained **three seeds per RL algorithm** (nine fits, 300 episodes each) and evaluated their final policies on **20 unseen simulation worlds**. The feasibility mask prevented drone loss in all 180 learned evaluation missions, but learned inspection freshness remained near masked random (approximately **0.084** for DQN and A2C), below Greedy (**0.221**). The negative result and its limitations are examined in the notebook.
+## Common errors
 
-The data and settings used by the notebook are in:
+| Error | Fix |
+| --- | --- |
+| `No matching distribution found for torch==2.5.1` | Your Python version is not 3.11 or 3.12 (for example 3.13). Install Python 3.12 and repeat steps 2–3. |
+| `ModuleNotFoundError: No module named 'torch'` (or `gymnasium`, `pandas`) in the notebook | Jupyter is using a different Python. Activate the virtual environment (step 2) and start Jupyter from it (step 4). |
+| `FileNotFoundError: Cannot find COMP6008_Wildfire_Drone_Fleet/configs` | The notebook was moved out of its folder. Keep the unzipped folder intact and open the notebook from inside it. |
+| `.venv\Scripts\activate` is blocked on Windows PowerShell | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or use Command Prompt instead. |
 
-- [`configs/`](configs/) — development and frozen experiment settings.
-- [`docs/experiments/final-2026-10-05/`](docs/experiments/final-2026-10-05/) — historical 20×20 comparison and tuning.
-- [`docs/experiments/rl-main-2026-10-11/`](docs/experiments/rl-main-2026-10-11/) — frozen 40×40 training and evaluation records.
-- [`docs/experiments/rl-followups-2026-10-11/`](docs/experiments/rl-followups-2026-10-11/) — planner, learning-rate sweep and sensitivity scripts, results and instructions for obtaining optional trained checkpoints.
+## What is in this folder
 
-The environment and learning package is in [`src/wild_drone/`](src/wild_drone/), with supporting [`scripts/`](scripts/) and [`tests/`](tests/). **The main-study trained checkpoints are not included in the repository checkout**; see [the follow-up experiment instructions](docs/experiments/rl-followups-2026-10-11/README.md) for retrieving them when reproducing the full checkpoint-based sensitivity runs.
+| Path | Contents |
+| --- | --- |
+| `Wildfire_Drone_Fleet_clean.ipynb` | The project notebook (all code it runs is defined in it) |
+| `requirements.txt` | Pinned Python dependencies |
+| `configs/` | Environment and training settings |
+| `docs/experiments/` | Archived results the notebook reads: 20×20 study, 40×40 main study, 40×40 follow-ups |
+| `src/wild_drone/`, `scripts/`, `tests/`, `pyproject.toml` | Package version of the code that produced the archived results, with its tests |
+| `*_DeclarationOfOriginality.pdf` | Signed declarations of the three group members |
 
-The simulation uses illustrative fire, wind and energy settings rather than calibrated real-world wildfire physics.
+The fire, wind and energy settings are illustrative simulation values, not calibrated
+real-world physics.

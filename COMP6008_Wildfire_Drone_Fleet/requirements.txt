@@ -1,6 +1,6 @@
-# Tested with Python 3.11 and 3.12 on CPU.
-# Install: python -m pip install -r requirements.txt && python -m pip install -e .
-# For a GPU build of PyTorch, see https://pytorch.org/get-started/locally/
+# Tested with Python 3.11 and 3.12 on CPU (torch==2.5.1 has no Python 3.13 build).
+# Install: python -m pip install -r requirements.txt   (setup steps: see README.md)
+# No GPU is needed; the notebook runs on CPU.
 numpy==2.4.6
 gymnasium==1.4.0
 matplotlib==3.11.2
