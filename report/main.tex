@@ -1,4 +1,5 @@
 \documentclass[conference,a4paper]{IEEEtran}
+\usepackage{cite}
 \usepackage{graphicx}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
@@ -6,15 +7,58 @@
 \usepackage{array}
 \usepackage{amsmath,amssymb}
 \usepackage{url}
-\usepackage{hyperref}
-\usepackage{enumitem}
-\hypersetup{colorlinks=true,allcolors=black}
-\setlist{nosep,leftmargin=*}
-\title{Coordinated Wildfire Inspection with a Battery-Constrained Drone Fleet}
-\author{\IEEEauthorblockN{Group 7 --- Research Dossier}\IEEEauthorblockA{COMP6008 Reinforcement Learning\\For independent study and report preparation --- NOT FOR SUBMISSION}}
+\usepackage[hidelinks]{hyperref}
+
+% Author note at the start of each section, as required by the unit guidelines.
+\newcommand{\writtenby}[1]{\noindent\textit{(Written by #1)}\par\smallskip}
+% Heading that separates the three parts of the report.
+\newcommand{\reportpart}[1]{\medskip\noindent{\centering\large\scshape #1\par}\smallskip}
+
 \begin{document}
+
+\title{Coordinated Wildfire Inspection with a\\Battery-Constrained Drone Fleet:\\DQN, REINFORCE and A2C Compared}
+
+\author{
+\IEEEauthorblockN{Lithma Perera}
+\IEEEauthorblockA{Student ID 24101822\\
+Curtin University}
+\and
+\IEEEauthorblockN{Sulakna Weerasinghe}
+\IEEEauthorblockA{Student ID 24105235\\
+Curtin University}
+\and
+\IEEEauthorblockN{Sayuru Bopitiya}
+\IEEEauthorblockA{Student ID 24071158\\
+Curtin University}
+}
+
 \maketitle
-\noindent\textbf{Policy notice:} The unit specification prohibits generative AI in submitted work. This AI-assisted source-checked research dossier must not be submitted verbatim; all members must independently write the assessed report, verify citations and attribute their work.
-\medskip
+
+\begin{abstract}
+Emergency responders need fire fronts and high-priority areas to be inspected again and again,
+but a small fleet of battery-limited drones must also return to share a single charger. We
+model this as a fully observable, finite-horizon Markov decision process in which one central
+controller chooses a joint move for three drones on a 40$\times$40 grid with stochastic fire
+spread and changing wind. Three reinforcement learning (RL) agents were implemented and
+compared: a deep Q-network (DQN), REINFORCE with a learned baseline, and synchronous advantage
+actor--critic (A2C). Each was trained with three random seeds and evaluated on 20 unseen
+worlds against a one-step Greedy controller, a rolling-horizon planner, a lawnmower sweep and
+random policies. After a feasibility mask was added, every learned policy kept all drones
+alive, but inspection quality stayed at the level of random feasible actions: weighted
+freshness of 0.084 (DQN), 0.069 (REINFORCE) and 0.084 (A2C) against 0.084 for masked random
+and 0.221 for Greedy. A learning-rate sweep and a sensitivity study did not change this
+picture. Measurements show that the immediate reward separates good and bad joint actions by
+far less than the noise in mission returns, which explains why none of the agents learned
+coordinated patrols. We propose factorised credit assignment, potential-based shaping and
+learning from demonstrations as improvements, and partial observability, decentralised
+communication and calibrated fire physics as extensions.
+\end{abstract}
+
+\begin{IEEEkeywords}
+reinforcement learning, wildfire monitoring, multi-drone coordination, Markov decision
+process, DQN, policy gradient, actor--critic, action masking
+\end{IEEEkeywords}
+
 \input{body.tex}
+
 \end{document}

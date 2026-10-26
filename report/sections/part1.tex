@@ -1,89 +1,437 @@
-\section{Project description and critical review}
+\section{Introduction}
+\writtenby{Lithma Perera}
 
-\subsection{Problem framing and research aim}
+Extreme wildfires cause loss of life, property and ecosystems on every vegetated continent,
+and a warming climate is making the conditions for them more common \cite{bowman2017}. During a
+response, incident teams need up-to-date, close-range views of the active fire front and of
+assets at risk such as roads, settlements and power lines. Unmanned aerial vehicles (UAVs)
+are increasingly used for this task because they are cheap, fast to deploy and safe to fly
+over hazardous terrain \cite{yuan2015}. A single drone, however, has limited endurance. A
+small fleet can cover more ground, but only if its members coordinate: they must spread out
+over the areas that most need attention, return before their batteries run out, and take
+turns at a shared charging point.
 
-The approved project asks how three battery-limited drones can repeatedly inspect known, changing wildfire hazards over a finite mission. The controller must trade inspection freshness against transit energy, overdue locations, scarce charging capacity and collision restrictions. This is not a hidden-fire discovery experiment: fire, fuel, terrain, priority, wind and drone condition are fully observed in the simulation \cite{source1}, \cite{source12}. Novelty is a coordinated sequential decision problem, not the claim that deep RL necessarily wins against engineered patrol rules. Related peer-reviewed drone-fire studies justify the application domain but do not calibrate the parameters of this simulator \cite{source9}, \cite{source10}.
+This project studies that coordination problem in simulation. Three battery-limited drones
+are commanded by one central controller. Fires spread stochastically under changing wind, and
+every location has an inspection age that grows until a drone flies over it. The goal is to
+keep high-priority locations, especially burning cells and the fire front, recently
+inspected for the whole mission while never losing a drone.
 
-Why nontrivial: an action that increases coverage now can strand a drone later; high-priority sites change with burning cells and fire front; three simultaneous moves can interfere; and all drones share one charger. A one-step urgency rule may nonetheless be formidable. The suitable scientific question is whether learned policies yield measurable sustained inspection improvement under an unchanged task and comparable held-out scenarios.
+The problem is hard for three reasons. First, decisions are joint: five commands per drone
+give $5^3 = 125$ joint actions at every step, and the value of one drone's move depends on
+where the other two are. Second, consequences are delayed: flying too far from base costs
+nothing immediately but strands the drone many steps later. Third, one charger creates
+contention, so the fleet must stagger its returns. These properties make the task a
+sequential decision problem under uncertainty with a clear numerical objective, which is the
+setting reinforcement learning (RL) is designed for \cite{sutton2018}. Prior work has applied
+deep RL to wildfire surveillance with autonomous aircraft \cite{julian2019} and to fire-front
+monitoring with multiple UAVs \cite{viseras2021}. Unlike those studies, we give every
+controller the full state, so that RL can be compared fairly with conventional planning that
+uses the same information.
 
-\subsection{Fully observable finite-horizon MDP}
+Our contributions are: (i) a Gymnasium environment for fleet inspection with stochastic fire,
+wind, batteries, collisions and a shared charger; (ii) implementations of DQN, REINFORCE and
+A2C trained under one protocol with a feasibility mask; (iii) a frozen 40$\times$40 comparison
+on 20 unseen worlds against Greedy, rolling-horizon, sweep and random controllers, with
+tuning and sensitivity studies; and (iv) a measured explanation of why the learned policies
+did not improve on random feasible behaviour. The code, the executed notebook and all archived
+results accompany this report \cite{project2026}.
 
-Decision process: M=(S,A,P,r,$\gamma$,H). The observation is a Gymnasium dictionary: five full-grid maps---burning, normalized fuel, terrain susceptibility, static priority, and inspection age---of shape (5,n,n); three records {[}row,column,battery,lost{]} of shape (3,4); and 12 global entries for wind (five one-hot categories), charger ownership (four), base coordinates (two), and remaining-time proportion (one). In the main study n=40 and H=300. Each variable is normalized to {[}0,1{]}. The neural encoder additionally constructs four binary location maps from these observed coordinates, yielding nine spatial channels and 24 nonspatial inputs. It does not supply hidden future fire information \cite{source12}, \cite{source13}.
+\section{Markov Decision Process and Environment}
+\writtenby{Lithma Perera}
 
-One central action controls all three drones. Each receives one of stay/north/south/west/east; the joint discrete space therefore has 5$^3$=125 actions. Inspection happens automatically after movement. At the shared base, a staying drone can charge, but only one charger owner is serviced per step. A physical transition resolves simultaneous moves and blocked collisions, applies energy and charge updates, increments and resets inspection ages, computes reward, then evolves fire and wind. Full fleet loss or the horizon ends an episode. Transition randomness is seeded; parameters are illustrative rather than physically calibrated \cite{source12}.
+We formulate the task as a finite-horizon Markov decision process (MDP)
+$\mathcal{M} = (\mathcal{S}, \mathcal{A}, P, r, \gamma, H)$ with horizon $H = 300$ steps and
+discount $\gamma = 0.99$ \cite{sutton2018}. The environment follows the Gymnasium
+\texttt{Env} interface. All values below are those of the 40$\times$40 main study; the earlier
+20$\times$20 development study used a smaller, shorter version (horizon 160, battery 80).
 
-The 40$\times$40 environment uses battery capacity 160, movement cost 1, hover cost 0.25, recharge rate 8, radius 2, inspection deadline 30, initial three fires, base near the grid centre, fire-spread probability 0.04 and wind-change probability 0.06. Three higher-priority zones are initialized per scenario. Terrain influences fire, not obstacles to flight. The single controller cannot be equated with three independent learning agents.
+\subsection{State and observation}
 
-\subsection{Objective, reward and measurable outcomes}
+The state is fully observed. The observation is a dictionary of three arrays, all scaled to
+$[0,1]$:
+\begin{itemize}
+\item five $40\times40$ maps: burning cells, remaining fuel, terrain flammability, static
+priority and inspection age;
+\item a $3\times4$ array with each drone's row, column, battery and a lost flag;
+\item 12 global values: wind direction (one-hot over calm and four directions), charger owner
+(one-hot over none and three drones), base position and the fraction of the mission left.
+\end{itemize}
+Keeping the fire, fuel and age information as spatial maps preserves the neighbourhood
+structure that convolutional networks exploit in pixel-based RL \cite{mnih2015}. Every
+quantity that influences the next-state distribution is included, including inspection ages
+and remaining time, so the Markov property holds and no observation history is needed. This
+is a deliberate simplification of real operations, where fire is only partly visible; we
+return to it in Section~\ref{sec:future}. Before the network, the drone and base coordinates
+are also drawn as four binary maps, giving nine spatial channels and 24 vector inputs.
 
-The simulator computes location priority w\_i = p\_i(1 + 2 b\_i + f\_i), where p\_i is static site priority, b\_i marks burning cells and f\_i marks a fuel-bearing fire-front neighbour. At each step, weighted freshness is F\_t = $\sum$\_i w\_i max(0,1-age\_i/deadline) / $\sum$\_i w\_i. The overdue fraction is the weighted proportion with age\_i \textgreater{} deadline. These are quality metrics on a {[}0,1{]} scale, not the percentage of area covered \cite{source12}.
+\subsection{Action space}
 
-The environment reward is the sum of weighted inspection gain, a negative overdue penalty, normalized energy cost, blocked collision attempts and newly lost drones, plus a remaining-horizon overdue charge on total fleet failure. Frozen weights are +1.0 gain, -0.1 overdue fraction, -0.02 $\times$ energy/160, -0.2 per blocked command and -5 per new drone loss. This reward is shaped in the general sense of combining terms, but the main 40$\times$40 experiment sets additional coordination shaping to zero. Distinguish this existing multi-term objective from a proposed potential-based shaping method \cite{source8}.
+The action $a_t \in \{0, \dots, 124\}$ encodes one of five commands (stay, north, south,
+west, east) for each drone. A single joint action lets a central controller coordinate the
+fleet directly and lets us use standard discrete-action algorithms without changing them.
+Its cost is a size that grows as $5^N$ with fleet size $N$; Section~\ref{sec:improvements}
+discusses factorised alternatives. Inspection is automatic: every cell within a Chebyshev
+radius of two cells of an active drone is inspected after it moves.
 
-Report distinct metrics: full-horizon weighted freshness, overdue fraction, episode return, energy, loss count, collision attempts, fleet-failure rate, charge completions and safe-return events. A safe return event is not an assertion that all drones ended at base. On an early total fleet failure the evaluator pads unserved timesteps with zero freshness and fully overdue locations rather than rewarding a shortened run \cite{source1}, \cite{source12}.
+\subsection{Transition model}
 
-\subsection{Selection and implementation of three RL methods}
+Each step applies the following updates in order, with all randomness drawn from the world's
+seeded generator.
+\begin{enumerate}
+\item \emph{Movement.} Moves off the grid are ignored. If two drones would enter the same
+non-base cell or swap cells, both moves are rejected and counted as collision attempts.
+\item \emph{Energy and charging.} A move costs 1 unit and hovering 0.25 from a capacity of
+$B = 160$. One drone staying at the base charges by 8 units per step; when several wait, the
+one with the lowest battery is served first. A drone whose battery reaches zero away from
+base is lost permanently.
+\item \emph{Inspection.} All ages increase by one; cells under a sensor footprint are reset
+to zero.
+\item \emph{Fire and wind.} A burning cell burns one unit of fuel per step and goes out when
+its fuel is exhausted. An unburnt cell $i$ with fuel ignites with probability
+\begin{equation}
+P_i = 1 - \prod_{j \in \mathcal{N}_i \cap \mathcal{F}_t}
+\bigl(1 - \min(1,\, q\, \omega_{ji}\, \tau_i)\bigr),
+\label{eq:spread}
+\end{equation}
+where $\mathcal{N}_i$ are the four neighbours of $i$, $\mathcal{F}_t$ the burning cells,
+$q = 0.04$ the spread probability, $\tau_i \in [0.4, 1]$ the terrain flammability, and
+$\omega_{ji} = 2$ when the spread from $j$ to $i$ is downwind and 1 otherwise. The wind
+changes to a random direction with probability 0.06 per step.
+\end{enumerate}
+An episode ends at the horizon or when all three drones are lost. Each world fixes the
+terrain, fuel, three high-priority zones and three initial fires. The physical constants are
+illustrative rather than calibrated.
 
-DQN (value-based): a convolutional encoder maps the full observation to 125 joint Q-values; replay samples transitions; a target network supplies bootstrapped TD estimates; epsilon-greedy data collection explores admissible candidate actions. The final corrected masked DQN uses a feasible next-action TD maximum and standard DQN targets, not Double DQN \cite{source2}, \cite{source13}.
+\subsection{Reward design}
 
-REINFORCE (Monte Carlo policy gradient): a categorical policy over feasible joint actions collects full episodes, then weights log-probabilities by discounted reward-to-go minus an optional learned Monte Carlo baseline. It contains no TD bootstrap, despite sharing the neural encoder with the other methods \cite{source3}, \cite{source13}.
+Inspection quality is defined with priority weights $w_i = p_i(1 + 2b_i + f_i)$, where
+$p_i \in \{1, 3\}$ marks priority zones, $b_i$ burning cells and $f_i$ cells on the fire
+front. With inspection age $a_i$ and deadline $D = 30$, the \emph{weighted freshness} and
+\emph{overdue fraction} are
+\begin{equation}
+F_t = \frac{\sum_i w_i \max(0, 1 - a_i/D)}{\sum_i w_i}, \quad
+O_t = \frac{\sum_i w_i \, \mathbb{1}[a_i > D]}{\sum_i w_i}.
+\end{equation}
+The reward is
+\begin{equation}
+r_t = G_t - 0.1\,O_t - 0.02\,\frac{E_t}{B} - 0.2\,K_t - 5\,L_t - 0.1\,(H - t - 1)\,
+\mathbb{1}[\text{fleet lost}],
+\label{eq:reward}
+\end{equation}
+where $G_t = \sum_{i \in C_t} w_i \min(1, a_i/D) / \sum_i w_i$ is the weighted staleness
+removed by this step's inspections $C_t$, $E_t$ the energy used, $K_t$ the collision
+attempts and $L_t$ the newly lost drones.
 
-A2C (synchronous actor--critic): one network returns categorical policy logits and a state-value estimate; 32-step rollouts use bootstrapped discounted targets to update policy and critic. Its entropy penalty regularizes action selection; it is synchronous single-environment A2C, not the asynchronous A3C algorithm described by Mnih et al. \cite{source4}, \cite{source13}.
+Each term targets part of the goal. The inspection gain $G_t$ is dense: it rewards a useful
+inspection immediately rather than only at the end of a 300-step mission, which shortens the
+credit-assignment path and should speed up learning. Because it is larger for stale and
+high-weight cells, it favours revisiting the fire front rather than circling one area. The
+overdue term keeps pressure on every location, the energy term discourages pointless
+movement, and the collision term penalises blocked commands. The loss penalty and the
+mission-failure term charge the remaining horizon as fully overdue, so losing the fleet early
+is never better than flying the whole mission. All terms are part of the task objective
+rather than added shaping, so they define the optimal policy instead of altering it; shaping
+that is not potential-based can change which policy is optimal \cite{ng1999}. For evaluation
+we report $F_t$ and $O_t$ averaged over the full horizon, return, energy, drones lost and
+decision time.
 
-Algorithm--code mapping to independently validate: environment reset/step in src/wild\_drone/environment.py; action\_mask and masked TD target in masked\_learning.py; neural encoder, return and TD utilities in learning.py; candidate and Greedy/sweep policies in baselines.py; experiment runner, audit and replay scripts in scripts/. The consolidated Wildfire\_Drone\_Fleet.ipynb already provides implementation-oriented pseudocode; students must verify and attribute each assessed code/notebook section.
+\section{Reinforcement Learning Agents}
+\writtenby{Sulakna Weerasinghe}
 
-\subsection{Experiments and training decisions}
+\subsection{Choice of agents}
 
-Historical development used 20$\times$20 worlds to diagnose poor unmasked survival, repeated commands, instability and incomplete charger coordination. Changes included spatial drone/base channels, REINFORCE's Monte Carlo baseline, feasible-action rules, lower DQN learning rate, Double DQN screening and diagnostic supervised probes. These experiments must not be merged with the final 40$\times$40 numerical estimates or described as successful RL tuning without evidence \cite{source1}, \cite{source14}, \cite{source15}.
+We chose one agent from each of the three main families of model-free RL, so that a failure
+could not be blamed on one family's weaknesses. DQN is value-based and off-policy: its replay
+buffer reuses each transition many times, which suits an expensive simulator with a discrete
+action set \cite{mnih2015}. REINFORCE is a Monte Carlo policy-gradient method: it gives
+unbiased gradients of the expected return and learns a stochastic policy directly
+\cite{williams1992}. A2C is an actor--critic method: its critic bootstraps value estimates to
+reduce the variance of the policy gradient and allows updates within an episode
+\cite{mnih2016}. Comparing them shows whether value estimation, full returns or bootstrapping
+copes best with long missions and a large joint action space.
 
-The frozen main comparison used independently initialized training seeds 0, 1, 2 for each of DQN, REINFORCE and A2C (nine fits). Each completed 300 episodes on training worlds 0--299 (90,000 environment interactions per fit, 810,000 total). All final checkpoints were evaluated on unseen worlds 22000--22019: 9$\times$20=180 learned-policy missions plus 4$\times$20=80 baselines, totalling 260. No 40$\times$40 best-checkpoint selection, post-result tuning, supervised warm start or additional coordination shaping was used \cite{source1}, \cite{source11}.
+All three share one network: two strided convolutions (16 and 32 filters) over the nine
+spatial channels, concatenated with the 24 vector inputs, a 128-unit hidden layer and a
+125-way output, which gives Q-values for DQN and logits for the policies. REINFORCE and A2C
+add a scalar value head (435{,}006 parameters in total at 40$\times$40). All agents use Adam,
+$\gamma = 0.99$ and gradient-norm clipping at 0.5.
 
-Shared settings include $\gamma$=0.99, Adam, gradient clipping 0.5 and a common spatial input. DQN: learning rate 1$\times$10$^{-}$$^4$, minibatch 32, replay capacity 2,000, target refresh every 100 update steps and epsilon 1$\rightarrow$0.05 over 40,000 steps. REINFORCE: learning rate 1$\times$10$^{-}$$^3$ and entropy weight 0, with a learned Monte Carlo baseline. A2C: learning rate 1$\times$10$^{-}$$^4$, 32-step rollout and entropy weight 0.05. These are fixed study choices, not proof of optimum settings \cite{source11}.
+\subsection{Update rules}
 
-\subsection{Frozen 40$\times$40 outcomes}
+\emph{DQN} minimises the Huber loss between $Q_\theta(s,a)$ and the target
+$y = r + \gamma \max_{a' \in \mathcal{A}_{\mathrm{f}}(s')} Q_{\bar\theta}(s', a')$, where
+$Q_{\bar\theta}$ is a target network copied every 100 steps and $\mathcal{A}_{\mathrm{f}}$ the
+feasible actions. It samples minibatches of 32 from a 2{,}000-transition replay buffer and
+explores with $\epsilon$ decayed from 1 to 0.05 over 40{,}000 steps.
 
-\begin{table*}[!t]
+\emph{REINFORCE} with a learned baseline updates once per episode with
+$\nabla_\theta \sum_t \gamma^t \log \pi_\theta(a_t|s_t)\,(G_t - V_\phi(s_t))$, where $G_t$ is
+the discounted reward-to-go and the baseline $V_\phi$ is fitted by squared error.
+
+\emph{A2C} updates every 32 steps using $n$-step returns bootstrapped from the critic,
+the advantage $A_t = G^{(n)}_t - V_\phi(s_t)$, a value loss weighted 0.5 and an entropy bonus
+of 0.05. It is the synchronous, single-environment form of the method in \cite{mnih2016}.
+Full update equations are given in the Appendix.
+
+\subsection{Feasibility mask}
+
+The first versions of all three agents chose freely among the 125 actions and lost most of the
+fleet (Section~\ref{sec:development}), while every conventional controller kept its drones
+because it only proposed safe moves. We therefore applied the same feasibility rule to the
+learners. A move is feasible only if the drone keeps enough battery to fly back to base
+afterwards; a drone low on battery must move towards base; a drone at base below full charge
+must stay and charge; and joint actions that would collide are excluded. In the rare case
+where no joint action remains, an emergency rule moves the drones with the smallest margin
+home first. The mask is applied when acting and inside the DQN target, and infeasible logits
+are set to the lowest finite value so they receive zero probability. This follows shielding
+in safe RL \cite{alshiekh2018} and invalid-action masking in policy-gradient methods, which
+keeps the policy gradient valid \cite{huang2022}. At reset, 73 of the 125 joint actions are
+feasible.
+
+\section{Development at 20$\times$20}
+\label{sec:development}
+\writtenby{Sulakna Weerasinghe}
+
+We first developed on a 20$\times$20 grid (horizon 160, battery 80, sensor radius 1). Without
+the mask, 1{,}000-episode runs on a GPU lost most drones, and DQN's Q-values grew to about
+74{,}000 against a true return bound of about 80. A lower learning rate removed the blow-up,
+but Double DQN \cite{vanhasselt2016} and slower exploration did not stop the losses.
+Table~\ref{tab:dev} compares the masked and unmasked agents trained for 300 episodes with three
+seeds each and tested on 20 unseen worlds.
+
+\begin{table}[!t]
 \centering
-\caption{Audited main-study evaluation means across 260 missions.}
+\caption{20$\times$20 development study: test means over 20 unseen worlds (learners: three
+seeds).}
+\label{tab:dev}
 \scriptsize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lrrrr}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lrrr}
 \toprule
-\textbf{Policy} & \textbf{Fresh. $\uparrow$} & \textbf{Overdue $\downarrow$} & \textbf{Return $\uparrow$} & \textbf{Loss $\downarrow$} \\
+Policy & Freshness $\uparrow$ & Return $\uparrow$ & Drones lost $\downarrow$ \\
 \midrule
-DQN & 0.08438 & 0.86869 & -24.79 & 0 \\
-REINFORCE & 0.06901 & 0.89402 & -25.81 & 0 \\
-A2C & 0.08435 & 0.86949 & -24.83 & 0 \\
-Greedy & 0.22077 & 0.65563 & -16.10 & 0 \\
-Sweep & 0.06486 & 0.90121 & -26.07 & 0 \\
-Random & 0.05956 & 0.92098 & -42.87 & 3 \\
-Masked random & 0.08379 & 0.88601 & -25.46 & 0 \\
+Masked DQN & 0.146 & $-10.92$ & 0.00 \\
+Masked REINFORCE & 0.133 & $-11.49$ & 0.00 \\
+Masked A2C & 0.137 & $-11.20$ & 0.00 \\
+Unmasked DQN & 0.038 & $-65.42$ & 1.70 \\
+Unmasked REINFORCE & 0.052 & $-24.63$ & 2.00 \\
+Unmasked A2C & 0.037 & $-31.59$ & 3.00 \\
+\midrule
+Greedy & 0.322 & $-5.27$ & 0.15 \\
+Rolling-horizon planner & 0.305 & $-5.20$ & 0.00 \\
+Masked random & 0.145 & $-11.37$ & 0.00 \\
+Random & 0.095 & $-29.04$ & 3.00 \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
-\begin{figure}[!t]
+The mask was decisive for survival: all masked agents kept every drone in every test mission.
+It did not create inspection skill, however. Masked DQN's freshness (0.146) equalled masked
+random's (0.145), and Greedy was more than twice as good. Supervised experiments, in which a
+network imitated Greedy, fitted 86--96\% of training decisions but only 9--18\% on new worlds,
+which suggested that generalising the inspection ranking, rather than survival, was the
+bottleneck.
+
+\section{Hyperparameter Tuning}
+\writtenby{Sayuru Bopitiya}
+
+Tuning had two stages. At 20$\times$20, a one-seed screen trained each agent for 200 episodes
+per setting and scored the final policy on five validation worlds. It chose REINFORCE's
+learning rate ($10^{-3}$, freshness 0.131 against 0.114 at $10^{-4}$) and entropy weight (0,
+0.132 against 0.114 at 0.01), and A2C's entropy weight (0.05, 0.164 against 0.126 at 0.01) and
+rollout length (32 steps). DQN scored best at $10^{-3}$ in this screen, but we kept
+$10^{-4}$ for the main study because the larger rate had produced the Q-value blow-up above.
+These settings were frozen before the 40$\times$40 study.
+
+Because the 40$\times$40 rates were not tuned on the larger grid, we later trained each agent
+from scratch at one third, one and three times its main-study rate (one seed, 300 episodes),
+scoring each on 20 separate validation worlds (Table~\ref{tab:lr}). None of the rates closed
+the gap to Greedy. DQN at its main-study rate was the best fit and slightly ahead of masked
+random (0.098 against 0.091 freshness, $-24.00$ against $-25.14$ return), but this margin is
+smaller than the standard deviation across worlds (about 0.015). REINFORCE improved with a
+larger rate and A2C was flat over a ten-fold range. With one seed per setting, differences of
+about 0.01 are within seed-to-seed variation \cite{henderson2018}, so the sweep cannot rule
+out the learning rate as one contributing factor. It does show that a three-fold change in
+either direction was not enough on its own.
+
+\begin{table}[!t]
 \centering
-\input{figures/main_freshness.tex}
-\caption{Main-study freshness means; illustrative graph redrawn from published study statistics \cite{source1}.}
-\end{figure}
+\caption{40$\times$40 learning-rate sweep: mean freshness on 20 validation worlds (one seed).
+The main-study rate is in the middle column.}
+\label{tab:lr}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccc}
+\toprule
+Agent & $\times\tfrac{1}{3}$ & $\times 1$ & $\times 3$ \\
+\midrule
+DQN & 0.087 ($3\!\times\!10^{-5}$) & 0.098 ($10^{-4}$) & 0.080 ($3\!\times\!10^{-4}$) \\
+REINFORCE & 0.072 ($3\!\times\!10^{-4}$) & 0.080 ($10^{-3}$) & 0.084 ($3\!\times\!10^{-3}$) \\
+A2C & 0.084 ($3\!\times\!10^{-5}$) & 0.084 ($10^{-4}$) & 0.083 ($3\!\times\!10^{-4}$) \\
+\midrule
+\multicolumn{4}{l}{References on the same worlds: Greedy 0.226, masked random 0.091.} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-The Greedy policy has approximately 2.62$\times$ DQN's mean freshness and 3.20$\times$ REINFORCE's. DQN improves over masked random by only 0.000589 freshness (0.059 percentage points); A2C by 0.000553; REINFORCE is below it by 0.014780. All learned methods miss the prespecified all-seed contribution and Greedy capability gates. An intact fleet at the horizon did not imply good monitoring. Unmasked random loses all three drones in each of its 20 test missions, whereas all nine masked fitted policies and masked random have zero average losses \cite{source1}.
+\section{Main Study at 40$\times$40}
+\writtenby{Sayuru Bopitiya}
 
-Statistical caution: each learned controller's average first aggregates 20 worlds within each fitted seed, then averages three seed means. Freshness seed-level sample SD is DQN 0.00254, REINFORCE 0.00730 and A2C 0.01163. Baseline variability is across 20 worlds, a different unit. Three fitted replicates are insufficient for strong significance or convergence claims. DQN's +0.000589 average difference is descriptive, not evidence of a meaningful positive effect \cite{source1}.
+\subsection{Protocol}
 
-\begin{figure}[!t]
+The implementation, settings, budget and success criteria were fixed before any main-study
+fit started. Each agent was trained with seeds 0, 1 and 2 for 300 episodes on training worlds
+0--299 (90{,}000 environment steps per fit). The final weights of all nine fits were then
+evaluated once, acting greedily over feasible actions, on 20 unseen worlds (22000--22019).
+Greedy, the lawnmower sweep, random and masked random flew the same worlds, giving 260
+missions; the rolling-horizon planner was added later on the same worlds. Greedy scores every
+feasible joint action by the priority-weighted staleness its sensors would remove and picks
+the best. The planner simulates eight candidate actions four steps ahead over two sampled
+fire futures. For a learner, results are averaged over worlds within each seed and the
+standard deviation is taken across the three seed means; for a baseline it is across worlds.
+An independent replay reproduced all 75{,}911 evaluation steps exactly, including every
+action, mask, state hash and reward.
+
+\subsection{Training behaviour}
+
+Fig.~\ref{fig:learning} shows the training returns. DQN improved steadily during the first
+100 episodes, from a mean of $-25.1$ over the first 50 episodes to $-23.8$ over the last 50, and
+then levelled off. REINFORCE ($-25.1$ to $-25.0$) and A2C ($-25.3$ to $-25.4$) showed no
+trend: their returns moved within the noise of individual missions, and the three seeds of
+each agent did not agree on a direction. Training freshness followed the same pattern, rising
+from 0.089 to 0.101 for DQN but not for the two policy-gradient agents.
+
+\begin{figure*}[!t]
 \centering
-\input{figures/historical_comparison.tex}
-\caption{The 20$\times$20 and 40$\times$40 values come from different code/configuration regimes; do not infer an isolated scaling effect \cite{source14}.}
-\end{figure}
+\includegraphics[width=\textwidth]{figures/learning_curves.pdf}
+\caption{Training return of the nine main-study fits at 40$\times$40 (20-episode moving
+mean; returns include exploration).}
+\label{fig:learning}
+\end{figure*}
 
-\subsection{Critical review: separating task completion from RL success}
+\subsection{Results on unseen worlds}
 
-The implementation and audit objectives were substantially met: an explicit MDP, independently implemented three-method comparison, notebook-linked pseudocode, multiple historical pilots, fresh-world evaluation, and a completed 40$\times$40 training protocol. Independent replay checked all 75,911 final evaluation steps, selected actions, masks, state hashes and rewards, with zero neural-score drift. This supports reproducibility of the recorded experiment, not validation of real wildfire physics \cite{source1}, \cite{source11}.
+\begin{table}[!t]
+\centering
+\caption{Main 40$\times$40 study on 20 unseen worlds. Mean $\pm$ sample SD (learners:
+across three seed means; baselines: across worlds).}
+\label{tab:main}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccrr}
+\toprule
+Policy & Freshness $\uparrow$ & Overdue $\downarrow$ & Return $\uparrow$ & Energy & Lost \\
+\midrule
+DQN & $0.084 \pm 0.003$ & 0.869 & $-24.79 \pm 0.25$ & 698 & 0 \\
+REINFORCE & $0.069 \pm 0.007$ & 0.894 & $-25.81 \pm 0.59$ & 675 & 0 \\
+A2C & $0.084 \pm 0.012$ & 0.869 & $-24.83 \pm 0.92$ & 723 & 0 \\
+\midrule
+Greedy & $0.221 \pm 0.027$ & 0.656 & $-16.10 \pm 1.50$ & 783 & 0 \\
+Planner & $0.221 \pm 0.027$ & 0.667 & $-16.55 \pm 1.49$ & 757 & 0 \\
+Sweep & $0.065 \pm 0.015$ & 0.901 & $-26.07 \pm 0.81$ & 465 & 0 \\
+Masked random & $0.084 \pm 0.024$ & 0.886 & $-25.46 \pm 1.33$ & 675 & 0 \\
+Random & $0.060 \pm 0.018$ & 0.921 & $-42.87 \pm 1.12$ & 483 & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-The central scientific finding is negative. DQN and A2C lie close to a policy that uniformly samples rule-approved actions; REINFORCE performs worse. Feasible-action filtering blocks unsafe battery/collision commands and is a dominant explanation for survival. Because Greedy uses its native candidate logic and supervised probes have separate objectives, the comparison is not a perfectly identical algorithmic control. The absence of validated learning superiority must be stated plainly \cite{source1}, \cite{source14}.
+Table~\ref{tab:main} gives the results. All learned policies kept every drone in all 180
+missions, whereas unrestricted random lost the whole fleet in all 20. Their inspection
+quality, however, matched masked random: DQN's freshness exceeded it by only 0.0006 and A2C's
+by 0.0006, while REINFORCE was 0.015 below. Greedy achieved 2.6 times the freshness of DQN and
+A2C. On return, DQN and A2C were about 0.65 above masked random. None of the nine fits passed
+the pre-registered performance gates, which required every seed to beat masked random by at
+least 0.01 freshness and 0.5 return, and separately to reach 90\% of Greedy's freshness.
 
-Potential mechanisms supported by historical diagnostics include a large 125-way joint action head, difficult long-horizon inspection/charging credit assignment, weak learned ranking under distribution shift, repeated argmax actions and (in earlier unmasked 20$\times$20 runs) very large Q predictions relative to bounded return. The 40$\times$40 audited experiment does not identify one unique causal mechanism. Earlier pilot changes were not isolated one-factor causal estimates, and additional compute alone does not resolve why a Greedy controller wins \cite{source14}, \cite{source15}.
+The rolling-horizon planner matched Greedy's freshness (0.2207 against 0.2208) with a slightly
+lower return and no losses, but needed about 66\,ms per decision against 1.1\,ms for Greedy in
+the same serial timing test. Paired by world, it beat Greedy's return in only 7 of 20 worlds,
+so four-step lookahead added nothing over the one-step rule here.
 
-Construct validity is limited: true fire and wind are observed; the grid ignores smoke occlusion, uncertain sensors, no-fly zones and calibrated physical units; fire evolves through synthetic stochastic cellular rules. External validity to actual UAV emergency operations has not been established. Also, the 20$\times$20 and 40$\times$40 comparison changes horizons, energy settings, sensor radius, inspection deadline and source revision, so the observed numerical difference is not a controlled scalability result \cite{source12}, \cite{source14}.
+\section{Sensitivity Study}
+\writtenby{Sayuru Bopitiya}
+
+To test whether these conclusions depend on the chosen settings, we changed one parameter at a
+time and flew all policies again on the same 20 worlds (1{,}820 missions). The learners kept
+their default-setting weights, so their rows measure the robustness of a fixed policy, not
+what the algorithm would learn under the new setting. Table~\ref{tab:sens} gives the
+freshness.
+
+\begin{table}[!t]
+\centering
+\caption{Sensitivity at 40$\times$40: mean freshness on 20 unseen worlds, one setting
+changed at a time (learners not retrained).}
+\label{tab:sens}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccc}
+\toprule
+Setting & Greedy & Planner & M.\ rand. & DQN & REINF. & A2C \\
+\midrule
+Default & 0.221 & 0.221 & 0.084 & 0.084 & 0.069 & 0.084 \\
+Battery 120 & 0.205 & 0.208 & 0.083 & 0.096 & 0.083 & 0.094 \\
+Battery 200 & 0.215 & 0.216 & 0.088 & 0.078 & 0.061 & 0.075 \\
+Recharge 5 & 0.203 & 0.207 & 0.078 & 0.081 & 0.066 & 0.080 \\
+Recharge 12 & 0.226 & 0.227 & 0.087 & 0.085 & 0.071 & 0.085 \\
+Spread 0.02 & 0.208 & 0.216 & 0.080 & 0.084 & 0.069 & 0.084 \\
+Spread 0.08 & 0.208 & 0.214 & 0.082 & 0.086 & 0.066 & 0.084 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Greedy and the planner remained the strongest group in every condition (0.20--0.23), and all
+other policies stayed between 0.06 and 0.10, although rankings inside each group changed.
+Slower charging cost Greedy and the planner 0.014--0.018 freshness. Away from the default,
+Greedy lost its whole fleet in 4 of 140 missions: three low-battery drones met near the base,
+every move home collided, its rule fell back to ``all stay'' and they hovered until empty. The
+masked learners avoid this deadlock through the emergency return, and the planner avoided it
+in all of its missions. A smaller battery made the fixed learners look better (DQN 0.096) and
+a larger one worse (0.078); because the weights did not change, this is most likely the mask
+forcing earlier returns that pass near the base, not learned behaviour.
+
+\section{Critical Review}
+\label{sec:review}
+\writtenby{Sayuru Bopitiya}
+
+\subsection{Was the problem solved?}
+
+Only partly. The engineering goals were met: the environment, three agents, a fixed protocol,
+unseen-world evaluation and an exact audit were all completed, and every learned policy flew
+full missions without losing a drone. The learning goal was not met. In every comparison the
+learned policies inspected no better than random feasible actions, and a one-step heuristic
+was more than twice as good. The zero-loss result must therefore be credited to the mask, not
+to learning: masked random, which has no learning at all, also lost no drones. Without the
+masked-random control, the safety result could easily have been misread as learned
+competence.
+
+\subsection{Why the learners stayed at masked-random level}
+
+All three agents learn from differences in reward between actions. To measure how large these
+are, we froze the state every tenth step under random feasible play, tried every feasible
+joint action, and recorded the immediate reward. At 40$\times$40 the best action beats the
+second-best by only 0.0005 on average, and the standard deviation across actions is 0.002.
+The standard deviation of the mission return across worlds is 0.87, about 430 times larger
+(130 times at 20$\times$20). The useful signal is therefore buried in noise: REINFORCE updates
+once per episode from a single noisy return; A2C bootstraps from a critic that must itself
+resolve these tiny differences; and DQN must estimate Q-values whose gaps between actions are
+smaller than its approximation error. This matches the flat learning curves of the two
+policy-gradient agents, and the fact that DQN's training gains did not transfer to unseen
+worlds.
+
+The joint action space makes this worse. One drone's good move is rewarded together with the
+other two drones' choices, so the agent cannot easily tell which drone deserved the credit.
+Greedy, by contrast, computes exactly the quantity the reward measures, so it does not need to
+learn it from noisy samples. Three seeds and 90{,}000 steps per fit are also a small budget
+for deep RL, where results vary strongly between seeds \cite{henderson2018}. However, the
+learning-rate sweep and the DQN plateau suggest that more compute alone would not close a
+gap of this size.
+
+\subsection{Implications and validity}
+
+The study shows that a well-designed heuristic with full information is a strong baseline
+for fleet inspection, and that safe behaviour obtained through masking should not be
+reported as learning success. The conclusions hold for this simulator only: fire, wind and
+battery values are illustrative, the state is fully observed, and the 20$\times$20 and
+40$\times$40 studies differ in several settings at once, so their difference is not a
+controlled scaling result. Part~II proposes changes that target the measured causes.

@@ -1,4 +1,4 @@
-name: Build and archive COMP6008 report research PDF
+name: Build COMP6008 report PDF
 on:
   pull_request:
     paths:
@@ -29,12 +29,12 @@ jobs:
       - name: Upload compiled PDF for review
         uses: actions/upload-artifact@v4
         with:
-          name: wild-drone-report-research-pdf
+          name: wild-drone-report-pdf
           path: report/main.pdf
           if-no-files-found: error
       - name: Commit generated PDF to master
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: 'docs(report): update compiled research PDF'
+          commit_message: 'docs(report): update compiled report PDF'
           file_pattern: report/main.pdf

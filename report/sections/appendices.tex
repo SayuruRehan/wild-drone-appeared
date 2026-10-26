@@ -1,77 +1,45 @@
 \appendices
-\section{Assignment alignment and final verification}
+\section{Update Equations}
+\writtenby{Sulakna Weerasinghe}
 
-This appendix is an internal checklist, not assessment writing. The 29 July 2026 brief says generative AI is strictly prohibited in any part of submitted work, including report, code documentation and presentation. Students must independently read the primary evidence, write and verify their final text, and demonstrate understanding during the interview. The report deadline stated in the brief is 30 October 2026 at 23:59, with the code and presentation deadline 23 October; Blackboard may supersede these dates \cite{source16}.
+Let $\mathcal{A}_{\mathrm{f}}(s)$ be the feasible joint actions in state $s$ and
+$m(s) \in \{0,1\}^{125}$ its mask. Masked scores replace infeasible entries by the lowest
+finite value, so $\pi_\theta(a|s) = 0$ for $a \notin \mathcal{A}_{\mathrm{f}}(s)$.
 
-\begin{table*}[!t]
-\centering
-\caption{Assignment alignment and outstanding verification checks.}
-\scriptsize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{p{0.34\textwidth}p{0.55\textwidth}}
-\toprule
-\textbf{Guideline requirement} & \textbf{Verified evidence / action still required} \\
-\midrule
-Three independently implemented RL methods & DQN, REINFORCE, A2C in Python; all nine 40$\times$40 fits complete \\
-MDP state/action/transition/reward & environment.py, design.md and consolidated notebook; students verify mappings \\
-Training and tuning analysis & 20$\times$20 development/Colab pilots + frozen 40$\times$40 summary; distinguish protocols \\
-Validation on unseen scenarios & 20 new 40$\times$40 worlds (22000–22019), all 260 missions replay audited \\
-Critical analysis & Greedy strongly exceeds all learned controllers; safety mostly rule-associated \\
-Improvement proposals & At least 3 weakness-linked structural methods; not mere parameter changes \\
-Future expansions & At least 3 distinct scope extensions; minimum six academic works \\
-Report presentation & Use official IEEE two-column A4 Word template; at most eight pages before refs/appendix \\
-Contributions & Add real author names, section allocation and agreed percentages \\
-Submission/assessment & Independently write, verify and prepare viva; observe no-GenAI rule \\
-\bottomrule
-\end{tabular}
-\end{table*}
+\subsection{DQN}
+For a minibatch $\mathcal{B}$ of transitions $(s, a, r, s', d)$ with terminal flag $d$,
+\begin{align}
+y &= r + \gamma\,(1 - d) \max_{a' \in \mathcal{A}_{\mathrm{f}}(s')} Q_{\bar\theta}(s', a'), \\
+\mathcal{L}(\theta) &= \frac{1}{|\mathcal{B}|} \sum_{\mathcal{B}}
+\mathrm{Huber}\bigl(Q_\theta(s, a) - y\bigr),
+\end{align}
+with $\bar\theta \leftarrow \theta$ every 100 environment steps and the $\epsilon$-greedy
+action drawn uniformly from $\mathcal{A}_{\mathrm{f}}(s)$.
 
-\section{Code and evidence pointers}
+\subsection{REINFORCE with a learned baseline}
+For one episode of length $T$ with reward-to-go
+$G_t = \sum_{k=t}^{T-1} \gamma^{k-t} r_k$,
+\begin{equation}
+\mathcal{L}(\theta, \phi) = -\frac{1}{H}\sum_{t=0}^{T-1} \gamma^t \log \pi_\theta(a_t|s_t)
+\bigl(G_t - V_\phi(s_t)\bigr) + \frac{c_v}{T} \sum_{t=0}^{T-1} \bigl(G_t - V_\phi(s_t)\bigr)^2,
+\end{equation}
+where the baseline enters the actor term as a constant and $c_v = 0.5$. Subtracting
+$V_\phi(s_t)$ leaves the gradient unbiased because
+$\mathbb{E}_{a \sim \pi}[\nabla_\theta \log \pi_\theta(a|s)\,b(s)] = b(s) \nabla_\theta
+\sum_a \pi_\theta(a|s) = 0$ \cite{williams1992, sutton2018}.
 
-\textbf{Wildfire\_Drone\_Fleet.ipynb ---} Single consolidated notebook; mathematical/pseudocode mapping and frozen results.
+\subsection{A2C}
+For a segment of $n = 32$ steps starting at $t_0$,
+\begin{align}
+G^{(n)}_t &= \sum_{k=t}^{t_0+n-1} \gamma^{k-t} r_k + \gamma^{t_0+n-t} (1 - d)\,
+V_\phi(s_{t_0+n}), \\
+\mathcal{L} &= -\frac{1}{n}\sum_t \gamma^{t} \log \pi_\theta(a_t|s_t)\, A_t
++ c_v \,\overline{(G^{(n)}_t - V_\phi(s_t))^2} - c_e \,\overline{\mathcal{H}[\pi_\theta(\cdot|s_t)]},
+\end{align}
+with $A_t = G^{(n)}_t - V_\phi(s_t)$ treated as a constant in the actor term, $c_v = 0.5$,
+$c_e = 0.05$, and bars denoting means over the segment \cite{mnih2016}.
 
-\textbf{src/wild\_drone/environment.py ---} Observation, action encoding, state updates, reward and episode termination.
-
-\textbf{src/wild\_drone/learning.py ---} Neural encoder, discounting, TD/Monte Carlo utilities and unmasked learning.
-
-\textbf{src/wild\_drone/masked\_learning.py ---} Feasibility selection, masked DQN targets, training/evaluation.
-
-\textbf{src/wild\_drone/baselines.py ---} Greedy, sweep, random and planner baselines.
-
-\textbf{configs/rl-main-frozen.json ---} Exact declared 40$\times$40 settings, training seeds and final-world IDs.
-
-\textbf{docs/experiments/rl-main-2026-10-11/summary.csv ---} Full metrics including uncertainty units and decision speed.
-
-\textbf{docs/20x20-40x40-comparison.md ---} Historical differences, caveats and outstanding assessed deliverables.
-
-\textbf{docs/experiments/scale-loss-2026-10-11/README.md ---} Negative supervised loss probe; must not be described as a successful RL method.
-
-\textbf{docs/scale-rl-protocol.md ---} Prespecified 40$\times$40 comparison, success gates and audit controls.
-
-\section{Questions for independent oral defence}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  Which fields make the environment fully observable, and why is the task not unknown-fire discovery?
-\item
-  How do 5$^3$ joint actions encode movement and how do collision/charge rules constrain their effects?
-\item
-  Can you derive the exact reward terms from the implementation and explain early-failure accounting?
-\item
-  What distinguishes DQN's TD target, REINFORCE's full Monte Carlo return, and A2C's n-step bootstrap?
-\item
-  Why does zero drone loss not imply learning or successful charging coordination?
-\item
-  How is seed-level uncertainty calculated and why are 60 test missions not 60 independent fitted models?
-\item
-  Which 20$\times$20 differences make the apparent scaling trend noncausal?
-\item
-  What evidence justifies each proposed improvement and what new evaluation would disprove it?
-\item
-  How would a partial-observation extension alter S, O, P and the policy input?
-\item
-  Which contribution percentages and notebook/report authorship have been agreed by the group?
-\end{enumerate}
-
-Evidence and source metadata checked on 18 October 2026. Original code and experiment records remain in the private GitHub repository. This independent study packet is not an assessment-ready manuscript and does not guarantee similarity or integrity-policy compliance if copied into a submission.
+\subsection{Fire-spread probability}
+Each burning neighbour $j$ of an unburnt cell $i$ ignites it independently with probability
+$p_{ji} = \min(1, q\,\omega_{ji}\,\tau_i)$. The cell therefore stays unburnt only if every
+neighbour fails, with probability $\prod_j (1 - p_{ji})$, which gives (\ref{eq:spread}).
