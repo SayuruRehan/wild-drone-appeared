@@ -21,21 +21,18 @@ The problem is hard for three reasons. First, decisions are joint: five commands
 give $5^3 = 125$ joint actions at every step, and the value of one drone's move depends on
 where the other two are. Second, consequences are delayed: flying too far from base costs
 nothing immediately but strands the drone many steps later. Third, one charger creates
-contention, so the fleet must stagger its returns. These properties make the task a
-sequential decision problem under uncertainty with a clear numerical objective, which is the
-setting reinforcement learning (RL) is designed for \cite{sutton2018}. Prior work has applied
+contention, so the fleet must stagger its returns. This is a sequential decision problem
+under uncertainty with a numerical objective, the setting reinforcement learning (RL) is
+designed for \cite{sutton2018}. Prior work has applied
 deep RL to wildfire surveillance with autonomous aircraft \cite{julian2019} and to fire-front
 monitoring with multiple UAVs \cite{viseras2021}. Unlike those studies, we give every
 controller the full state, so that RL can be compared fairly with conventional planning that
 uses the same information.
 
-Our contributions are: (i) a Gymnasium environment for fleet inspection with stochastic fire,
-wind, batteries, collisions and a shared charger; (ii) implementations of DQN, REINFORCE and
-A2C trained under one protocol with a feasibility mask; (iii) a frozen 40$\times$40 comparison
-on 20 unseen worlds against Greedy, rolling-horizon, sweep and random controllers, with
-tuning and sensitivity studies; and (iv) a measured explanation of why the learned policies
-did not improve on random feasible behaviour. The code, the executed notebook and all archived
-results accompany this report \cite{project2026}.
+We contribute a Gymnasium environment for this task, three agents trained under one fixed
+protocol, a comparison on unseen worlds against conventional controllers with tuning and
+sensitivity studies, and a measured explanation of why the agents did not learn. The code,
+executed notebook and archived results accompany this report \cite{project2026}.
 
 \section{Markov Decision Process and Environment}
 \writtenby{Lithma Perera}
@@ -57,12 +54,11 @@ priority and inspection age;
 \item 12 global values: wind direction (one-hot over calm and four directions), charger owner
 (one-hot over none and three drones), base position and the fraction of the mission left.
 \end{itemize}
-Keeping the fire, fuel and age information as spatial maps preserves the neighbourhood
-structure that convolutional networks exploit in pixel-based RL \cite{mnih2015}. Every
-quantity that influences the next-state distribution is included, including inspection ages
-and remaining time, so the Markov property holds and no observation history is needed. This
-is a deliberate simplification of real operations, where fire is only partly visible; we
-return to it in Section~\ref{sec:future}. Before the network, the drone and base coordinates
+Spatial maps preserve the neighbourhood structure that convolutional networks exploit in
+pixel-based RL \cite{mnih2015}. Every quantity that affects the next-state distribution,
+including inspection ages and remaining time, is included, so the Markov property holds
+without an observation history. Real fire is only partly visible; Section~\ref{sec:future}
+returns to this. Before the network, the drone and base coordinates
 are also drawn as four binary maps, giving nine spatial channels and 24 vector inputs.
 
 \subsection{Action space}
@@ -111,14 +107,14 @@ front. With inspection age $a_i$ and deadline $D = 30$, the \emph{weighted fresh
 \emph{overdue fraction} are
 \begin{equation}
 F_t = \frac{\sum_i w_i \max(0, 1 - a_i/D)}{\sum_i w_i}, \quad
-O_t = \frac{\sum_i w_i \, \mathbb{1}[a_i > D]}{\sum_i w_i}.
+O_t = \frac{\sum_i w_i \, \mathbb{I}[a_i > D]}{\sum_i w_i}.
 \end{equation}
 The reward is
-\begin{equation}
-r_t = G_t - 0.1\,O_t - 0.02\,\frac{E_t}{B} - 0.2\,K_t - 5\,L_t - 0.1\,(H - t - 1)\,
-\mathbb{1}[\text{fleet lost}],
+\begin{multline}
+r_t = G_t - 0.1\,O_t - 0.02\,\frac{E_t}{B} - 0.2\,K_t \\
+- 5\,L_t - 0.1\,(H - t - 1)\,\mathbb{I}[\text{fleet lost}],
 \label{eq:reward}
-\end{equation}
+\end{multline}
 where $G_t = \sum_{i \in C_t} w_i \min(1, a_i/D) / \sum_i w_i$ is the weighted staleness
 removed by this step's inspections $C_t$, $E_t$ the energy used, $K_t$ the collision
 attempts and $L_t$ the newly lost drones.
@@ -176,10 +172,9 @@ Full update equations are given in the Appendix.
 
 \subsection{Feasibility mask}
 
-The first versions of all three agents chose freely among the 125 actions and lost most of the
-fleet (Section~\ref{sec:development}), while every conventional controller kept its drones
-because it only proposed safe moves. We therefore applied the same feasibility rule to the
-learners. A move is feasible only if the drone keeps enough battery to fly back to base
+Unrestricted agents lost most of the fleet (Section~\ref{sec:development}), while the
+conventional controllers, which only propose safe moves, kept theirs. We therefore gave the
+learners the same feasibility rule. A move is feasible only if the drone keeps enough battery to fly back to base
 afterwards; a drone low on battery must move towards base; a drone at base below full charge
 must stay and charge; and joint actions that would collide are excluded. In the rare case
 where no joint action remains, an emergency rule moves the drones with the smallest margin
@@ -226,11 +221,10 @@ Random & 0.095 & $-29.04$ & 3.00 \\
 \end{tabular}
 \end{table}
 
-The mask was decisive for survival: all masked agents kept every drone in every test mission.
-It did not create inspection skill, however. Masked DQN's freshness (0.146) equalled masked
-random's (0.145), and Greedy was more than twice as good. Supervised experiments, in which a
-network imitated Greedy, fitted 86--96\% of training decisions but only 9--18\% on new worlds,
-which suggested that generalising the inspection ranking, rather than survival, was the
+The mask was decisive for survival: all masked agents kept every drone in every mission, but
+inspection did not improve. Masked DQN (0.146) equalled masked random (0.145), and Greedy was
+twice as good. Networks trained to imitate Greedy matched 86--96\% of its training decisions
+but only 9--18\% on new worlds, so generalising the inspection ranking, not survival, was the
 bottleneck.
 
 \section{Hyperparameter Tuning}
@@ -252,8 +246,8 @@ random (0.098 against 0.091 freshness, $-24.00$ against $-25.14$ return), but th
 smaller than the standard deviation across worlds (about 0.015). REINFORCE improved with a
 larger rate and A2C was flat over a ten-fold range. With one seed per setting, differences of
 about 0.01 are within seed-to-seed variation \cite{henderson2018}, so the sweep cannot rule
-out the learning rate as one contributing factor. It does show that a three-fold change in
-either direction was not enough on its own.
+out the learning rate as a contributing factor, only show that a three-fold change was not
+enough on its own.
 
 \begin{table}[!t]
 \centering
@@ -285,11 +279,9 @@ fit started. Each agent was trained with seeds 0, 1 and 2 for 300 episodes on tr
 0--299 (90{,}000 environment steps per fit). The final weights of all nine fits were then
 evaluated once, acting greedily over feasible actions, on 20 unseen worlds (22000--22019).
 Greedy, the lawnmower sweep, random and masked random flew the same worlds, giving 260
-missions; the rolling-horizon planner was added later on the same worlds. Greedy scores every
-feasible joint action by the priority-weighted staleness its sensors would remove and picks
-the best. The planner simulates eight candidate actions four steps ahead over two sampled
-fire futures. For a learner, results are averaged over worlds within each seed and the
-standard deviation is taken across the three seed means; for a baseline it is across worlds.
+missions; the rolling-horizon planner was added later. Greedy picks the feasible joint action
+whose sensors would remove the most priority-weighted staleness; the planner simulates eight
+candidate actions four steps ahead over two sampled fire futures.
 An independent replay reproduced all 75{,}911 evaluation steps exactly, including every
 action, mask, state hash and reward.
 
@@ -298,9 +290,8 @@ action, mask, state hash and reward.
 Fig.~\ref{fig:learning} shows the training returns. DQN improved steadily during the first
 100 episodes, from a mean of $-25.1$ over the first 50 episodes to $-23.8$ over the last 50, and
 then levelled off. REINFORCE ($-25.1$ to $-25.0$) and A2C ($-25.3$ to $-25.4$) showed no
-trend: their returns moved within the noise of individual missions, and the three seeds of
-each agent did not agree on a direction. Training freshness followed the same pattern, rising
-from 0.089 to 0.101 for DQN but not for the two policy-gradient agents.
+trend, and their three seeds did not agree on a direction. Training freshness rose from
+0.089 to 0.101 for DQN only.
 
 \begin{figure*}[!t]
 \centering
@@ -396,13 +387,11 @@ forcing earlier returns that pass near the base, not learned behaviour.
 
 \subsection{Was the problem solved?}
 
-Only partly. The engineering goals were met: the environment, three agents, a fixed protocol,
-unseen-world evaluation and an exact audit were all completed, and every learned policy flew
-full missions without losing a drone. The learning goal was not met. In every comparison the
-learned policies inspected no better than random feasible actions, and a one-step heuristic
-was more than twice as good. The zero-loss result must therefore be credited to the mask, not
-to learning: masked random, which has no learning at all, also lost no drones. Without the
-masked-random control, the safety result could easily have been misread as learned
+Only partly. The engineering goals were met and every learned policy flew full missions
+without losing a drone, but the learning goal was not: the learned policies inspected no
+better than random feasible actions, and a one-step heuristic was more than twice as good.
+The zero-loss result belongs to the mask, since masked random, which learns nothing, also lost
+no drones. Without that control, safety could easily have been misread as learned
 competence.
 
 \subsection{Why the learners stayed at masked-random level}
@@ -429,9 +418,9 @@ gap of this size.
 
 \subsection{Implications and validity}
 
-The study shows that a well-designed heuristic with full information is a strong baseline
-for fleet inspection, and that safe behaviour obtained through masking should not be
-reported as learning success. The conclusions hold for this simulator only: fire, wind and
+A well-designed heuristic with full information is a strong baseline for fleet inspection,
+and safety obtained through masking should not be reported as learning success. The
+conclusions hold for this simulator only: fire, wind and
 battery values are illustrative, the state is fully observed, and the 20$\times$20 and
 40$\times$40 studies differ in several settings at once, so their difference is not a
 controlled scaling result. Part~II proposes changes that target the measured causes.

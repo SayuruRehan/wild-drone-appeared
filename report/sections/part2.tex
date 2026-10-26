@@ -16,6 +16,8 @@ weights with 90{,}000 steps, although a strong controller (Greedy, 0.221 freshne
 available; DQN's training gains levelled off after about 100 episodes.
 \end{enumerate}
 We propose one structural improvement for each. None of them is a change of hyperparameters.
+Each states the change, the literature that supports it, how it would be evaluated and its
+main risks.
 
 \subsection{Improvement 1: Factorised credit assignment (L1)}
 \writtenby{Lithma Perera}
@@ -37,13 +39,22 @@ decompositions on cooperative StarCraft micromanagement tasks \cite{rashid2018},
 counterfactual advantage reduced the variance caused by teammates' actions in the same domain
 \cite{foerster2018coma}. In our task, a drone that inspects a stale fire front while another
 wanders currently receives the same scalar signal as both; a per-drone utility can attribute
-the gain to the drone whose footprint caused it.
+the gain to the drone whose footprint caused it. Factorisation also scales: with five
+drones a joint head would need 3{,}125 outputs, while per-drone utilities need only 25.
 
 \emph{Evaluation.} Keep the environment, mask, budget, seeds and world split of the main study
 and change only the action and value structure. Report freshness, the number of
 cells inspected by more than one drone at once, charger waiting time and the gap to Greedy.
 If freshness stays at masked-random level, credit assignment is not the main bottleneck,
 which would itself be a useful result.
+
+\emph{Expected effect and risks.} The simplest factorisation, a sum of per-drone values (VDN)
+\cite{sunehag2018}, cannot represent cases where one drone's best move depends on the others,
+such as two drones heading for the same fire front; QMIX's state-conditioned mixer relaxes
+this while keeping decentralised maximisation \cite{rashid2018}. Monotonic mixing still cannot
+express every coordination pattern, for example when two drones are each useful alone but
+wasteful together, so duplicated inspection is the diagnostic to watch. Charger contention is
+the case most likely to need the joint collision filter we would keep.
 
 \subsection{Improvement 2: Potential-based shaping for inspection urgency (L2)}
 \writtenby{Sulakna Weerasinghe}
@@ -76,6 +87,14 @@ with and without shaping under the main-study protocol and compare learning spee
 unshaped test freshness. A higher shaped return without higher test freshness would mean the
 potential is poorly chosen.
 
+\emph{Expected effect and risks.} Potential-based shaping is equivalent to initialising the
+value function with $\Phi$ \cite{wiewiora2003}, so a good potential should mostly speed up early
+learning, where our DQN curve shows its only gains. A poor potential cannot change the optimal
+policy, but it can slow learning by pointing exploration the wrong way, for example towards
+an urgent cell that another drone is already serving. The urgency set $U(s)$ should therefore
+exclude cells inside another drone's footprint, and the scales $\lambda$ and $\mu$ should be
+fixed on validation worlds before any test run.
+
 \subsection{Improvement 3: Learning from demonstrations (L3)}
 \writtenby{Sayuru Bopitiya}
 
@@ -101,12 +120,32 @@ demonstration steps against it. Plot freshness against steps to measure sample e
 test whether the final policy exceeds Greedy on unseen worlds, matches it, or falls back
 towards masked random once demonstrations are diluted.
 
+\emph{Expected effect and risks.} Pure imitation suffers from compounding errors: one mistake
+leads to states the demonstrator never visited, where the copy has no guidance
+\cite{ross2011}. This explains why our supervised copies of Greedy fitted training decisions
+well but generalised poorly. DQfD reduces the problem because its TD loss is also trained on
+the agent's own states. The main risk is that the agent simply reproduces Greedy; reaching
+Greedy's freshness with zero losses would already be a large improvement on the current
+result, and any gain beyond it would show what RL adds to the heuristic.
+
+\subsection{Order of work}
+
+The three improvements differ in cost. Shaping (I2) changes only the reward used in training
+and can be checked cheaply with the reward-signal measurement before any training. DQfD (I3)
+reuses the existing DQN and only adds a demonstration buffer and a margin loss. Factorisation
+(I1) needs a new network and changes to the mask, so it is the most expensive. We would run
+them in that order and combine the ones that help, since they target different limitations:
+I2 strengthens the signal, I3 provides a good starting point and I1 divides the credit.
+Each step would follow the main-study protocol, so that any gain can be attributed to the
+change alone.
+
 \section{Future Work}
 \label{sec:future}
 \writtenby{all members; each subsection names its author}
 
 The following directions do not repair the limitations above. They extend the problem towards
-real fire operations with methods we have not used.
+real fire operations with methods we have not used. Each changes the MDP itself and builds on
+published work.
 
 \subsection{Extension 1: Partial observability and belief maps}
 \writtenby{Lithma Perera}
@@ -120,7 +159,10 @@ searching areas where the belief is uncertain. Exact POMDP solutions are intract
 spaces of this size, and Hauskrecht reviews value-function approximations that make them
 practical \cite{hauskrecht2000}. Julian and Kochenderfer showed that deep RL can learn
 distributed wildfire surveillance when each aircraft acts on a belief map of the fire built
-from its own observations \cite{julian2019}. We would compare a belief-based learner with an information-gain planner
+from its own observations \cite{julian2019}. In MDP terms, the state stays the same but the agent receives an
+observation $o_t \sim p(o \mid s_t)$ instead of $s_t$, the fire and inspection maps in the
+input are replaced by belief and uncertainty maps, and the reward can add a term for reducing
+uncertainty. We would compare a belief-based learner with an information-gain planner
 and the Greedy rule applied to the belief, and report detection delay, belief error and
 freshness measured against the true fire.
 
@@ -135,8 +177,11 @@ Foerster et al.\ showed that agents can learn useful communication protocols end
 reinforcement or by back-propagating through the channel during centralised training
 \cite{foerster2016}. Centralised training with decentralised execution, as in QMIX
 \cite{rashid2018}, keeps the advantage of a shared critic during training while removing the
-need for a central controller in flight. The study would measure freshness and safety as
-message rates fall and links fail, against a baseline in which drones share nothing.
+need for a central controller in flight. Each drone would choose among its own five
+commands, so the action space grows linearly with the fleet, and the shared reward would be
+kept so that the agents remain cooperative. The study would measure freshness and safety as
+message rates fall and links fail, against a baseline in which drones share nothing, and
+would also test fleets larger than three, which a joint action space cannot reach.
 
 \subsection{Extension 3: Calibrated and heterogeneous operations}
 \writtenby{Sayuru Bopitiya}
@@ -148,9 +193,12 @@ Policies would be trained with domain randomisation over these parameters, which
 al.\ used to transfer models trained only on simulated images to a real robot
 \cite{tobin2017}, and tested on held-out regions and weather regimes. Viseras et al.\
 provide a precedent for monitoring a fire front with several UAVs using deep Q-learning
-\cite{viseras2021}. Results would report freshness of the actual front, energy, robustness to
-sensor and drone failures, and decision latency, which our planner results show can become
-the limiting factor.
+\cite{viseras2021}. The transition model in (\ref{eq:spread}) would be replaced by a
+calibrated spread model, and the reward weights would be set with fire managers so that they
+reflect real priorities. Results would report freshness of the actual front, energy,
+robustness to sensor and drone failures, and decision latency, which our planner results show
+can become the limiting factor: the planner matched Greedy but needed about 60 times longer
+per decision.
 
 \begin{table}[!t]
 \centering
@@ -177,6 +225,17 @@ Robustness on held-out regions \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\subsection{Relevance to the project goals}
+
+The project asked whether learning can coordinate a battery-limited fleet better than
+conventional planning. The improvements test that question more fairly on the present task;
+the extensions test whether the answer changes when the task becomes more realistic. Partial
+observability (E1) removes the full information that makes Greedy strong, so learned memory
+and belief may matter more there than here. Decentralisation (E2) removes the central
+controller that the current comparison takes for granted. Calibration (E3) checks whether
+any advantage survives realistic fire behaviour. Together they would show where RL offers a
+useful trade-off for fleet inspection, which was the outcome promised in our proposal.
 
 Table~\ref{tab:plan} summarises the six proposals. Any of these studies should follow the
 discipline of our main study: fix settings and success criteria before training, keep test
