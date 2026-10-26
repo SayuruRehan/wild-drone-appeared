@@ -37,7 +37,7 @@ With a TeX distribution that includes IEEEtran:
 
 ```bash
 cd report
-latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex
+latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 ```
 
 The workflow `.github/workflows/build-report.yml` builds the PDF on pull requests that

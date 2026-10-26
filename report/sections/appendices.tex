@@ -19,10 +19,11 @@ action drawn uniformly from $\mathcal{A}_{\mathrm{f}}(s)$.
 \subsection{REINFORCE with a learned baseline}
 For one episode of length $T$ with reward-to-go
 $G_t = \sum_{k=t}^{T-1} \gamma^{k-t} r_k$,
-\begin{equation}
+\begin{multline}
 \mathcal{L}(\theta, \phi) = -\frac{1}{H}\sum_{t=0}^{T-1} \gamma^t \log \pi_\theta(a_t|s_t)
-\bigl(G_t - V_\phi(s_t)\bigr) + \frac{c_v}{T} \sum_{t=0}^{T-1} \bigl(G_t - V_\phi(s_t)\bigr)^2,
-\end{equation}
+\bigl(G_t - V_\phi(s_t)\bigr) \\
++ \frac{c_v}{T} \sum_{t=0}^{T-1} \bigl(G_t - V_\phi(s_t)\bigr)^2,
+\end{multline}
 where the baseline enters the actor term as a constant and $c_v = 0.5$. Subtracting
 $V_\phi(s_t)$ leaves the gradient unbiased because
 $\mathbb{E}_{a \sim \pi}[\nabla_\theta \log \pi_\theta(a|s)\,b(s)] = b(s) \nabla_\theta
@@ -33,8 +34,9 @@ For a segment of $n = 32$ steps starting at $t_0$,
 \begin{align}
 G^{(n)}_t &= \sum_{k=t}^{t_0+n-1} \gamma^{k-t} r_k + \gamma^{t_0+n-t} (1 - d)\,
 V_\phi(s_{t_0+n}), \\
-\mathcal{L} &= -\frac{1}{n}\sum_t \gamma^{t} \log \pi_\theta(a_t|s_t)\, A_t
-+ c_v \,\overline{(G^{(n)}_t - V_\phi(s_t))^2} - c_e \,\overline{\mathcal{H}[\pi_\theta(\cdot|s_t)]},
+\mathcal{L} &= -\frac{1}{n}\sum_t \gamma^{t} \log \pi_\theta(a_t|s_t)\, A_t \nonumber \\
+&\quad + c_v \,\overline{(G^{(n)}_t - V_\phi(s_t))^2}
+- c_e \,\overline{\mathcal{H}[\pi_\theta(\cdot|s_t)]},
 \end{align}
 with $A_t = G^{(n)}_t - V_\phi(s_t)$ treated as a constant in the actor term, $c_v = 0.5$,
 $c_e = 0.05$, and bars denoting means over the segment \cite{mnih2016}.

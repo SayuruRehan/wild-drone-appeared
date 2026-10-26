@@ -1,5 +1,7 @@
 \documentclass[conference,a4paper]{IEEEtran}
+\usepackage[T1]{fontenc}
 \usepackage{cite}
+\usepackage{float}
 \usepackage{graphicx}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
@@ -12,7 +14,7 @@
 % Author note at the start of each section, as required by the unit guidelines.
 \newcommand{\writtenby}[1]{\noindent\textit{(Written by #1)}\par\smallskip}
 % Heading that separates the three parts of the report.
-\newcommand{\reportpart}[1]{\medskip\noindent{\centering\large\scshape #1\par}\smallskip}
+\newcommand{\reportpart}[1]{\par\begin{center}\large\scshape #1\end{center}}
 
 \begin{document}
 
