@@ -49,9 +49,9 @@ random policies. After a feasibility mask was added, every learned policy kept a
 alive, but inspection quality stayed at the level of random feasible actions: weighted
 freshness of 0.084 (DQN), 0.069 (REINFORCE) and 0.084 (A2C) against 0.084 for masked random
 and 0.221 for Greedy. A learning-rate sweep and a sensitivity study did not change this
-picture. Measurements show that the immediate reward separates good and bad joint actions by
-far less than the noise in mission returns, which explains why none of the agents learned
-coordinated patrols. We propose factorised credit assignment, potential-based shaping and
+picture. Historical 20$\times$20 diagnostics suggest weak immediate action discrimination as one
+possible explanation for the poor learning results; the 40$\times$40 study does not
+isolate a single cause. We propose factorised credit assignment, potential-based shaping and
 learning from demonstrations as improvements, and partial observability, decentralised
 communication and calibrated fire physics as extensions.
 \end{abstract}
