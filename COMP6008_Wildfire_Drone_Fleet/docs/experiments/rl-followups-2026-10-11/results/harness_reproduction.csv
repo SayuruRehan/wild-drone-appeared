@@ -1,0 +1,5 @@
+policy,worlds,max_abs_difference,max_diff_return,max_diff_weighted_freshness,max_diff_overdue_fraction,max_diff_energy_used,max_diff_total_losses,max_diff_safe_returns,max_diff_charge_completions,max_diff_collision_attempts,max_diff_steps,max_diff_fleet_failure,max_diff_intact_fleet
+greedy,20,7.771561172376096e-16,0.0,1.6653345369377348e-16,7.771561172376096e-16,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+sweep,20,1.5543122344752192e-15,0.0,5.551115123125783e-17,1.5543122344752192e-15,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+random,20,4.440892098500626e-16,0.0,2.0816681711721685e-17,4.440892098500626e-16,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+masked_random,20,7.771561172376096e-16,0.0,1.249000902703301e-16,7.771561172376096e-16,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
