@@ -7,13 +7,14 @@ Part~I identified three limitations of the current work, each supported by our o
 \item[L1] \emph{Credit assignment over a joint action.} One network scores all 125 joint
 actions, so a single scalar reward must teach it which of three drones acted well. The
 learned policies matched masked random on unseen worlds (Table~\ref{tab:main}).
-\item[L2] \emph{A weak, noisy learning signal.} The immediate reward separates the best
-and second-best actions by about 0.0005, while mission returns vary 430 times more than
-rewards across actions; the policy-gradient learning curves were flat
-(Fig.~\ref{fig:learning}).
-\item[L3] \emph{Learning from scratch with a small budget.} Every agent started from random
-weights with 90{,}000 steps, although a strong controller (Greedy, 0.221 freshness) was
-available; DQN's training gains levelled off after about 100 episodes.
+\item[L2] \emph{Possible weak learning signals.} Historical 20$\times$20 diagnostics
+found small one-step reward differences between feasible actions. At 40$\times$40,
+the policy-gradient learning curves were largely flat (Fig.~\ref{fig:learning});
+the causal link has not been isolated.
+\item[L3] \emph{Learning from scratch and limited generalisation.} Every agent started
+from random weights with 90{,}000 steps per fit, although Greedy achieved 0.221
+freshness; DQN's training gains levelled off after about 100 episodes. Historical
+20$\times$20 imitation pilots also exhibited weak generalisation to unseen worlds.
 \end{enumerate}
 We propose one structural improvement for each. None of them is a change of hyperparameters.
 Each states the change, the literature that supports it, how it would be evaluated and its
@@ -25,10 +26,12 @@ main risks.
 \emph{Proposal.} Replace the 125-way joint head with per-drone utility networks that share
 the spatial encoder, and combine them into a joint value with a learned mixing network, as in
 QMIX \cite{rashid2018}. Each drone's utility depends on its own position and battery plus the
-shared fire and age maps, and the mixer is conditioned on the full state. Because the mixer is
-monotonic in each drone's utility, the joint greedy action can be found by maximising each
-drone's utility separately, so the output grows as $5N$ rather than $5^N$. The feasibility
-mask would be applied per drone, with the collision check kept as a joint filter. A
+shared fire and age maps, and the mixer is conditioned on the full state. For an unconstrained
+joint action set, the monotonic mixer allows independently maximising each drone's
+utility, with $5N$ local action scores rather than $5^N$ joint outputs. In this
+environment, however, collision and shared-resource constraints couple actions;
+independent per-drone masks alone are insufficient. A joint feasible-action
+selection or constrained coordination mechanism remains necessary. A
 policy-gradient alternative is a centralised critic with a counterfactual baseline (COMA),
 which compares the joint value with the value obtained when only one drone's action is
 replaced by an average over its alternatives \cite{foerster2018coma}.
@@ -72,20 +75,23 @@ $\lambda, \mu$ are small scales. The first term rewards moving towards urgent ce
 are reached; the second rewards keeping a safe return margin. Evaluation always uses the
 unshaped reward in (\ref{eq:reward}).
 
-\emph{Justification.} Ng et al.\ proved that adding $\gamma\Phi(s') - \Phi(s)$ leaves the set
-of optimal policies unchanged, whereas arbitrary shaping can create loops that earn reward
-without completing the task \cite{ng1999}. The term is useful precisely where our reward is
-weakest: today a drone receives nothing until its sensor reaches a stale cell, so the ten
-steps it takes to get there are credited only through noisy returns. The potential difference
-rewards each of those steps directly, which increases the gap between good and poor actions
-without changing what is optimal. For our finite horizon, the potential must be set to zero
-at termination so that ending early cannot earn extra credit.
+\emph{Justification.} Ng et al.\ showed that potential-difference shaping can preserve
+optimal policies under the relevant MDP assumptions \cite{ng1999}. Our existing
+inspection-gain reward is dense when inspections occur, but longer transit
+sequences may still be difficult to credit. A revised potential might provide
+more timely training feedback without changing the evaluated objective.
+A previous 20$\times$20 potential-based coordination pilot was negative:
+shaped Double DQN achieved 0.1485 freshness versus 0.1560 for its unshaped
+control (20 development worlds, one fit per arm). That pilot does not validate
+this new potential, and its failure argues for a matched ablation rather than
+an assumed benefit. For our finite horizon, terminal potential must be
+handled consistently so termination does not introduce artificial incentives.
 
-\emph{Evaluation.} Repeat the reward-signal measurement of Section~\ref{sec:review} with the
-shaped reward to check that the gap between the best and second-best actions grows. Then train
-with and without shaping under the main-study protocol and compare learning speed and
-unshaped test freshness. A higher shaped return without higher test freshness would mean the
-potential is poorly chosen.
+\emph{Evaluation.} Measure immediate reward differences under a newly declared,
+matched 40$\times$40 diagnostic, distinguishing action-level differences from
+episode-return variance. Then train with and without shaping under matched
+seeds and budgets, evaluating on fresh worlds with the original unshaped reward.
+Higher shaped training return alone would not demonstrate a monitoring benefit.
 
 \emph{Expected effect and risks.} Potential-based shaping is equivalent to initialising the
 value function with $\Phi$ \cite{wiewiora2003}, so a good potential should mostly speed up early
@@ -130,8 +136,9 @@ result, and any gain beyond it would show what RL adds to the heuristic.
 
 \subsection{Order of work}
 
-The three improvements differ in cost. Shaping (I2) changes only the reward used in training
-and can be checked cheaply with the reward-signal measurement before any training. DQfD (I3)
+The three improvements differ in cost. A revised shaping potential (I2) changes only
+training rewards and could first be screened with a matched diagnostic, although our
+earlier shaping pilot was unsuccessful. DQfD (I3)
 reuses the existing DQN and only adds a demonstration buffer and a margin loss. Factorisation
 (I1) needs a new network and changes to the mask, so it is the most expensive. We would run
 them in that order and combine the ones that help, since they target different limitations:
@@ -177,9 +184,10 @@ Foerster et al.\ showed that agents can learn useful communication protocols end
 reinforcement or by back-propagating through the channel during centralised training
 \cite{foerster2016}. Centralised training with decentralised execution, as in QMIX
 \cite{rashid2018}, keeps the advantage of a shared critic during training while removing the
-need for a central controller in flight. Each drone would choose among its own five
-commands, so the action space grows linearly with the fleet, and the shared reward would be
-kept so that the agents remain cooperative. The study would measure freshness and safety as
+need for a central controller in flight. Each drone would output scores over five local commands, allowing the number of
+policy outputs to scale linearly with the fleet; the full joint action space
+and coordination constraints would still grow combinatorially. The shared
+reward would be kept so that the agents remain cooperative. The study would measure freshness and safety as
 message rates fall and links fail, against a baseline in which drones share nothing, and
 would also test fleets larger than three, which a joint action space cannot reach.
 
