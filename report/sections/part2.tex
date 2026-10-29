@@ -183,14 +183,11 @@ unreliable link. We would give each drone a local view, add a communication chan
 bandwidth limits, delay and dropouts, and model the problem as a decentralised POMDP.
 Foerster et al.\ showed that agents can learn useful communication protocols end to end, by
 reinforcement or by back-propagating through the channel during centralised training
-\cite{foerster2016}. Centralised training with decentralised execution, as in QMIX
-\cite{rashid2018}, keeps the advantage of a shared critic during training while removing the
-need for a central controller in flight. Each drone would output scores over five local commands, allowing the number of
-policy outputs to scale linearly with the fleet; the full joint action space
-and coordination constraints would still grow combinatorially. The shared
-reward would be kept so that the agents remain cooperative. The study would measure freshness and safety as
-message rates fall and links fail, against a baseline in which drones share nothing, and
-would also test fleets larger than three, which a joint action space cannot reach.
+\cite{foerster2016}. Execution would be fully decentralised: each drone acts only on its own observations and
+the messages it receives, so the question is how much coordination survives when
+communication is limited, not how credit is assigned. The shared reward would be kept so that
+the agents remain cooperative. The study would measure freshness and safety as message rates
+fall and links fail, against a baseline in which drones share nothing.
 
 \subsection{Extension 3: Calibrated and heterogeneous operations}
 \writtenby{Sayuru Bopitiya}
