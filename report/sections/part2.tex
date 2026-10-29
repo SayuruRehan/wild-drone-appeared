@@ -66,10 +66,10 @@ the case most likely to need the joint collision filter we would keep.
 \emph{Proposal.} Add a training-only shaping term
 $F(s, a, s') = \gamma\,\Phi(s') - \Phi(s)$ with a potential that measures how well placed the
 fleet is to serve the most urgent locations:
-\begin{equation}
-\Phi(s) = -\lambda \sum_{k=1}^{3} \min_{i \in U(s)} d(x_k, i)
+\begin{multline}
+\Phi(s) = -\lambda \sum_{k=1}^{3} \min_{i \in U(s)} d(x_k, i) \\
 - \mu \sum_{k=1}^{3} \max\bigl(0,\, d(x_k, \text{base}) - \beta_k\bigr),
-\end{equation}
+\end{multline}
 where $U(s)$ are the most urgent cells (high weight and close to their deadline), $d$ is grid
 distance, $x_k$ and $\beta_k$ are drone $k$'s position and the distance its battery allows, and
 $\lambda, \mu$ are small scales. The first term rewards moving towards urgent cells before they
