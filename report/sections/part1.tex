@@ -129,7 +129,7 @@ mission-failure term charge the remaining horizon as fully overdue, so losing th
 is never better than flying the whole mission. All terms are part of the task objective
 rather than added shaping, so they define the optimal policy instead of altering it; shaping
 that is not potential-based can change which policy is optimal \cite{ng1999}. For evaluation
-we report $F_t$ and $O_t$ averaged over the full horizon, return, energy, drones lost and
+we report $F_t$ and $O_t$ averaged over the full horizon, return, drones lost and
 decision time.
 
 \section{Reinforcement Learning Agents}
@@ -337,7 +337,7 @@ the pre-registered performance gates, which required every seed to beat masked r
 least 0.01 freshness and 0.5 return, and separately to reach 90\% of Greedy's freshness.
 
 The rolling-horizon planner matched Greedy's freshness (0.2207 against 0.2208) with a slightly
-lower return and no losses, but needed about 66\,ms per decision against 1.1\,ms for Greedy in
+lower return and no losses, but needed about 67\,ms per decision against 1.1\,ms for Greedy in
 the same serial timing test. Paired by world, it beat Greedy's return in only 7 of 20 worlds,
 so this bounded four-step planner did not improve inspection freshness at these settings.
 
@@ -374,8 +374,8 @@ Spread 0.08 & 0.208 & 0.214 & 0.082 & 0.086 & 0.066 & 0.084 \\
 
 Greedy and the planner remained the strongest group in every condition (0.20--0.23), and all
 other policies stayed between 0.06 and 0.10, although rankings inside each group changed.
-Slower charging cost Greedy and the planner 0.014--0.018 freshness. Away from the default,
-Greedy lost its whole fleet in 4 of 120 missions. In each case three drones with low batteries
+Slower charging cost Greedy and the planner 0.014--0.018 freshness. Greedy lost its whole
+fleet in 4 of its 140 sensitivity missions, all away from the default. In each case three drones with low batteries
 met near the base, every move towards it would have collided, and Greedy's rule fell back to
 ``all stay'', so the drones hovered until their batteries were exhausted. The masked learners
 avoid this deadlock through the emergency return, and the planner avoided it in all of its
