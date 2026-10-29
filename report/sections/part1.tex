@@ -289,11 +289,10 @@ action, mask, state hash and reward.
 
 \subsection{Training behaviour}
 
-Fig.~\ref{fig:learning} shows the training returns. DQN improved steadily during the first
-100 episodes, from a mean of $-25.1$ over the first 50 episodes to $-23.8$ over the last 50, and
-then levelled off. REINFORCE ($-25.1$ to $-25.0$) and A2C ($-25.3$ to $-25.4$) showed no
-trend, and their three seeds did not agree on a direction. Training freshness rose from
-0.089 to 0.101 for DQN only.
+Fig.~\ref{fig:learning} shows the training returns. DQN improved during roughly the first
+100 episodes and then levelled off; over its last 50 episodes its mean return was $-23.8$ and
+its training freshness 0.100 (mean of three seeds). REINFORCE ($-25.0$) and A2C ($-25.4$)
+showed no clear trend, and their three seeds did not agree on a direction.
 
 \begin{figure*}[!t]
 \centering
@@ -312,19 +311,19 @@ across three seed means; baselines: across worlds).}
 \label{tab:main}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{lcccrr}
+\begin{tabular}{lcccr}
 \toprule
-Policy & Freshness $\uparrow$ & Overdue $\downarrow$ & Return $\uparrow$ & Energy & Lost \\
+Policy & Freshness $\uparrow$ & Overdue $\downarrow$ & Return $\uparrow$ & Lost \\
 \midrule
-DQN & $0.084 \pm 0.003$ & 0.869 & $-24.79 \pm 0.25$ & 698 & 0 \\
-REINFORCE & $0.069 \pm 0.007$ & 0.894 & $-25.81 \pm 0.59$ & 675 & 0 \\
-A2C & $0.084 \pm 0.012$ & 0.869 & $-24.83 \pm 0.92$ & 723 & 0 \\
+DQN & $0.084 \pm 0.003$ & 0.869 & $-24.79 \pm 0.25$ & 0 \\
+REINFORCE & $0.069 \pm 0.007$ & 0.894 & $-25.81 \pm 0.59$ & 0 \\
+A2C & $0.084 \pm 0.012$ & 0.869 & $-24.83 \pm 0.92$ & 0 \\
 \midrule
-Greedy & $0.221 \pm 0.027$ & 0.656 & $-16.10 \pm 1.50$ & 783 & 0 \\
-Planner & $0.221 \pm 0.027$ & 0.667 & $-16.55 \pm 1.49$ & 757 & 0 \\
-Sweep & $0.065 \pm 0.015$ & 0.901 & $-26.07 \pm 0.81$ & 465 & 0 \\
-Masked random & $0.084 \pm 0.024$ & 0.886 & $-25.46 \pm 1.33$ & 675 & 0 \\
-Random & $0.060 \pm 0.018$ & 0.921 & $-42.87 \pm 1.12$ & 483 & 3 \\
+Greedy & $0.221 \pm 0.027$ & 0.656 & $-16.10 \pm 1.50$ & 0 \\
+Planner & $0.221 \pm 0.027$ & 0.667 & $-16.55 \pm 1.49$ & 0 \\
+Sweep & $0.065 \pm 0.015$ & 0.901 & $-26.07 \pm 0.81$ & 0 \\
+Masked random & $0.084 \pm 0.024$ & 0.886 & $-25.46 \pm 1.33$ & 0 \\
+Random & $0.060 \pm 0.018$ & 0.921 & $-42.87 \pm 1.12$ & 3 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -399,12 +398,13 @@ competence.
 \subsection{Possible explanations for weak learning}
 
 The frozen 40$\times$40 study establishes a substantial performance gap, but it does not
-identify a unique reason. A historical 20$\times$20 reward-signal diagnostic sampled
-feasible actions from fixed states and reported a mean best-versus-second-best immediate
-reward gap of 0.0017; under masked-random play, complete-mission returns varied by 1.06
-(SD) across scenarios. These are archived development findings, not measurements from the
-final 40$\times$40 study. Moreover, one-step action gaps and full-mission return variation
-measure different quantities; their ratio is not a calibrated learning signal-to-noise
+identify a unique reason. The notebook's reward-signal diagnostic froze the state every
+tenth step under random feasible play and tried every feasible joint action. At
+40$\times$40 the best action beat the second-best by only 0.0005 on average and the
+standard deviation across actions was 0.002, while complete-mission returns varied across
+worlds with a standard deviation of 0.87, about 430 times larger (about 130 times at
+20$\times$20). However, one-step action gaps and full-mission return variation measure
+different quantities; their ratio is not a calibrated learning signal-to-noise
 statistic. We therefore treat weak immediate discrimination as a hypothesis, not a
 demonstrated causal explanation.
 

@@ -7,8 +7,9 @@ Part~I identified three limitations of the current work, each supported by our o
 \item[L1] \emph{Credit assignment over a joint action.} One network scores all 125 joint
 actions, so a single scalar reward must teach it which of three drones acted well. The
 learned policies matched masked random on unseen worlds (Table~\ref{tab:main}).
-\item[L2] \emph{Possible weak learning signals.} Historical 20$\times$20 diagnostics
-found small one-step reward differences between feasible actions. At 40$\times$40,
+\item[L2] \emph{Possible weak learning signals.} The reward-signal diagnostic
+(Section~\ref{sec:review}) found small one-step reward differences between feasible actions
+at both grid sizes. At 40$\times$40,
 the policy-gradient learning curves were largely flat (Fig.~\ref{fig:learning});
 the causal link has not been isolated.
 \item[L3] \emph{Learning from scratch and limited generalisation.} Every agent started
@@ -81,15 +82,15 @@ inspection-gain reward is dense when inspections occur, but longer transit
 sequences may still be difficult to credit. A revised potential might provide
 more timely training feedback without changing the evaluated objective.
 A previous 20$\times$20 potential-based coordination pilot was negative:
-shaped Double DQN achieved 0.1485 freshness versus 0.1560 for its unshaped
-control (20 development worlds, one fit per arm). That pilot does not validate
+shaped Double DQN reached lower freshness than its unshaped control (one fit per
+arm). That pilot does not validate
 this new potential, and its failure argues for a matched ablation rather than
 an assumed benefit. For our finite horizon, terminal potential must be
 handled consistently so termination does not introduce artificial incentives.
 
-\emph{Evaluation.} Measure immediate reward differences under a newly declared,
-matched 40$\times$40 diagnostic, distinguishing action-level differences from
-episode-return variance. Then train with and without shaping under matched
+\emph{Evaluation.} Repeat the reward-signal diagnostic of Section~\ref{sec:review} with
+the shaped training reward, distinguishing action-level differences from episode-return
+variance. Then train with and without shaping under matched
 seeds and budgets, evaluating on fresh worlds with the original unshaped reward.
 Higher shaped training return alone would not demonstrate a monitoring benefit.
 
