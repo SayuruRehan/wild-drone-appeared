@@ -14,7 +14,7 @@ with a Battery-Constrained Drone Fleet*. The compiled report is `main.pdf`.
 | `sections/part3.tex` | Part III: statement of contributions and section authorship |
 | `sections/appendices.tex` | Appendix: update equations and fire-spread derivation |
 | `references.tex` | IEEE reference list, numbered in order of first citation |
-| `figures/learning_curves.pdf` | Training returns of the nine main-study fits |
+| `figures/learning_curves.pdf` | Training returns of the nine main-study fits (made by `figures/learning_curves.py`) |
 
 Every section starts with a note naming its author, as the unit guidelines require. The
 page limit is eight pages before the references and appendix.
@@ -28,8 +28,9 @@ All results come from the archived experiments in the submission folder:
 - Learning-rate sweep, planner and sensitivity: `docs/experiments/rl-followups-2026-10-11/results/`
 - Settings: `configs/rl-main-frozen.json` and `configs/development.json`
 
-`figures/learning_curves.pdf` plots the 20-episode moving mean of `return` from
-`docs/experiments/rl-main-2026-10-11/fits/<agent>/seed-<n>/training.csv`.
+`figures/learning_curves.pdf` plots the 10-episode moving mean of `return` from
+`docs/experiments/rl-main-2026-10-11/fits/<agent>/seed-<n>/training.csv`, the same window as the
+notebook's learning curves. Regenerate it with `python report/figures/learning_curves.py`.
 
 ## Build
 

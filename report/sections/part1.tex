@@ -31,8 +31,8 @@ uses the same information.
 
 We contribute a Gymnasium environment for this task, three agents trained under one fixed
 protocol, a comparison on unseen worlds against conventional controllers with tuning and
-sensitivity studies, and a measured explanation of why the agents did not learn. The code,
-executed notebook and archived results are submitted with this report.
+sensitivity studies, and an evidence-based discussion of possible reasons why learning remained weak. The code,
+executed notebook and archived results were submitted separately as the code submission.
 
 \section{Markov Decision Process and Environment}
 \writtenby{Lithma Perera}
@@ -172,9 +172,10 @@ Full update equations are given in the Appendix.
 
 \subsection{Feasibility mask}
 
-Unrestricted agents lost most of the fleet (Section~\ref{sec:development}), while the
-conventional controllers, which only propose safe moves, kept theirs. We therefore gave the
-learners the same feasibility rule. A move is feasible only if the drone keeps enough battery to fly back to base
+Unrestricted agents lost most of the fleet (Section~\ref{sec:development}), while
+battery-aware conventional baselines generally had fewer losses; Greedy was not perfectly
+safe in the historical 20$\times$20 study. We therefore applied the baseline
+candidate-action feasibility rule to the learners. A move is feasible only if the drone keeps enough battery to fly back to base
 afterwards; a drone low on battery must move towards base; a drone at base below full charge
 must stay and charge; and joint actions that would collide are excluded. In the rare case
 where no joint action remains, an emergency rule moves the drones with the smallest margin
@@ -210,8 +211,8 @@ Masked DQN & 0.146 & $-10.92$ & 0.00 \\
 Masked REINFORCE & 0.133 & $-11.49$ & 0.00 \\
 Masked A2C & 0.137 & $-11.20$ & 0.00 \\
 Unmasked DQN & 0.038 & $-65.42$ & 1.70 \\
-Unmasked REINFORCE & 0.052 & $-24.63$ & 2.00 \\
-Unmasked A2C & 0.037 & $-31.59$ & 3.00 \\
+Unmasked REINFORCE & 0.051 & $-24.63$ & 2.00 \\
+Unmasked A2C & 0.037 & $-31.58$ & 3.00 \\
 \midrule
 Greedy & 0.322 & $-5.27$ & 0.15 \\
 Rolling-horizon planner & 0.305 & $-5.20$ & 0.00 \\
@@ -221,11 +222,12 @@ Random & 0.095 & $-29.04$ & 3.00 \\
 \end{tabular}
 \end{table}
 
-The mask was decisive for survival: all masked agents kept every drone in every mission, but
-inspection did not improve. Masked DQN (0.146) equalled masked random (0.145), and Greedy was
-twice as good. Networks trained to imitate Greedy matched 86--96\% of its training decisions
-but only 9--18\% on new worlds, so generalising the inspection ranking, not survival, was the
-bottleneck.
+The mask was decisive for survival in this comparison: all masked agents kept every drone in
+every mission, but inspection did not improve materially. Masked DQN (0.146) was close to
+masked random (0.145), and Greedy achieved more than twice its freshness. Historical Greedy
+imitation probes reported 86--96\% training agreement but only 9--18\% on new worlds,
+suggesting weak decision generalisation; these observations do not isolate one cause of the
+RL shortfall.
 
 \section{Hyperparameter Tuning}
 \writtenby{Sayuru Bopitiya}
@@ -235,7 +237,8 @@ per setting and scored the final policy on five validation worlds. It chose REIN
 learning rate ($10^{-3}$, freshness 0.131 against 0.114 at $10^{-4}$) and entropy weight (0,
 0.132 against 0.114 at 0.01), and A2C's entropy weight (0.05, 0.164 against 0.126 at 0.01) and
 rollout length (32 steps). DQN scored best at $10^{-3}$ in this screen, but we kept
-$10^{-4}$ for the main study because the larger rate had produced the Q-value blow-up above.
+$10^{-4}$ for the main study because the Q-value blow-up above had occurred at
+$3\times10^{-4}$ and a lower rate had removed it.
 These settings were frozen before the 40$\times$40 study.
 
 Because the 40$\times$40 rates were not tuned on the larger grid, we later trained each agent
@@ -261,8 +264,8 @@ The main-study rate is in the middle column.}
 Agent & $\times\tfrac{1}{3}$ & $\times 1$ & $\times 3$ \\
 \midrule
 DQN & 0.087 ($3\!\times\!10^{-5}$) & 0.098 ($10^{-4}$) & 0.080 ($3\!\times\!10^{-4}$) \\
-REINFORCE & 0.072 ($3\!\times\!10^{-4}$) & 0.080 ($10^{-3}$) & 0.084 ($3\!\times\!10^{-3}$) \\
-A2C & 0.084 ($3\!\times\!10^{-5}$) & 0.084 ($10^{-4}$) & 0.083 ($3\!\times\!10^{-4}$) \\
+REINFORCE & 0.071 ($3\!\times\!10^{-4}$) & 0.080 ($10^{-3}$) & 0.084 ($3\!\times\!10^{-3}$) \\
+A2C & 0.084 ($3\!\times\!10^{-5}$) & 0.084 ($10^{-4}$) & 0.082 ($3\!\times\!10^{-4}$) \\
 \midrule
 \multicolumn{4}{l}{References on the same worlds: Greedy 0.226, masked random 0.091.} \\
 \bottomrule
@@ -287,17 +290,16 @@ action, mask, state hash and reward.
 
 \subsection{Training behaviour}
 
-Fig.~\ref{fig:learning} shows the training returns. DQN improved steadily during the first
-100 episodes, from a mean of $-25.1$ over the first 50 episodes to $-23.8$ over the last 50, and
-then levelled off. REINFORCE ($-25.1$ to $-25.0$) and A2C ($-25.3$ to $-25.4$) showed no
-trend, and their three seeds did not agree on a direction. Training freshness rose from
-0.089 to 0.101 for DQN only.
+Fig.~\ref{fig:learning} shows the training returns. DQN improved during roughly the first
+100 episodes and then levelled off; over its last 50 episodes its mean return was $-23.8$ and
+its training freshness 0.100 (mean of three seeds). REINFORCE ($-25.0$) and A2C ($-25.4$)
+showed no clear trend, and their three seeds did not agree on a direction.
 
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{figures/learning_curves.pdf}
-\caption{Training return of the nine main-study fits at 40$\times$40 (20-episode moving
-mean; returns include exploration).}
+\caption{Training return of the nine main-study fits at 40$\times$40 (10-episode moving
+mean, as in the notebook; returns include exploration).}
 \label{fig:learning}
 \end{figure*}
 
@@ -310,19 +312,19 @@ across three seed means; baselines: across worlds).}
 \label{tab:main}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{lcccrr}
+\begin{tabular}{lcccr}
 \toprule
-Policy & Freshness $\uparrow$ & Overdue $\downarrow$ & Return $\uparrow$ & Energy & Lost \\
+Policy & Freshness $\uparrow$ & Overdue $\downarrow$ & Return $\uparrow$ & Lost \\
 \midrule
-DQN & $0.084 \pm 0.003$ & 0.869 & $-24.79 \pm 0.25$ & 698 & 0 \\
-REINFORCE & $0.069 \pm 0.007$ & 0.894 & $-25.81 \pm 0.59$ & 675 & 0 \\
-A2C & $0.084 \pm 0.012$ & 0.869 & $-24.83 \pm 0.92$ & 723 & 0 \\
+DQN & $0.084 \pm 0.003$ & 0.869 & $-24.79 \pm 0.25$ & 0 \\
+REINFORCE & $0.069 \pm 0.007$ & 0.894 & $-25.81 \pm 0.59$ & 0 \\
+A2C & $0.084 \pm 0.012$ & 0.869 & $-24.83 \pm 0.92$ & 0 \\
 \midrule
-Greedy & $0.221 \pm 0.027$ & 0.656 & $-16.10 \pm 1.50$ & 783 & 0 \\
-Planner & $0.221 \pm 0.027$ & 0.667 & $-16.55 \pm 1.49$ & 757 & 0 \\
-Sweep & $0.065 \pm 0.015$ & 0.901 & $-26.07 \pm 0.81$ & 465 & 0 \\
-Masked random & $0.084 \pm 0.024$ & 0.886 & $-25.46 \pm 1.33$ & 675 & 0 \\
-Random & $0.060 \pm 0.018$ & 0.921 & $-42.87 \pm 1.12$ & 483 & 3 \\
+Greedy & $0.221 \pm 0.027$ & 0.656 & $-16.10 \pm 1.50$ & 0 \\
+Planner & $0.221 \pm 0.027$ & 0.667 & $-16.55 \pm 1.49$ & 0 \\
+Sweep & $0.065 \pm 0.015$ & 0.901 & $-26.07 \pm 0.81$ & 0 \\
+Masked random & $0.084 \pm 0.024$ & 0.886 & $-25.46 \pm 1.33$ & 0 \\
+Random & $0.060 \pm 0.018$ & 0.921 & $-42.87 \pm 1.12$ & 3 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -338,7 +340,7 @@ least 0.01 freshness and 0.5 return, and separately to reach 90\% of Greedy's fr
 The rolling-horizon planner matched Greedy's freshness (0.2207 against 0.2208) with a slightly
 lower return and no losses, but needed about 66\,ms per decision against 1.1\,ms for Greedy in
 the same serial timing test. Paired by world, it beat Greedy's return in only 7 of 20 worlds,
-so four-step lookahead added nothing over the one-step rule here.
+so this bounded four-step planner did not improve inspection freshness at these settings.
 
 \section{Sensitivity Study}
 \writtenby{Sayuru Bopitiya}
@@ -363,7 +365,7 @@ Setting & Greedy & Planner & M.\ rand. & DQN & REINF. & A2C \\
 Default & 0.221 & 0.221 & 0.084 & 0.084 & 0.069 & 0.084 \\
 Battery 120 & 0.205 & 0.208 & 0.083 & 0.096 & 0.083 & 0.094 \\
 Battery 200 & 0.215 & 0.216 & 0.088 & 0.078 & 0.061 & 0.075 \\
-Recharge 5 & 0.203 & 0.207 & 0.078 & 0.081 & 0.066 & 0.080 \\
+Recharge 5 & 0.203 & 0.207 & 0.078 & 0.080 & 0.066 & 0.080 \\
 Recharge 12 & 0.226 & 0.227 & 0.087 & 0.085 & 0.071 & 0.085 \\
 Spread 0.02 & 0.208 & 0.216 & 0.080 & 0.084 & 0.069 & 0.084 \\
 Spread 0.08 & 0.208 & 0.214 & 0.082 & 0.086 & 0.066 & 0.084 \\
@@ -374,12 +376,12 @@ Spread 0.08 & 0.208 & 0.214 & 0.082 & 0.086 & 0.066 & 0.084 \\
 Greedy and the planner remained the strongest group in every condition (0.20--0.23), and all
 other policies stayed between 0.06 and 0.10, although rankings inside each group changed.
 Slower charging cost Greedy and the planner 0.014--0.018 freshness. Away from the default,
-Greedy lost its whole fleet in 4 of 140 missions: three low-battery drones met near the base,
+Greedy lost its whole fleet in 4 of 120 missions: three low-battery drones met near the base,
 every move home collided, its rule fell back to ``all stay'' and they hovered until empty. The
 masked learners avoid this deadlock through the emergency return, and the planner avoided it
 in all of its missions. A smaller battery made the fixed learners look better (DQN 0.096) and
 a larger one worse (0.078); because the weights did not change, this is most likely the mask
-forcing earlier returns that pass near the base, not learned behaviour.
+forcing earlier returns that pass near the base; this hypothesis was not tested separately.
 
 \section{Critical Review}
 \label{sec:review}
@@ -394,27 +396,34 @@ The zero-loss result belongs to the mask, since masked random, which learns noth
 no drones. Without that control, safety could easily have been misread as learned
 competence.
 
-\subsection{Why the learners stayed at masked-random level}
+\subsection{Possible explanations for weak learning}
 
-All three agents learn from differences in reward between actions. To measure how large these
-are, we froze the state every tenth step under random feasible play, tried every feasible
-joint action, and recorded the immediate reward. At 40$\times$40 the best action beats the
-second-best by only 0.0005 on average, and the standard deviation across actions is 0.002.
-The standard deviation of the mission return across worlds is 0.87, about 430 times larger
-(130 times at 20$\times$20). The useful signal is therefore buried in noise: REINFORCE updates
-once per episode from a single noisy return; A2C bootstraps from a critic that must itself
-resolve these tiny differences; and DQN must estimate Q-values whose gaps between actions are
-smaller than its approximation error. This matches the flat learning curves of the two
-policy-gradient agents, and the fact that DQN's training gains did not transfer to unseen
-worlds.
+The frozen 40$\times$40 study establishes a substantial performance gap, but it does not
+identify a unique reason. The notebook's reward-signal diagnostic froze the state every
+tenth step under random feasible play and tried every feasible joint action. At
+40$\times$40 the best action beat the second-best by only 0.0005 on average and the
+standard deviation across actions was 0.002, while complete-mission returns varied across
+worlds with a standard deviation of 0.87, about 430 times larger (about 130 times at
+20$\times$20). However, one-step action gaps and full-mission return variation measure
+different quantities; their ratio is not a calibrated learning signal-to-noise
+statistic. We therefore treat weak immediate discrimination as a hypothesis, not a
+demonstrated causal explanation.
 
-The joint action space makes this worse. One drone's good move is rewarded together with the
-other two drones' choices, so the agent cannot easily tell which drone deserved the credit.
-Greedy, by contrast, computes exactly the quantity the reward measures, so it does not need to
-learn it from noisy samples. Three seeds and 90{,}000 steps per fit are also a small budget
-for deep RL, where results vary strongly between seeds \cite{henderson2018}. However, the
-learning-rate sweep and the DQN plateau suggest that more compute alone would not close a
-gap of this size.
+Other plausible mechanisms are the 125-way joint action head, long-horizon battery and
+charging decisions, credit assignment between drones, representation and exploration.
+Historical action-ranking diagnostics found limited changes in preferred actions when
+inspection urgency or drone position was varied, but those tests concern particular
+20$\times$20 checkpoints and do not prove the same mechanism at 40$\times$40.
+REINFORCE estimates episodic returns; A2C and DQN bootstrap imperfect value
+estimates. Greedy instead directly scores one-step priority-weighted inspection gain,
+which avoids learning that immediate heuristic from sampled trajectories but does not
+make Greedy optimal for the entire mission.
+
+DQN's training return improved before levelling off, whereas REINFORCE and A2C showed
+no consistent improvement across seeds. The learning-rate sweep did not close the gap,
+yet neither that sweep nor the fixed 90{,}000-step-per-fit budget rules out gains from
+longer training or different representations. Controlled ablations would be required
+to distinguish these explanations.
 
 \subsection{Implications and validity}
 
@@ -423,4 +432,4 @@ and safety obtained through masking should not be reported as learning success. 
 conclusions hold for this simulator only: fire, wind and
 battery values are illustrative, the state is fully observed, and the 20$\times$20 and
 40$\times$40 studies differ in several settings at once, so their difference is not a
-controlled scaling result. Part~II proposes changes that target the measured causes.
+controlled scaling result. Part~II proposes changes that target these possible causes.
