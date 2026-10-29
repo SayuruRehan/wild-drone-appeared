@@ -2,20 +2,19 @@
 \label{sec:improvements}
 \writtenby{all members; each subsection names its author}
 
-Part~I identified three limitations of the current work, each supported by our own results:
+Part~I identified three limitations, each motivated by our results:
 \begin{enumerate}
 \item[L1] \emph{Credit assignment over a joint action.} One network scores all 125 joint
 actions, so a single scalar reward must teach it which of three drones acted well. The
 learned policies matched masked random on unseen worlds (Table~\ref{tab:main}).
-\item[L2] \emph{Possible weak learning signals.} The reward-signal diagnostic
-(Section~\ref{sec:review}) found small one-step reward differences between feasible actions
-at both grid sizes. At 40$\times$40,
-the policy-gradient learning curves were largely flat (Fig.~\ref{fig:learning});
-the causal link has not been isolated.
+\item[L2] \emph{A weak learning signal.} The reward measurement in
+Section~\ref{sec:review} found that one-step rewards barely separate feasible actions at both
+grid sizes, and the policy-gradient learning curves at 40$\times$40 were largely flat
+(Fig.~\ref{fig:learning}).
 \item[L3] \emph{Learning from scratch and limited generalisation.} Every agent started
-from random weights with 90{,}000 steps per fit, although Greedy achieved 0.221
-freshness; DQN's training gains levelled off after about 100 episodes. Historical
-20$\times$20 imitation pilots also exhibited weak generalisation to unseen worlds.
+from random weights with 90{,}000 steps per training run, although Greedy achieved 0.221
+freshness, and DQN's training gains levelled off after about 100 episodes. Earlier
+20$\times$20 imitation experiments also generalised poorly to unseen worlds.
 \end{enumerate}
 We propose one structural improvement for each. None of them is a change of hyperparameters.
 Each states the change, the literature that supports it, how it would be evaluated and its
@@ -24,16 +23,15 @@ main risks.
 \subsection{Improvement 1: Factorised credit assignment (L1)}
 \writtenby{Lithma Perera}
 
-\emph{Proposal.} Replace the 125-way joint head with per-drone utility networks that share
-the spatial encoder, and combine them into a joint value with a learned mixing network, as in
-QMIX \cite{rashid2018}. Each drone's utility depends on its own position and battery plus the
-shared fire and age maps, and the mixer is conditioned on the full state. For an unconstrained
-joint action set, the monotonic mixer allows independently maximising each drone's
-utility, with $5N$ local action scores rather than $5^N$ joint outputs. In this
-environment, however, collision and shared-resource constraints couple actions;
-independent per-drone masks alone are insufficient. A joint feasible-action
-selection or constrained coordination mechanism remains necessary. A
-policy-gradient alternative is a centralised critic with a counterfactual baseline (COMA),
+\emph{Proposal.} Replace the 125-way joint output with one utility network per drone. The
+networks share the spatial encoder, and each drone's utility depends on its own position and
+battery and on the shared fire and age maps. A mixing network conditioned on the full state
+combines the three utilities into a joint value, as in QMIX \cite{rashid2018}. Because the
+mixer is monotonic, the best joint action can normally be found by maximising each drone's
+utility on its own, which needs $5N$ outputs instead of $5^N$. Our task adds a complication:
+the collision and charger rules depend on all three drones at once, so a mask applied to each
+drone separately is not enough. The joint action would still be chosen from the jointly
+feasible set, with the per-drone utilities used to score it. A policy-gradient alternative is a centralised critic with a counterfactual baseline (COMA),
 which compares the joint value with the value obtained when only one drone's action is
 replaced by an average over its alternatives \cite{foerster2018coma}.
 
@@ -76,23 +74,23 @@ $\lambda, \mu$ are small scales. The first term rewards moving towards urgent ce
 are reached; the second rewards keeping a safe return margin. Evaluation always uses the
 unshaped reward in (\ref{eq:reward}).
 
-\emph{Justification.} Ng et al.\ showed that potential-difference shaping can preserve
-optimal policies under the relevant MDP assumptions \cite{ng1999}. Our existing
-inspection-gain reward is dense when inspections occur, but longer transit
-sequences may still be difficult to credit. A revised potential might provide
-more timely training feedback without changing the evaluated objective.
-A previous 20$\times$20 potential-based coordination pilot was negative:
-shaped Double DQN reached lower freshness than its unshaped control (one fit per
-arm). That pilot does not validate
-this new potential, and its failure argues for a matched ablation rather than
-an assumed benefit. For our finite horizon, terminal potential must be
-handled consistently so termination does not introduce artificial incentives.
+\emph{Justification.} Ng et al.\ proved that adding $\gamma\Phi(s') - \Phi(s)$ to the
+reward does not change which policies are optimal \cite{ng1999}. Our inspection reward already
+gives feedback whenever a drone inspects a stale cell, but the steps a drone spends travelling
+towards that cell earn nothing directly. A potential based on distance to urgent cells would
+reward those steps as they happen, without changing the objective used for evaluation. An
+earlier 20$\times$20 experiment with a different, coordination-based shaping reward lowered
+freshness compared with the same agent trained without it, from a single training run in each
+condition. That result does not test the potential proposed here, but it shows that shaping
+must be compared directly with an unshaped control rather than assumed to help. The potential
+must also be set to zero at the end of an episode, so that ending a mission early cannot earn
+extra reward.
 
-\emph{Evaluation.} Repeat the reward-signal diagnostic of Section~\ref{sec:review} with
-the shaped training reward, distinguishing action-level differences from episode-return
-variance. Then train with and without shaping under matched
-seeds and budgets, evaluating on fresh worlds with the original unshaped reward.
-Higher shaped training return alone would not demonstrate a monitoring benefit.
+\emph{Evaluation.} Repeat the reward measurement of Section~\ref{sec:review} with the
+shaped reward to check that the gap between the best and second-best actions grows. Then
+train with and without shaping using the same seeds and budget, and evaluate both on unseen
+worlds with the original unshaped reward. A higher shaped training return on its own would
+not show better inspection.
 
 \emph{Expected effect and risks.} Potential-based shaping is equivalent to initialising the
 value function with $\Phi$ \cite{wiewiora2003}, so a good potential should mostly speed up early
@@ -129,17 +127,17 @@ towards masked random once demonstrations are diluted.
 
 \emph{Expected effect and risks.} Pure imitation suffers from compounding errors: one mistake
 leads to states the demonstrator never visited, where the copy has no guidance
-\cite{ross2011}. This explains why our supervised copies of Greedy fitted training decisions
-well but generalised poorly. DQfD reduces the problem because its TD loss is also trained on
+\cite{ross2011}. This is consistent with our earlier imitation experiments, which matched
+Greedy well on training worlds but generalised poorly. DQfD reduces the problem because its TD loss is also trained on
 the agent's own states. The main risk is that the agent simply reproduces Greedy; reaching
 Greedy's freshness with zero losses would already be a large improvement on the current
 result, and any gain beyond it would show what RL adds to the heuristic.
 
 \subsection{Order of work}
 
-The three improvements differ in cost. A revised shaping potential (I2) changes only
-training rewards and could first be screened with a matched diagnostic, although our
-earlier shaping pilot was unsuccessful. DQfD (I3)
+The three improvements differ in cost. Shaping (I2) changes only the training
+reward and can be checked cheaply with the reward measurement before any training, although
+our earlier shaping experiment was unsuccessful. DQfD (I3)
 reuses the existing DQN and only adds a demonstration buffer and a margin loss. Factorisation
 (I1) needs a new network and changes to the mask, so it is the most expensive. We would run
 them in that order and combine the ones that help, since they target different limitations:
