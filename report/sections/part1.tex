@@ -32,7 +32,7 @@ uses the same information.
 We contribute a Gymnasium environment for this task, three agents trained under one fixed
 protocol, a comparison on unseen worlds against conventional controllers with tuning and
 sensitivity studies, and an evidence-based discussion of possible reasons why learning remained weak. The code,
-executed notebook and archived results are submitted with this report.
+executed notebook and archived results were submitted separately as the code submission.
 
 \section{Markov Decision Process and Environment}
 \writtenby{Lithma Perera}
@@ -211,8 +211,8 @@ Masked DQN & 0.146 & $-10.92$ & 0.00 \\
 Masked REINFORCE & 0.133 & $-11.49$ & 0.00 \\
 Masked A2C & 0.137 & $-11.20$ & 0.00 \\
 Unmasked DQN & 0.038 & $-65.42$ & 1.70 \\
-Unmasked REINFORCE & 0.052 & $-24.63$ & 2.00 \\
-Unmasked A2C & 0.037 & $-31.59$ & 3.00 \\
+Unmasked REINFORCE & 0.051 & $-24.63$ & 2.00 \\
+Unmasked A2C & 0.037 & $-31.58$ & 3.00 \\
 \midrule
 Greedy & 0.322 & $-5.27$ & 0.15 \\
 Rolling-horizon planner & 0.305 & $-5.20$ & 0.00 \\
@@ -237,7 +237,8 @@ per setting and scored the final policy on five validation worlds. It chose REIN
 learning rate ($10^{-3}$, freshness 0.131 against 0.114 at $10^{-4}$) and entropy weight (0,
 0.132 against 0.114 at 0.01), and A2C's entropy weight (0.05, 0.164 against 0.126 at 0.01) and
 rollout length (32 steps). DQN scored best at $10^{-3}$ in this screen, but we kept
-$10^{-4}$ for the main study because the larger rate had produced the Q-value blow-up above.
+$10^{-4}$ for the main study because the Q-value blow-up above had occurred at
+$3\times10^{-4}$ and a lower rate had removed it.
 These settings were frozen before the 40$\times$40 study.
 
 Because the 40$\times$40 rates were not tuned on the larger grid, we later trained each agent
@@ -263,8 +264,8 @@ The main-study rate is in the middle column.}
 Agent & $\times\tfrac{1}{3}$ & $\times 1$ & $\times 3$ \\
 \midrule
 DQN & 0.087 ($3\!\times\!10^{-5}$) & 0.098 ($10^{-4}$) & 0.080 ($3\!\times\!10^{-4}$) \\
-REINFORCE & 0.072 ($3\!\times\!10^{-4}$) & 0.080 ($10^{-3}$) & 0.084 ($3\!\times\!10^{-3}$) \\
-A2C & 0.084 ($3\!\times\!10^{-5}$) & 0.084 ($10^{-4}$) & 0.083 ($3\!\times\!10^{-4}$) \\
+REINFORCE & 0.071 ($3\!\times\!10^{-4}$) & 0.080 ($10^{-3}$) & 0.084 ($3\!\times\!10^{-3}$) \\
+A2C & 0.084 ($3\!\times\!10^{-5}$) & 0.084 ($10^{-4}$) & 0.082 ($3\!\times\!10^{-4}$) \\
 \midrule
 \multicolumn{4}{l}{References on the same worlds: Greedy 0.226, masked random 0.091.} \\
 \bottomrule
@@ -364,7 +365,7 @@ Setting & Greedy & Planner & M.\ rand. & DQN & REINF. & A2C \\
 Default & 0.221 & 0.221 & 0.084 & 0.084 & 0.069 & 0.084 \\
 Battery 120 & 0.205 & 0.208 & 0.083 & 0.096 & 0.083 & 0.094 \\
 Battery 200 & 0.215 & 0.216 & 0.088 & 0.078 & 0.061 & 0.075 \\
-Recharge 5 & 0.203 & 0.207 & 0.078 & 0.081 & 0.066 & 0.080 \\
+Recharge 5 & 0.203 & 0.207 & 0.078 & 0.080 & 0.066 & 0.080 \\
 Recharge 12 & 0.226 & 0.227 & 0.087 & 0.085 & 0.071 & 0.085 \\
 Spread 0.02 & 0.208 & 0.216 & 0.080 & 0.084 & 0.069 & 0.084 \\
 Spread 0.08 & 0.208 & 0.214 & 0.082 & 0.086 & 0.066 & 0.084 \\
@@ -375,7 +376,7 @@ Spread 0.08 & 0.208 & 0.214 & 0.082 & 0.086 & 0.066 & 0.084 \\
 Greedy and the planner remained the strongest group in every condition (0.20--0.23), and all
 other policies stayed between 0.06 and 0.10, although rankings inside each group changed.
 Slower charging cost Greedy and the planner 0.014--0.018 freshness. Away from the default,
-Greedy lost its whole fleet in 4 of 140 missions: three low-battery drones met near the base,
+Greedy lost its whole fleet in 4 of 120 missions: three low-battery drones met near the base,
 every move home collided, its rule fell back to ``all stay'' and they hovered until empty. The
 masked learners avoid this deadlock through the emergency return, and the planner avoided it
 in all of its missions. A smaller battery made the fixed learners look better (DQN 0.096) and
@@ -431,4 +432,4 @@ and safety obtained through masking should not be reported as learning success. 
 conclusions hold for this simulator only: fire, wind and
 battery values are illustrative, the state is fully observed, and the 20$\times$20 and
 40$\times$40 studies differ in several settings at once, so their difference is not a
-controlled scaling result. Part~II proposes changes that target the measured causes.
+controlled scaling result. Part~II proposes changes that target these possible causes.
