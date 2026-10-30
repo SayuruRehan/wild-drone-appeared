@@ -31,8 +31,8 @@ uses the same information.
 
 We contribute a Gymnasium environment for this task, three agents trained under one fixed
 protocol, a comparison on unseen worlds against conventional controllers with tuning and
-sensitivity studies, and an evidence-based discussion of possible reasons why learning remained weak. The code,
-executed notebook and archived results were submitted separately as the code submission.
+sensitivity studies, and an analysis of why the agents did not learn to coordinate. The code,
+executed notebook and archived results are provided in the separate code submission.
 
 \section{Markov Decision Process and Environment}
 \writtenby{Lithma Perera}
@@ -129,7 +129,7 @@ mission-failure term charge the remaining horizon as fully overdue, so losing th
 is never better than flying the whole mission. All terms are part of the task objective
 rather than added shaping, so they define the optimal policy instead of altering it; shaping
 that is not potential-based can change which policy is optimal \cite{ng1999}. For evaluation
-we report $F_t$ and $O_t$ averaged over the full horizon, return, energy, drones lost and
+we report $F_t$ and $O_t$ averaged over the full horizon, return, drones lost and
 decision time.
 
 \section{Reinforcement Learning Agents}
@@ -172,10 +172,9 @@ Full update equations are given in the Appendix.
 
 \subsection{Feasibility mask}
 
-Unrestricted agents lost most of the fleet (Section~\ref{sec:development}), while
-battery-aware conventional baselines generally had fewer losses; Greedy was not perfectly
-safe in the historical 20$\times$20 study. We therefore applied the baseline
-candidate-action feasibility rule to the learners. A move is feasible only if the drone keeps enough battery to fly back to base
+Unrestricted agents lost most of the fleet (Section~\ref{sec:development}), while the
+battery-aware baselines lost few drones, although even Greedy was not perfectly safe in the
+20$\times$20 study. We therefore applied the baselines' feasibility rule to the learners. A move is feasible only if the drone keeps enough battery to fly back to base
 afterwards; a drone low on battery must move towards base; a drone at base below full charge
 must stay and charge; and joint actions that would collide are excluded. In the rare case
 where no joint action remains, an emergency rule moves the drones with the smallest margin
@@ -222,12 +221,11 @@ Random & 0.095 & $-29.04$ & 3.00 \\
 \end{tabular}
 \end{table}
 
-The mask was decisive for survival in this comparison: all masked agents kept every drone in
-every mission, but inspection did not improve materially. Masked DQN (0.146) was close to
-masked random (0.145), and Greedy achieved more than twice its freshness. Historical Greedy
-imitation probes reported 86--96\% training agreement but only 9--18\% on new worlds,
-suggesting weak decision generalisation; these observations do not isolate one cause of the
-RL shortfall.
+The mask was decisive for survival: all masked agents kept every drone in every mission, but
+inspection did not improve. Masked DQN (0.146) was close to masked random (0.145), and Greedy
+achieved more than twice its freshness. In earlier 20$\times$20 experiments, networks trained
+to imitate Greedy agreed with 86--96\% of its decisions on training worlds but only 9--18\% on
+new worlds, so they generalised poorly.
 
 \section{Hyperparameter Tuning}
 \writtenby{Sayuru Bopitiya}
@@ -239,12 +237,12 @@ learning rate ($10^{-3}$, freshness 0.131 against 0.114 at $10^{-4}$) and entrop
 rollout length (32 steps). DQN scored best at $10^{-3}$ in this screen, but we kept
 $10^{-4}$ for the main study because the Q-value blow-up above had occurred at
 $3\times10^{-4}$ and a lower rate had removed it.
-These settings were frozen before the 40$\times$40 study.
+These settings were fixed before the 40$\times$40 study.
 
 Because the 40$\times$40 rates were not tuned on the larger grid, we later trained each agent
 from scratch at one third, one and three times its main-study rate (one seed, 300 episodes),
 scoring each on 20 separate validation worlds (Table~\ref{tab:lr}). None of the rates closed
-the gap to Greedy. DQN at its main-study rate was the best fit and slightly ahead of masked
+the gap to Greedy. DQN at its main-study rate was the best of the nine runs and slightly ahead of masked
 random (0.098 against 0.091 freshness, $-24.00$ against $-25.14$ return), but this margin is
 smaller than the standard deviation across worlds (about 0.015). REINFORCE improved with a
 larger rate and A2C was flat over a ten-fold range. With one seed per setting, differences of
@@ -278,8 +276,9 @@ A2C & 0.084 ($3\!\times\!10^{-5}$) & 0.084 ($10^{-4}$) & 0.082 ($3\!\times\!10^{
 \subsection{Protocol}
 
 The implementation, settings, budget and success criteria were fixed before any main-study
-fit started. Each agent was trained with seeds 0, 1 and 2 for 300 episodes on training worlds
-0--299 (90{,}000 environment steps per fit). The final weights of all nine fits were then
+training run started. Each agent was trained with seeds 0, 1 and 2 for 300 episodes on
+training worlds 0--299 (90{,}000 environment steps per run). The final weights of all nine
+runs were then
 evaluated once, acting greedily over feasible actions, on 20 unseen worlds (22000--22019).
 Greedy, the lawnmower sweep, random and masked random flew the same worlds, giving 260
 missions; the rolling-horizon planner was added later. Greedy picks the feasible joint action
@@ -298,7 +297,7 @@ showed no clear trend, and their three seeds did not agree on a direction.
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{figures/learning_curves.pdf}
-\caption{Training return of the nine main-study fits at 40$\times$40 (10-episode moving
+\caption{Training return of the nine main-study training runs at 40$\times$40 (10-episode moving
 mean, as in the notebook; returns include exploration).}
 \label{fig:learning}
 \end{figure*}
@@ -333,12 +332,12 @@ Table~\ref{tab:main} gives the results. All learned policies kept every drone in
 missions, whereas unrestricted random lost the whole fleet in all 20. Their inspection
 quality, however, matched masked random: DQN's freshness exceeded it by only 0.0006 and A2C's
 by 0.0006, while REINFORCE was 0.015 below. Greedy achieved 2.6 times the freshness of DQN and
-A2C. On return, DQN and A2C were about 0.65 above masked random. None of the nine fits passed
+A2C. On return, DQN and A2C were about 0.65 above masked random. None of the nine trained agents passed
 the pre-registered performance gates, which required every seed to beat masked random by at
 least 0.01 freshness and 0.5 return, and separately to reach 90\% of Greedy's freshness.
 
 The rolling-horizon planner matched Greedy's freshness (0.2207 against 0.2208) with a slightly
-lower return and no losses, but needed about 66\,ms per decision against 1.1\,ms for Greedy in
+lower return and no losses, but needed about 67\,ms per decision against 1.1\,ms for Greedy in
 the same serial timing test. Paired by world, it beat Greedy's return in only 7 of 20 worlds,
 so this bounded four-step planner did not improve inspection freshness at these settings.
 
@@ -375,13 +374,14 @@ Spread 0.08 & 0.208 & 0.214 & 0.082 & 0.086 & 0.066 & 0.084 \\
 
 Greedy and the planner remained the strongest group in every condition (0.20--0.23), and all
 other policies stayed between 0.06 and 0.10, although rankings inside each group changed.
-Slower charging cost Greedy and the planner 0.014--0.018 freshness. Away from the default,
-Greedy lost its whole fleet in 4 of 120 missions: three low-battery drones met near the base,
-every move home collided, its rule fell back to ``all stay'' and they hovered until empty. The
-masked learners avoid this deadlock through the emergency return, and the planner avoided it
-in all of its missions. A smaller battery made the fixed learners look better (DQN 0.096) and
-a larger one worse (0.078); because the weights did not change, this is most likely the mask
-forcing earlier returns that pass near the base; this hypothesis was not tested separately.
+Slower charging cost Greedy and the planner 0.014--0.018 freshness. Greedy lost its whole
+fleet in 4 of its 140 sensitivity missions, all away from the default. In each case three drones with low batteries
+met near the base, every move towards it would have collided, and Greedy's rule fell back to
+``all stay'', so the drones hovered until their batteries were exhausted. The masked learners
+avoid this deadlock through the emergency return, and the planner avoided it in all of its
+missions. A smaller battery made the fixed learners look better (DQN 0.096) and a larger one
+worse (0.078). Because the weights did not change, this is most likely the mask forcing
+earlier returns that pass near the base. We did not test this separately.
 
 \section{Critical Review}
 \label{sec:review}
@@ -389,41 +389,35 @@ forcing earlier returns that pass near the base; this hypothesis was not tested 
 
 \subsection{Was the problem solved?}
 
-Only partly. The engineering goals were met and every learned policy flew full missions
-without losing a drone, but the learning goal was not: the learned policies inspected no
-better than random feasible actions, and a one-step heuristic was more than twice as good.
-The zero-loss result belongs to the mask, since masked random, which learns nothing, also lost
-no drones. Without that control, safety could easily have been misread as learned
-competence.
+The problem was solved only in part. The engineering goals were met, and every trained agent
+flew complete missions without losing a drone. The learning goal was not met: the agents
+inspected no better than random feasible actions, and the one-step Greedy rule was more than
+twice as good. The absence of drone losses is due to the feasibility mask rather than to
+learning, because masked random, which does not learn at all, also lost no drones. Without
+this comparison, the safety result could easily have been mistaken for learned skill.
 
-\subsection{Possible explanations for weak learning}
+\subsection{Why the agents did not learn to coordinate}
 
-The frozen 40$\times$40 study establishes a substantial performance gap, but it does not
-identify a unique reason. The notebook's reward-signal diagnostic froze the state every
-tenth step under random feasible play and tried every feasible joint action. At
-40$\times$40 the best action beat the second-best by only 0.0005 on average and the
-standard deviation across actions was 0.002, while complete-mission returns varied across
-worlds with a standard deviation of 0.87, about 430 times larger (about 130 times at
-20$\times$20). However, one-step action gaps and full-mission return variation measure
-different quantities; their ratio is not a calibrated learning signal-to-noise
-statistic. We therefore treat weak immediate discrimination as a hypothesis, not a
-demonstrated causal explanation.
+To look for a reason, we measured how strongly the immediate reward separates good and poor
+actions. Under random feasible play, every tenth step we tried every feasible joint action from
+the same state and recorded its reward. At 40$\times$40 the best action beat the second-best
+by only 0.0005 on average, and the standard deviation across actions was 0.002. Over complete
+missions, the return varied across worlds with a standard deviation of 0.87. The two numbers
+measure different things, so their ratio is not a formal signal-to-noise measure, but together
+they show that the reward says very little about which joint action is best at any single
+step. The same pattern holds at 20$\times$20.
 
-Other plausible mechanisms are the 125-way joint action head, long-horizon battery and
-charging decisions, credit assignment between drones, representation and exploration.
-Historical action-ranking diagnostics found limited changes in preferred actions when
-inspection urgency or drone position was varied, but those tests concern particular
-20$\times$20 checkpoints and do not prove the same mechanism at 40$\times$40.
-REINFORCE estimates episodic returns; A2C and DQN bootstrap imperfect value
-estimates. Greedy instead directly scores one-step priority-weighted inspection gain,
-which avoids learning that immediate heuristic from sampled trajectories but does not
-make Greedy optimal for the entire mission.
-
-DQN's training return improved before levelling off, whereas REINFORCE and A2C showed
-no consistent improvement across seeds. The learning-rate sweep did not close the gap,
-yet neither that sweep nor the fixed 90{,}000-step-per-fit budget rules out gains from
-longer training or different representations. Controlled ablations would be required
-to distinguish these explanations.
+This is our leading explanation, and it is consistent with the other results. REINFORCE
+learns from whole-episode returns, in which a small difference between actions is hidden by
+the variation between missions. A2C and DQN learn from value estimates that must themselves
+resolve these small differences. DQN's training return improved before levelling off, but the
+gain did not carry over to unseen worlds. The 125-way joint action makes learning harder
+still, because the reward for one drone's good move is shared with the other two drones'
+choices. Greedy needs none of this: it computes the one-step inspection gain directly. We did
+not test the explanation with a controlled ablation, so other factors, such as the network's
+representation, exploration and the 90{,}000-step budget per training run, may also
+contribute. The learning-rate sweep shows only that a three-fold change in rate was not
+enough on its own.
 
 \subsection{Implications and validity}
 
@@ -432,4 +426,4 @@ and safety obtained through masking should not be reported as learning success. 
 conclusions hold for this simulator only: fire, wind and
 battery values are illustrative, the state is fully observed, and the 20$\times$20 and
 40$\times$40 studies differ in several settings at once, so their difference is not a
-controlled scaling result. Part~II proposes changes that target these possible causes.
+controlled scaling result. Part~II proposes changes that target these causes.
