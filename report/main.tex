@@ -37,9 +37,10 @@ Curtin University}
 \maketitle
 
 \begin{abstract}
-Emergency responders need fire fronts and high-priority areas to be inspected again and again,
-but a small fleet of battery-limited drones must also return to share a single charger. We
-model this as a fully observable, finite-horizon Markov decision process in which one central
+During a wildfire, emergency responders need the fire front and other high-priority areas to
+be inspected repeatedly so that their picture of a spreading fire stays up to date. A small
+fleet of drones can provide these inspections, but only if the drones coordinate their patrols
+while each one returns in time to share a single charger. We model this as a fully observable, finite-horizon Markov decision process in which one central
 controller chooses a joint move for three drones on a 40$\times$40 grid with stochastic fire
 spread and changing wind. Three reinforcement learning (RL) agents were implemented and
 compared: a deep Q-network (DQN), REINFORCE with a learned baseline, and synchronous advantage
