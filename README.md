@@ -74,7 +74,7 @@ wild-drone-appeared/
 │
 ├── COMP6008_Wildfire_Drone_Fleet/     Self-contained copy of the code submitted on 23 Oct
 ├── COMP6008_Wildfire_Drone_Fleet.zip  The same folder, zipped as uploaded
-└── *_DeclarationOfOriginality.pdf     Declarations of originality of the three members
+└── member_declarations/               Declarations of originality of the three members
 ```
 
 ## Running the notebook
