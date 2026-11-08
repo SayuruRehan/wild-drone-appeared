@@ -1,0 +1,6 @@
+{
+  "_comment": "World-seed splits for the publication study. Disjoint from every seed used in the assignment (0-299 training, 5000-5004, 22000-22019 final, 23000-23019 validation). Final-test worlds must not be flown by any script until the protocol is frozen and the final runs are launched.",
+  "training": {"start": 100000, "stop": 1100000},
+  "development": {"start": 30000, "stop": 30050},
+  "final_test": {"start": 40000, "stop": 40100}
+}
