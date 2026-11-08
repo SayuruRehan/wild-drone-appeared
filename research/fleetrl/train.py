@@ -134,6 +134,9 @@ def train(cfg: TrainConfig, out: Path):
     train_start = split['training']['start'] + cfg.seed*100_000
     dev = split['development']
     eval_seeds = list(range(dev['start'], dev['start']+cfg.eval_worlds))
+    if cfg.kind == 'joint':  # a joint head exists only for its training fleet size
+        cfg.eval_drones = tuple(n for n in cfg.eval_drones if n in cfg.train_drones) or \
+            tuple(cfg.train_drones)
     json.dump(asdict(cfg), open(out/'config.json', 'w'), indent=1)
 
     replay = {n: deque(maxlen=cfg.replay_size // len(cfg.train_drones))
