@@ -1,0 +1,33 @@
+{
+ "kind": "joint",
+ "env": "dev20",
+ "train_drones": [
+  3
+ ],
+ "steps": 150000,
+ "seed": 0,
+ "learning_rate": 0.0001,
+ "gamma": 0.99,
+ "n_step": 3,
+ "batch_size": 64,
+ "replay_size": 100000,
+ "warmup_steps": 5000,
+ "train_every": 4,
+ "target_update_steps": 2000,
+ "epsilon_start": 1.0,
+ "epsilon_end": 0.05,
+ "epsilon_fraction": 0.3,
+ "reward_scale": 10.0,
+ "max_grad_norm": 10.0,
+ "hidden": 128,
+ "local_radius": 8,
+ "global_size": 8,
+ "eval_every": 25000,
+ "eval_worlds": 10,
+ "eval_drones": [
+  3
+ ],
+ "device": "auto",
+ "threads": 1,
+ "notes": {}
+}

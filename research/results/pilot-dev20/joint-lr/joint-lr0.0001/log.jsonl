@@ -1,0 +1,6 @@
+{"steps": 25000, "episodes": 156, "minutes": 7.374339453379313, "epsilon": 0.47224333333333335, "loss": 0.43654658924047407, "train_return": -10.967592055179523, "dev_freshness_n3": 0.1357489945613834, "dev_losses_n3": 0}
+{"steps": 50000, "episodes": 312, "minutes": 16.82421079874039, "epsilon": 0.050000000000000044, "loss": 0.7405372650000203, "train_return": -10.765213810704951, "dev_freshness_n3": 0.15362087222208148, "dev_losses_n3": 0}
+{"steps": 75000, "episodes": 468, "minutes": 26.43248702685038, "epsilon": 0.050000000000000044, "loss": 1.0249534641725642, "train_return": -10.011200647093911, "dev_freshness_n3": 0.17171233423366417, "dev_losses_n3": 0}
+{"steps": 100000, "episodes": 624, "minutes": 35.25631604592005, "epsilon": 0.050000000000000044, "loss": 1.1298193848517375, "train_return": -10.310648184027762, "dev_freshness_n3": 0.14616976168006593, "dev_losses_n3": 0}
+{"steps": 125000, "episodes": 782, "minutes": 44.33458251158397, "epsilon": 0.050000000000000044, "loss": 1.239126812697156, "train_return": -10.152900082980407, "dev_freshness_n3": 0.16049733256888055, "dev_losses_n3": 0}
+{"steps": 150000, "episodes": 939, "minutes": 53.59324481884639, "epsilon": 0.050000000000000044, "loss": 1.2416010390433376, "train_return": -10.043283132814334, "dev_freshness_n3": 0.15082176048176713, "dev_losses_n3": 3}

@@ -87,7 +87,7 @@ All are disjoint from the assignment seeds (0–299, 5000–5004, 22000–22019,
 | Gate | Question | Rule | Status |
 |---|---|---|---|
 | G1 | Is there headroom above Greedy? | some controller beats Greedy on ≥ 70% of 50 dev worlds at N = 3 (40×40) | **passed**: Assign +0.033, 48/50 (`results/headroom`) |
-| G2 | Does the repaired joint baseline learn? (H0) | joint DDQN > masked random at N = 3, dev20 | **not passed at 100k**: 0.154 vs 0.147 (factored 0.315); retry with 300k steps + LR sweep |
+| G2 | Does the repaired joint baseline learn? (H0) | joint DDQN > masked random at N = 3, dev20 | **not passed**: 0.154 vs 0.147 at 100k (factored 0.315); LR 1e-4/2.5e-4/5e-4 up to 150k all ≤ 0.19 (`results/pilot-dev20/joint-lr`); 300k GPU run pending |
 | G3 | Do factored models learn and transfer on 20×20? | best factored model ≥ 50% of the masked-random→Greedy gap at N = 3 and stays above masked random at N = 8 | **passed**: 92% of the gap at N = 3; 0.435 vs 0.264 at N = 8 (`results/pilot-dev20`) |
 | G4 | 40×40 pilot | same as G3 on main40 with one seed per model | after G3 |
 
