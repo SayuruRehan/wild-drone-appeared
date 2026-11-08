@@ -88,7 +88,7 @@ All are disjoint from the assignment seeds (0–299, 5000–5004, 22000–22019,
 |---|---|---|---|
 | G1 | Is there headroom above Greedy? | some controller beats Greedy on ≥ 70% of 50 dev worlds at N = 3 (40×40) | **passed**: Assign +0.033, 48/50 (`results/headroom`) |
 | G2 | Does the repaired joint baseline learn? (H0) | joint DDQN > masked random at N = 3, dev20 | pilot running |
-| G3 | Do factored models learn and transfer on 20×20? | best factored model ≥ 50% of the masked-random→Greedy gap at N = 3 and stays above masked random at N = 8 | pilot running |
+| G3 | Do factored models learn and transfer on 20×20? | best factored model ≥ 50% of the masked-random→Greedy gap at N = 3 and stays above masked random at N = 8 | **passed**: 92% of the gap at N = 3; 0.435 vs 0.264 at N = 8 (`results/pilot-dev20`) |
 | G4 | 40×40 pilot | same as G3 on main40 with one seed per model | after G3 |
 
 If G3 fails after one diagnosis round (budget, representation), the 40×40 study is not
@@ -144,3 +144,6 @@ search before `protocol-v1`.
 - v0.1: initial draft; G1 headroom result added.
 - v0.2: learners, trainer and 20×20 pilot launched (joint, VDN, DCG, structured; 2 seeds,
   100k steps, N = 3).
+- v0.3: G3 passed (factored learners). Joint learners must be evaluated only at their training
+  fleet size (bug fixed before their runs). Next: 300k steps, ≥ 3 seeds, mixed-size training
+  condition, 40×40 pilot (G4).
