@@ -8,7 +8,9 @@ Evaluation: development worlds 30000–30019, N ∈ {3, 4, 5, 6, 8}, exact feasi
 Baselines are the same worlds from `../headroom/episodes.csv`.
 Checkpoints are not committed; their SHA-256 sums are in `SHA256SUMS`.
 
-The joint dueling DDQN runs (gate G2) are reported separately once they finish.
+The joint dueling DDQN runs (gate G2) used the same encoder, optimiser, replay, budget and
+seeds; they are evaluated at N = 3 only (a joint head exists only for its training size)
+in `joint/`.
 
 ```bash
 PYTHONPATH=research:src python research/scripts/pilot.py --kinds vdn dcg structured \
@@ -33,6 +35,22 @@ more than one drone per step. Wait = drone-steps queuing at the charger per miss
 | 8 | 0.264 | 0.513 | 0.510 | 0.420 (0.003) | 0.345 (0.049) | 0.435 (0.034) | 10.03 / 5.65 | 351 / 129 |
 
 No drone was lost and no collision was attempted in any evaluated mission.
+
+## Gate G2: repaired joint-action baseline — **not passed at this budget**
+
+| N | Masked random | Greedy | Joint dueling DDQN | Factored (VDN / DCG / Structured) |
+|---:|---:|---:|---:|---:|
+| 3 | 0.147 | 0.329 | 0.154 (SD 0.006), 0/40 wins | 0.316 / 0.312 / 0.315 |
+
+With a 100k replay buffer, Double DQN, 3-step returns, a dueling head and the *same*
+drone-centric encoder and per-command features as the factored models, the joint learner
+still stays at masked-random level (development curve 0.15–0.18 throughout; TD loss rising).
+The only difference from VDN is the output: 125 independent joint-action values instead of
+3 × 5 shared per-drone values. At equal budget, **factorisation is what makes learning work
+here** (H1). Before reporting this as a finding, the joint learner gets a fair chance: a
+longer budget (300k+ on GPU) and a small learning-rate sweep on development worlds. Until
+it beats masked random, it is reported as "fails to learn at matched budget", never as a
+tuned baseline.
 
 ## Reading
 
