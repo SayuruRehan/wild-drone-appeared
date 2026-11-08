@@ -127,8 +127,10 @@ commit that produced a result.
 | VDN (Sunehag et al., 2018), QMIX (Rashid et al., 2018), QPLEX (Wang et al., 2021) | value factorisation; no pairwise terms (VDN, QMIX) or no domain structure |
 | DCG (Böhmer et al., 2020); DICG (Li et al., 2021); CASEC (Wang et al., 2022); SOPCG (Yang et al., 2022) | learned coordination graphs; the pairwise *form* is theirs, so DCG is a baseline here |
 | UPDeT (Hu et al., 2021); REFIL (Iqbal et al., 2021) | transfer across agent counts via attention/entities; candidates for related work, possibly a baseline |
-| Energy-aware persistent multi-UAV coverage with QMIX and energy masking (MDPI, 2026) | same application family; uses monotonic mixing; **verify details** |
-| Feasibility-preserving multi-UAV task allocation with action masking (MDPI) | action masking; **verify details** |
+| "Energy-Aware Persistent Multi-UAV Coverage via RL Guided by User Priority and Outage" (*Drones* 10:688, POGS-QMIX) | same application family (persistent priority coverage, energy); centralised greedy/Hungarian assignment coordinator + QMIX; no pairwise value terms, no fleet-size transfer. Must be a cited comparison; its coordinator is close in spirit to our `Assign` heuristic |
+| Masked deep-RL multi-UAV task scheduling (*Drones* 9(6):418) and other action-masking UAV papers (arXiv 2407.19657, 2509.23905) | feasibility via action masks; masking alone is therefore **not** a contribution here |
+| Zero-shot scalable resilience in UAV swarms with physics-informed graph interactions (arXiv 2604.15762) | zero-shot transfer across swarm sizes with domain-informed interaction graphs (imitation learning, resilience task); closest framing to C1+C2, must be cited and distinguished |
+| Graph-based MARL coverage with overlap-rate metric (2026, found in search; to read) | reports a coverage-overlap rate as a metric; we use overlap inside the value function |
 
 Working novelty statement: (i) pairwise interaction terms derived from the reward's
 inclusion–exclusion structure and from a shared resource, with state-conditioned gains,
