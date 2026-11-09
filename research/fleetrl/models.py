@@ -15,6 +15,7 @@ and differs only in the pairwise term P (and the joint model, which has no facto
   structured-n structured with the charger term divided by (N - 1): one shared charger,
                so the total charger interaction a drone sees does not grow with N
   qmix-structured   QMIX mixer + structured pairwise terms (overlap, normalised charger)
+  qmix-overlap QMIX mixer + overlap pair terms only (no charger term)
 
 model_version 1 is the pilot architecture (DCG as an unnormalised full 5x5 table per
 pair). model_version 2 (default) makes DCG follow Boehmer et al. (2020): utilities and
@@ -32,10 +33,11 @@ from torch import nn
 from fleetrl.selection import torch_dense_q, torch_gather_joint
 
 KINDS = ('vdn', 'dcg', 'structured', 'structured+', 'structured-overlap', 'structured-charger',
-         'structured-n', 'joint', 'qmix', 'qmix-structured')
+         'structured-n', 'joint', 'qmix', 'qmix-structured', 'qmix-overlap')
 STRUCTURED = ('structured', 'structured+', 'structured-overlap', 'structured-charger',
-              'structured-n', 'qmix-structured')
-MIXED = ('qmix', 'qmix-structured')
+              'structured-n', 'qmix-structured', 'qmix-overlap')
+OVERLAP_ONLY = ('structured-overlap', 'qmix-overlap')
+MIXED = ('qmix', 'qmix-structured', 'qmix-overlap')
 NORMALISED_CHARGER = ('structured-n', 'qmix-structured')
 MIX_EMBED = 32
 
@@ -151,7 +153,7 @@ class FleetQ(nn.Module):
             c = 0.5*(self.coeff(fwd)+self.coeff(rev))                         # B,P,2
             if self.kind != 'structured-charger':
                 pair = pair + c[..., 0, None, None]*f['overlap']
-            if self.kind != 'structured-overlap':
+            if self.kind not in OVERLAP_ONLY:
                 scale = 1.0/(k-1) if self.kind in NORMALISED_CHARGER else 1.0
                 pair = pair + scale*c[..., 1, None, None]*f['charger']
         if self.faithful_dcg:
