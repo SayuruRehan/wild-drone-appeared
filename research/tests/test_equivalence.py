@@ -39,7 +39,7 @@ def test_trajectories_mask_and_rewards_match(name, seed):
     steps = 0
     while not done:
         mask = frozen_mask(frozen)
-        assert np.array_equal(mask, feasible_mask(ours)), f'mask differs at step {steps}'
+        assert np.array_equal(mask, feasible_mask(ours, strict=True)), f'mask differs at step {steps}'
         # mostly feasible actions, sometimes arbitrary ones to exercise collision rules
         action = (int(rng.choice(np.flatnonzero(mask))) if rng.random() < 0.8
                   else int(rng.integers(125)))

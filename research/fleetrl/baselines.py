@@ -18,12 +18,7 @@ none of them can lose a drone through a battery or collision rule violation.
 import numpy as np
 
 from fleetrl.env import MOVES
-from fleetrl.feasibility import (
-    dense_feasible,
-    feasible_mask,
-    pairwise_conflicts,
-    unary_allowed,
-)
+from fleetrl.feasibility import constraints, dense_feasible, feasible_mask
 from fleetrl.selection import select
 
 EXACT_GREEDY_DRONES = 5
@@ -128,8 +123,7 @@ class GreedyPolicy:
         k = env.n_drones
         urgency = urgency_map(env)
         foot = command_footprints(env)
-        allowed = unary_allowed(env)
-        conflicts = pairwise_conflicts(env)
+        allowed, conflicts, _ = constraints(env)
         if k <= EXACT_GREEDY_DRONES:
             mask = dense_feasible(allowed, conflicts).reshape(-1)
             self.last_exact = True
@@ -197,8 +191,7 @@ class AssignPolicy:
         value = box_sum(urgency_map(env), c.sensor_radius)
         rows, cols = np.indices((n, n))
         home = np.abs(rows-env.base[0]) + np.abs(cols-env.base[1])
-        allowed = unary_allowed(env)
-        conflicts = pairwise_conflicts(env)
+        allowed, conflicts, _ = constraints(env)
         mask = dense_feasible(allowed, conflicts).reshape(-1)
         if not mask.any():
             return np.zeros(k, dtype=np.int64)

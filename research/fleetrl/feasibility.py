@@ -10,6 +10,15 @@ This module computes the two parts separately, so the joint feasible set is
 ``prod_i allowed[i] AND prod_{i<j} not conflict[i, j]`` for any fleet size. For three
 drones the dense set equals the frozen mask exactly (tested).
 
+**Deadlock resolution (deviation from the frozen mask).** The frozen rules forbid a
+low-battery drone from hovering. Three low-battery drones around the pad can then block
+each other completely (e.g. two on the axes at distance 2, each with a single approach
+cell, and one on the diagonal whose two approach cells are exactly those). The frozen code
+then falls back to "everyone stays", which never resolves and loses all three drones.
+``constraints`` keeps the frozen rules whenever they leave a feasible joint action, and
+only when they leave none lets a low-battery drone hover if it can still reach the pad
+afterwards. ``feasible_mask(env, strict=True)`` reproduces the frozen mask exactly.
+
 Joint index convention: C-order over per-drone commands, i.e.
 ``index = sum_i a_i * 5**(N-1-i)``, which matches ``wild_drone.environment.encode_action``.
 """
@@ -87,10 +96,41 @@ def dense_feasible(allowed, conflicts):
     return mask
 
 
-def feasible_mask(env):
-    """Flat boolean mask over all 5**N joint actions (same fallback as the frozen code:
-    if nothing is feasible, 'everyone stays' is the only proposal)."""
-    mask = dense_feasible(unary_allowed(env), pairwise_conflicts(env)).reshape(-1)
+def relaxed_allowed(env, allowed):
+    """Unary rules plus 'hover' for approaching low-battery drones that can afford one."""
+    c = env.config
+    relaxed = allowed.copy()
+    current = np.abs(env.positions-env.base).sum(axis=1)
+    for i in range(env.n_drones):
+        if env.lost[i] or current[i] == 0:
+            continue
+        if env.batteries[i] - c.hover_cost >= current[i]*c.move_cost:
+            relaxed[i, 0] = True
+    return relaxed
+
+
+def constraints(env):
+    """(allowed (N,5), conflicts (N,N,5,5), status) whose dense product is non-empty
+    whenever possible. status: 'strict' (frozen rules), 'relaxed' (deadlock resolved by
+    letting low-battery drones hover) or 'fallback' (nothing feasible even then)."""
+    allowed, conflicts = unary_allowed(env), pairwise_conflicts(env)
+    if dense_feasible(allowed, conflicts).any():
+        return allowed, conflicts, 'strict'
+    relaxed = relaxed_allowed(env, allowed)
+    if dense_feasible(relaxed, conflicts).any():
+        return relaxed, conflicts, 'relaxed'
+    return allowed, conflicts, 'fallback'
+
+
+def feasible_mask(env, strict=False):
+    """Flat boolean mask over all 5**N joint actions. With ``strict=True`` this is the frozen
+    mask (fallback 'everyone stays' when nothing is feasible); otherwise deadlocks are
+    resolved as described in the module docstring."""
+    if strict:
+        allowed, conflicts = unary_allowed(env), pairwise_conflicts(env)
+    else:
+        allowed, conflicts, _ = constraints(env)
+    mask = dense_feasible(allowed, conflicts).reshape(-1)
     if not mask.any():
         mask[0] = True
     return mask

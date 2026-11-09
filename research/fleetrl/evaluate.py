@@ -5,6 +5,7 @@ import time
 import numpy as np
 
 from fleetrl.env import FleetEnv
+from fleetrl.feasibility import constraints
 
 
 def run_episode(config, n_drones, policy, seed, record=False):
@@ -13,8 +14,12 @@ def run_episode(config, n_drones, policy, seed, record=False):
     if hasattr(policy, 'reset'):
         policy.reset()
     freshness, overdue, decision_ms, trace = [], [], [], []
+    status_counts = {'relaxed': 0, 'fallback': 0}
     done = False
     while not done:
+        status = constraints(env)[2]
+        if status != 'strict':
+            status_counts[status] += 1
         t0 = time.perf_counter()
         commands = policy.act_commands(env)
         decision_ms.append(1000*(time.perf_counter()-t0))
@@ -42,6 +47,8 @@ def run_episode(config, n_drones, policy, seed, record=False):
         'collision_attempts': int(totals['collision_attempts']),
         'charge_completions': int(totals['charge_completions']),
         'decision_ms': float(np.mean(decision_ms)),
+        'deadlock_relaxed_steps': status_counts['relaxed'],
+        'infeasible_steps': status_counts['fallback'],
     }
     if record:
         out['trace'] = trace

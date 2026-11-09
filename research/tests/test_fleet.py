@@ -8,7 +8,7 @@ import pytest
 from fleetrl.baselines import AssignPolicy, GreedyPolicy, MaskedRandomPolicy
 from fleetrl.env import FleetEnv
 from fleetrl.evaluate import run_episode
-from fleetrl.feasibility import feasible_mask, pairwise_conflicts, unary_allowed
+from fleetrl.feasibility import feasible_mask, unary_allowed
 from fleetrl.selection import dense_scores, select
 from wild_drone.config import EnvConfig
 
@@ -90,3 +90,22 @@ def test_more_drones_share_one_charger():
         env.step(policy.act_commands(env))
     assert env.totals['charge_completions'] > 0
     assert env.totals['charger_wait_steps'] > 0
+
+
+def test_pinwheel_deadlock_is_resolved_without_losses():
+    """Regression: three low-battery drones around the pad blocked each other completely
+    under the frozen rules and all were lost (40x40 pilot, world 30008)."""
+    from fleetrl.feasibility import constraints
+    from wild_drone.config import EnvConfig
+    config = EnvConfig()  # 40x40 frozen settings, base (20, 20)
+    env = FleetEnv(config, 3)
+    env.reset(30008)
+    env.positions = np.array([[22, 20], [20, 22], [21, 21]])
+    env.batteries = np.array([3.0, 3.0, 3.0], dtype=np.float32)
+    assert not feasible_mask(env, strict=True)[1:].any()      # frozen: only "all stay"
+    assert constraints(env)[2] == 'relaxed'
+    policy = GreedyPolicy()
+    for _ in range(6):
+        env.step(policy.act_commands(env))
+    assert env.lost.sum() == 0
+    assert np.all(np.abs(env.positions-env.base).sum(axis=1) == 0)
