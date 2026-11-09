@@ -12,6 +12,9 @@ and differs only in the pairwise term P (and the joint model, which has no facto
   joint        dueling 5**N head on concatenated drone embeddings (N fixed; baseline)
   qmix         monotonic state-conditioned mixing of per-drone utilities
                (Rashid et al., 2018); per-drone hypernetwork weights, so any N
+  structured-n structured with the charger term divided by (N - 1): one shared charger,
+               so the total charger interaction a drone sees does not grow with N
+  qmix-structured   QMIX mixer + structured pairwise terms (overlap, normalised charger)
 
 model_version 1 is the pilot architecture (DCG as an unnormalised full 5x5 table per
 pair). model_version 2 (default) makes DCG follow Boehmer et al. (2020): utilities and
@@ -29,8 +32,11 @@ from torch import nn
 from fleetrl.selection import torch_dense_q, torch_gather_joint
 
 KINDS = ('vdn', 'dcg', 'structured', 'structured+', 'structured-overlap', 'structured-charger',
-         'joint', 'qmix')
-STRUCTURED = ('structured', 'structured+', 'structured-overlap', 'structured-charger')
+         'structured-n', 'joint', 'qmix', 'qmix-structured')
+STRUCTURED = ('structured', 'structured+', 'structured-overlap', 'structured-charger',
+              'structured-n', 'qmix-structured')
+MIXED = ('qmix', 'qmix-structured')
+NORMALISED_CHARGER = ('structured-n', 'qmix-structured')
 MIX_EMBED = 32
 
 
@@ -79,14 +85,15 @@ class FleetQ(nn.Module):
         self.utility = nn.Sequential(nn.Linear(hidden+4+5, hidden), nn.ReLU(),
                                      nn.Linear(hidden, 1))
         pair_in = 2*hidden+4
-        if kind == 'qmix':
+        if kind in MIXED:
             # per-drone first-layer weights from (drone, state); state-conditioned rest
             self.hyper_w1 = nn.Sequential(nn.Linear(2*hidden, hidden), nn.ReLU(),
                                           nn.Linear(hidden, MIX_EMBED))
             self.hyper_b1 = nn.Linear(hidden, MIX_EMBED)
             self.hyper_w2 = nn.Sequential(nn.Linear(hidden, hidden), nn.ReLU(),
                                           nn.Linear(hidden, MIX_EMBED))
-            return
+            if kind == 'qmix':
+                return
         if self.faithful_dcg:
             self.residual = nn.Sequential(nn.Linear(pair_in, hidden), nn.ReLU(),
                                           nn.Linear(hidden, 10*dcg_rank))
@@ -119,12 +126,15 @@ class FleetQ(nn.Module):
         eye = torch.eye(5, device=h.device).expand(b, k, 5, 5)
         u_in = torch.cat([h[:, :, None].expand(b, k, 5, self.hidden), f['act'], eye], -1)
         unary = self.utility(u_in).squeeze(-1)                               # B,N,5
-        if self.kind == 'qmix':
+        mix = None
+        if self.kind in MIXED:
             state = h.mean(1)
             w1 = self.hyper_w1(torch.cat([h, state[:, None].expand_as(h)], -1)).abs()
             mix = (w1, self.hyper_b1(state), self.hyper_w2(state).abs())
-            return v, unary, mix                     # pair slot carries the mixer
-        unary = unary - unary.mean(-1, keepdim=True)
+            if self.kind == 'qmix' or not f['pairs']:
+                return v, unary, (mix, None)         # pair slot carries the mixer
+        if self.kind not in MIXED:
+            unary = unary - unary.mean(-1, keepdim=True)
         if self.faithful_dcg:
             unary = unary/k
         if self.kind == 'vdn' or not f['pairs']:
@@ -142,7 +152,8 @@ class FleetQ(nn.Module):
             if self.kind != 'structured-charger':
                 pair = pair + c[..., 0, None, None]*f['overlap']
             if self.kind != 'structured-overlap':
-                pair = pair + c[..., 1, None, None]*f['charger']
+                scale = 1.0/(k-1) if self.kind in NORMALISED_CHARGER else 1.0
+                pair = pair + scale*c[..., 1, None, None]*f['charger']
         if self.faithful_dcg:
             r = self.dcg_rank
 
@@ -154,6 +165,8 @@ class FleetQ(nn.Module):
             rf = self.residual(fwd).view(*fwd.shape[:2], 5, 5)
             rr = self.residual(rev).view(*fwd.shape[:2], 5, 5).transpose(-1, -2)
             pair = pair + 0.5*(rf+rr)
+        if self.kind in MIXED:
+            return v, unary, (mix, pair)
         return v, unary, pair
 
     @staticmethod
@@ -165,8 +178,8 @@ class FleetQ(nn.Module):
         v, unary, pair = parts
         if self.kind == 'joint':
             return v[:, None] + unary
-        if self.kind == 'qmix':
-            w1, b1, w2 = pair
+        if self.kind in MIXED:
+            (w1, b1, w2), extra = pair
             b, k, _ = unary.shape
             z = unary[..., None]*w1[:, :, None, :]                              # B,N,5,E
             total = z.new_zeros((b,)+(5,)*k+(MIX_EMBED,))
@@ -175,7 +188,10 @@ class FleetQ(nn.Module):
                 shape[1+i] = 5
                 total = total + z[:, i].reshape(shape)
             total = total.reshape(b, -1, MIX_EMBED)
-            return v[:, None] + self._mix(total, b1[:, None], w2[:, None])
+            q = v[:, None] + self._mix(total, b1[:, None], w2[:, None])
+            if extra is not None:
+                q = q + torch_dense_q(torch.zeros_like(unary), extra, pair_index)
+            return q
         return v[:, None] + torch_dense_q(unary, pair, pair_index)
 
     def gather_from(self, parts, pair_index, commands):
@@ -184,10 +200,13 @@ class FleetQ(nn.Module):
             k = commands.shape[1]
             weights = 5**torch.arange(k-1, -1, -1, device=commands.device)
             return v + unary.gather(1, (commands*weights).sum(1, keepdim=True)).squeeze(1)
-        if self.kind == 'qmix':
-            w1, b1, w2 = pair
+        if self.kind in MIXED:
+            (w1, b1, w2), extra = pair
             chosen = unary.gather(2, commands[:, :, None])                       # B,N,1
-            return v + self._mix((chosen*w1).sum(1), b1, w2)
+            q = v + self._mix((chosen*w1).sum(1), b1, w2)
+            if extra is not None:
+                q = q + torch_gather_joint(torch.zeros_like(unary), extra, pair_index, commands)
+            return q
         return v + torch_gather_joint(unary, pair, pair_index, commands)
 
     def dense_q(self, f):
