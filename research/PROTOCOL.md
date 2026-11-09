@@ -142,6 +142,14 @@ search before `protocol-v1`.
 
 ## Changelog
 
+- v0.5: **feasibility deadlock fixed.** Three low-battery drones around the pad could leave
+  no feasible joint action under the frozen rules (no low-battery hovering); the frozen
+  fallback then lost all three. Learners and baselines now use `feasibility.constraints`,
+  which allows a low-battery hover only when the frozen rules leave nothing feasible and the
+  drone can still reach the pad. Runs with zero losses never hit the deadlock (it always ends
+  in losses), so all 20×20 results stand; 40×40 round-1 results with losses are superseded.
+  Round 2 on 40×40 restarted with the fix. Also added: QMIX + overlap variant.
+
 - v0.1: initial draft; G1 headroom result added.
 - v0.2: learners, trainer and 20×20 pilot launched (joint, VDN, DCG, structured; 2 seeds,
   100k steps, N = 3).
