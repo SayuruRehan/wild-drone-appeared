@@ -300,6 +300,9 @@ def train(cfg: TrainConfig, out: Path):
                 print(json.dumps(entry), flush=True)
                 score = entry[f'dev_freshness_n{cfg.eval_drones[0]}']
                 _atomic_save(model.state_dict(), out/'final.pt')
+                # keep every evaluated model (~1 MB) for post-hoc analysis, e.g. of losses
+                (out/'snapshots').mkdir(exist_ok=True)
+                _atomic_save(model.state_dict(), out/'snapshots'/f'step-{steps:07d}.pt')
                 if score > st['best']:
                     st['best'] = score
                     _atomic_save(model.state_dict(), out/'best_dev.pt')

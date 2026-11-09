@@ -3,6 +3,8 @@
     PYTHONPATH=research:src python research/scripts/diagnose_losses.py \
         --run /content/drive/MyDrive/wild-drone-research/runs/pilot-main40/vdn-0 \
         --drones 5 --worlds 10
+    # a specific evaluated model (runs started after this script keep one per evaluation):
+    ... --checkpoint snapshots/step-0200000.pt
 
 For every mission it reports losses, steps where the feasible set was empty (the mask then
 falls back to "everyone stays"), and steps where the environment rejected a move. For the
