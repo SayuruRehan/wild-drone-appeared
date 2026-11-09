@@ -59,10 +59,11 @@ embeddings), so the network learns *how much* each known interaction matters in 
 | Assign (target assignment) | non-myopic heuristic; headroom probe | `baselines.AssignPolicy` |
 | Joint dueling DDQN | repaired joint-action RL, N = 3 only | `models.FleetQ('joint')` |
 | VDN | factorisation without interactions | `models.FleetQ('vdn')` |
-| DCG | learned pairwise tables (Böhmer et al., 2020) | `models.FleetQ('dcg')` |
+| DCG | learned pairwise payoffs as in Böhmer et al. (2020): averaged over drones and edges, low-rank (rank 1) | `models.FleetQ('dcg')`, `model_version=2` |
 | **Structured** | proposed | `models.FleetQ('structured')` |
 | Structured+ | proposed + learned residual (ablation) | `models.FleetQ('structured+')` |
-| QMIX | established monotonic mixer | *to add before protocol-v1* |
+| Structured-overlap / -charger | only one domain feature (ablations, H4) | `models.FleetQ('structured-overlap')`, `('structured-charger')` |
+| QMIX | monotonic mixing; per-drone hypernetwork weights so it accepts any N; exact feasible argmax over the nonlinear mixer | `models.FleetQ('qmix')` |
 
 All learners share the same drone encoder (17×17 egocentric crop, 8×8 coarse global map,
 per-drone scalars, per-command features), optimiser, Double-DQN target, n-step returns,
@@ -144,6 +145,10 @@ search before `protocol-v1`.
 - v0.1: initial draft; G1 headroom result added.
 - v0.2: learners, trainer and 20×20 pilot launched (joint, VDN, DCG, structured; 2 seeds,
   100k steps, N = 3).
+- v0.4: next-round code: QMIX; DCG made faithful to Böhmer et al. (2020) after the pilot DCG
+  (unnormalised full tables, `model_version=1`) collapsed on 40×40; overlap-only and
+  charger-only ablations; resumable training (replay, optimiser and RNG checkpoints);
+  `scripts/stats.py` (IQM, two-level bootstrap CIs, paired sign-flip tests, Holm).
 - v0.3: G3 passed (factored learners). Joint learners must be evaluated only at their training
   fleet size (bug fixed before their runs). Next: 300k steps, ≥ 3 seeds, mixed-size training
   condition, 40×40 pilot (G4).

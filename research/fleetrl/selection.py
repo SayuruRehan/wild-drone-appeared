@@ -11,7 +11,6 @@ an inexact action search.
 import itertools
 
 import numpy as np
-import torch
 
 MAX_EXACT_DRONES = 8
 

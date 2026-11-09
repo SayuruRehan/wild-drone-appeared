@@ -50,10 +50,14 @@ def test_own_gain_and_overlap_are_the_reward_terms():
         assert approx == pytest.approx(expected, rel=2e-3, abs=1e-6)
 
 
-@pytest.mark.parametrize('kind', [k for k in KINDS if k != 'joint'])
-def test_factored_models_are_permutation_equivariant_and_size_agnostic(kind):
+FACTORED = [(k, v) for k in KINDS if k != 'joint' for v in ((1, 2) if k == 'dcg' else (2,))]
+
+
+@pytest.mark.parametrize('kind,version', FACTORED)
+def test_factored_models_are_permutation_equivariant_and_size_agnostic(kind, version):
     torch.manual_seed(0)
-    model = FleetQ(kind, 2*SPEC.local_radius+1, SPEC.global_size, 32)
+    model = FleetQ(kind, 2*SPEC.local_radius+1, SPEC.global_size, 32, model_version=version,
+                   dcg_rank=2)
     for p in model.parameters():  # break the zero init so pairwise terms are active
         torch.nn.init.normal_(p, std=0.1)
     env, _ = scattered_env(3)
@@ -72,10 +76,11 @@ def test_factored_models_are_permutation_equivariant_and_size_agnostic(kind):
         assert model.dense_q(fk).shape == (1, 5**k)
 
 
-@pytest.mark.parametrize('kind', KINDS)
-def test_q_of_matches_dense_table(kind):
+@pytest.mark.parametrize('kind,version', FACTORED+[('joint', 2)])
+def test_q_of_matches_dense_table(kind, version):
     torch.manual_seed(1)
-    model = FleetQ(kind, 2*SPEC.local_radius+1, SPEC.global_size, 32, n_drones=3)
+    model = FleetQ(kind, 2*SPEC.local_radius+1, SPEC.global_size, 32, n_drones=3,
+                   model_version=version)
     for p in model.parameters():
         torch.nn.init.normal_(p, std=0.1)
     env, _ = scattered_env(3)
@@ -112,3 +117,69 @@ def test_training_smoke(tmp_path, monkeypatch):
                       local_radius=5, global_size=4, hidden=32, target_update_steps=50)
     out = train(cfg, tmp_path/'run')
     assert (out/'final.pt').exists() and (out/'done.json').exists()
+
+
+def test_qmix_is_monotonic_in_each_utility():
+    torch.manual_seed(2)
+    model = FleetQ('qmix', 2*SPEC.local_radius+1, SPEC.global_size, 32)
+    for p in model.parameters():
+        torch.nn.init.normal_(p, std=0.3)
+    env, _ = scattered_env(3)
+    f = build_features(collate([snapshot(env)], 'cpu'), SPEC)
+    v, unary, mix = model.components(f)
+    commands = torch.tensor([[1, 2, 3]])
+    base = model.gather_from((v, unary, mix), f['pairs'], commands)
+    bumped = unary.clone()
+    bumped[0, 1, 2] += 1.0
+    assert model.gather_from((v, bumped, mix), f['pairs'], commands) >= base
+
+
+def test_ablations_use_only_their_feature():
+    env, _ = scattered_env(3)
+    f = build_features(collate([snapshot(env)], 'cpu'), SPEC)
+    for kind, zeroed in (('structured-overlap', 'charger'), ('structured-charger', 'overlap')):
+        torch.manual_seed(3)
+        model = FleetQ(kind, 2*SPEC.local_radius+1, SPEC.global_size, 32)
+        for p in model.parameters():
+            torch.nn.init.normal_(p, std=0.1)
+        q = model.dense_q(f)
+        g = dict(f)
+        g[zeroed] = torch.randn_like(f[zeroed])
+        assert torch.allclose(q, model.dense_q(g))
+
+
+def test_replay_roundtrip_and_sampling():
+    from fleetrl.replay import Replay
+    env, rng = scattered_env(3)
+    buf = Replay(50, 3)
+    ids = [buf.add_state(snapshot(env)) for _ in range(80)]
+    for t in range(70):
+        buf.add(ids[t], np.array([1, 2, 3]), float(t), 0.9, ids[t+3], np.ones(125, bool))
+    assert len(buf) == 50
+    restored = Replay.from_state_dict(buf.state_dict())
+    a = buf.sample(np.random.default_rng(0), 8)
+    b = restored.sample(np.random.default_rng(0), 8)
+    for x, y in zip(a, b):
+        if isinstance(x, dict):
+            assert all(np.array_equal(x[k], y[k]) for k in x)
+        else:
+            assert np.array_equal(x, y)
+
+
+def test_training_resumes_from_checkpoint(tmp_path, monkeypatch):
+    import json
+
+    import fleetrl.train as T
+    monkeypatch.setattr(T, 'env_config', lambda name: CONFIG)
+    cfg = dict(kind='qmix', steps=200, warmup_steps=40, batch_size=8, replay_size=1000,
+               eval_every=100, eval_worlds=1, eval_drones=(3,), local_radius=5,
+               global_size=4, hidden=32, target_update_steps=50, checkpoint_every=40,
+               keep_checkpoint=True)
+    out = train(TrainConfig(**cfg), tmp_path/'run')
+    assert (out/'checkpoint.pt').exists()
+    (out/'done.json').unlink()
+    train(TrainConfig(**cfg), out)  # resumes from the last checkpoint and finishes
+    steps = [json.loads(line)['steps'] for line in open(out/'log.jsonl')]
+    assert steps == sorted(set(steps)) and steps[-1] == 200
+    with pytest.raises(ValueError):
+        train(TrainConfig(**{**cfg, 'learning_rate': 1e-3}), out)

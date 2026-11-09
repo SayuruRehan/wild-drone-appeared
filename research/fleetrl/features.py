@@ -66,10 +66,13 @@ def snapshot(env):
 
 
 def collate(snapshots, device):
-    out = {}
-    for key in snapshots[0]:
-        arr = np.stack([s[key] for s in snapshots])
-        out[key] = torch.as_tensor(arr, device=device)
+    return collate_arrays({key: np.stack([s[key] for s in snapshots]) for key in snapshots[0]},
+                          device)
+
+
+def collate_arrays(arrays, device):
+    """Batched snapshot arrays (leading batch dimension) -> feature-ready tensors."""
+    out = {key: torch.as_tensor(np.asarray(arr), device=device) for key, arr in arrays.items()}
     out['urgency'] = out['urgency'].float()
     out['burning'] = out['burning'].float()
     out['priority'] = out['priority'].float()/3

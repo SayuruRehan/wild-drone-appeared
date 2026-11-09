@@ -19,12 +19,14 @@ read-only and never changes it, `configs/` or `docs/experiments/`.
 | `fleetrl/selection.py` | exact maximisation of unary + pairwise scores over feasible joint actions (N ≤ 8) |
 | `fleetrl/baselines.py` | Greedy, masked random, Assign (target-assignment heuristic) for any N |
 | `fleetrl/features.py` | compact replay snapshots and batched drone-centric torch features, incl. overlap/charger pair features |
-| `fleetrl/models.py` | joint dueling, VDN, DCG, structured, structured+ value networks |
-| `fleetrl/train.py` | Double DQN, n-step, feasibility-constrained targets; `python -m fleetrl.train` |
+| `fleetrl/models.py` | joint dueling, VDN, QMIX, DCG, structured (+ residual and single-feature ablations) value networks |
+| `fleetrl/replay.py` | preallocated replay buffer (each state stored once), saved in checkpoints |
+| `fleetrl/train.py` | Double DQN, n-step, feasibility-constrained targets, resumable checkpoints; `python -m fleetrl.train` |
 | `fleetrl/evaluate.py` | one mission → study metrics |
 | `scripts/headroom.py` | gate G1: non-learning controllers across fleet sizes |
 | `scripts/pilot.py` | launch a (model × seed) training matrix in parallel; resumable |
 | `scripts/evaluate_runs.py` | evaluate runs across fleet sizes next to the baselines |
+| `scripts/stats.py` | IQM with bootstrap CIs, paired tests vs a reference, Holm correction |
 | `configs/` | environments (copies of the frozen settings) and world-seed splits |
 | `tests/` | equivalence with the frozen code, feasibility, exact selection, features, models |
 
