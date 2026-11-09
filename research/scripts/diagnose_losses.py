@@ -39,9 +39,27 @@ def main():
     p.add_argument('--drones', type=int, nargs='+', default=[5])
     p.add_argument('--worlds', type=int, default=10)
     p.add_argument('--history', type=int, default=12)
+    p.add_argument('--device', default='cpu', help="'cuda' reproduces in-training GPU evaluation")
+    p.add_argument('--raw', action='store_true',
+                   help='reproduce the pre-guard policy: plain masked argmax, no NaN handling')
     a = p.parse_args()
     torch.set_num_threads(1)
-    policy, cfg, config = load_policy(a.run, a.checkpoint)
+    policy, cfg, config = load_policy(a.run, a.checkpoint, a.device)
+    nonfinite = {'steps': 0}
+    if a.raw:
+        from fleetrl.features import build_features, collate, snapshot
+        from fleetrl.feasibility import feasible_mask
+
+        def raw_act(env, policy=policy):
+            with torch.no_grad():
+                f = build_features(collate([snapshot(env)], a.device), policy.spec)
+                q = policy.model.dense_q(f)[0]
+                if not torch.isfinite(q).all():
+                    nonfinite['steps'] += 1
+                mask = torch.as_tensor(feasible_mask(env), device=a.device)
+                index = int(q.masked_fill(~mask, float('-inf')).argmax())
+            return np.array(np.unravel_index(index, (5,)*env.n_drones), dtype=np.int64)
+        policy.act_commands = raw_act
     split = json.load(open(HERE/'configs/splits.json'))['development']
     explained = False
     totals = {'missions': 0, 'losses': 0, 'empty_mask_steps': 0, 'rejected_moves': 0}
@@ -89,6 +107,7 @@ def main():
             print(f'N={n} world={seed}: losses={int(env.lost.sum())} empty-mask steps={empty} '
                   f'rejected moves={rejected} freshness={env._metrics()["weighted_freshness"]:.3f}',
                   flush=True)
+    totals['nonfinite_q_steps'] = nonfinite['steps']
     print('\nTOTAL', json.dumps(totals))
 
 

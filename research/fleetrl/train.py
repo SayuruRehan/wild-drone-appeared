@@ -102,12 +102,20 @@ class LearnedPolicy:
     def __init__(self, model, spec, device):
         self.model, self.spec, self.device = model, spec, device
 
+    guard_trips = 0      # times the network's choice was not feasible (non-finite values)
+
     @torch.no_grad()
     def act_commands(self, env):
         f = build_features(collate([snapshot(env)], self.device), self.spec)
         q = self.model.dense_q(f)[0]
-        mask = torch.as_tensor(feasible_mask(env), device=self.device)
+        mask_np = feasible_mask(env)
+        mask = torch.as_tensor(mask_np, device=self.device)
+        # NaN/inf values would make argmax ignore the mask; treat them as worst-but-feasible
+        q = torch.nan_to_num(q.float(), nan=-1e30, posinf=1e30, neginf=-1e30)
         index = int(q.masked_fill(~mask, float('-inf')).argmax())
+        if not mask_np[index]:  # safety net: never execute an infeasible joint action
+            LearnedPolicy.guard_trips += 1
+            index = int(np.flatnonzero(mask_np)[0])
         return np.array(np.unravel_index(index, (5,)*env.n_drones), dtype=np.int64)
 
 
@@ -295,6 +303,7 @@ def train(cfg: TrainConfig, out: Path):
                     entry[f'dev_freshness_n{k}'] = float(np.mean(
                         [x['weighted_freshness'] for x in sel]))
                     entry[f'dev_losses_n{k}'] = int(sum(x['losses'] for x in sel))
+                entry['guard_trips'] = LearnedPolicy.guard_trips
                 log.write(json.dumps(entry)+'\n')
                 log.flush()
                 print(json.dumps(entry), flush=True)
