@@ -8,7 +8,8 @@ read-only and never changes it, `configs/` or `docs/experiments/`.
 
 - [`PROTOCOL.md`](PROTOCOL.md): claims, hypotheses, controllers, splits, gates, statistics.
 - [`results/`](results/): versioned results (per-episode CSVs and tables).
-- [`colab/gpu_runner.ipynb`](colab/gpu_runner.ipynb): GPU runs on Google Colab.
+- [`runpod/README.md`](runpod/README.md): running the study on a RunPod GPU pod (recommended).
+- [`colab/gpu_runner.ipynb`](colab/gpu_runner.ipynb): GPU runs on Google Colab (superseded by RunPod).
 
 ## Layout
 
@@ -27,6 +28,9 @@ read-only and never changes it, `configs/` or `docs/experiments/`.
 | `scripts/pilot.py` | launch a (model × seed) training matrix in parallel; resumable |
 | `scripts/evaluate_runs.py` | evaluate runs across fleet sizes next to the baselines |
 | `scripts/stats.py` | IQM with bootstrap CIs, paired tests vs a reference, Holm correction |
+| `scripts/status.py` | one-screen progress report of a run folder |
+| `scripts/diagnose_losses.py` | step-by-step explanation of drone losses for a checkpoint |
+| `runpod/` | setup, launch, evaluate scripts for a RunPod pod |
 | `configs/` | environments (copies of the frozen settings) and world-seed splits |
 | `tests/` | equivalence with the frozen code, feasibility, exact selection, features, models |
 
